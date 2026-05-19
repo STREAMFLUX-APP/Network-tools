@@ -101,7 +101,7 @@ function App({user,onLogout}){
 const[lang,setLang]=useState("English");
 const[step,setStep]=useState(1);
 const[goal,setGoal]=useState("");
-const[product,setProduct]=useState("");
+const[products,setProducts]=useState([]);
 const[contexts,setContexts]=useState([]);
 const[platforms,setPlatforms]=useState([]);
 const[tone,setTone]=useState("friendly");
@@ -116,14 +116,14 @@ const[tab,setTab]=useState("");
 const isReady=profile.name.trim()&&profile.link.trim();
 const goalOpts=GOALS[lang]||GOALS.English;
 const ctxOpts=goal==="sell"?PAIN_POINTS:goal==="recruit"?RECRUIT:goal==="motivate"?MOTIVATE:BRAND;
-const selProd=allProds.find(p=>p.value===product);
+const selProds=allProds.filter(p=>products.includes(p.value));
 
 const ok=()=>{if(step===1)return!!goal&&isReady;if(step===2)return contexts.length>0;if(step===3)return platforms.length>0;if(step===4)return!!tone;return false;};
 
 const base=()=>{
 const ci=contexts.map(c=>ctxOpts.find(o=>o.value===c)).filter(Boolean);
 const tl=TONES.find(t=>t.value===tone)?.label||tone;
-const pl=selProd?`\nFEATURED PRODUCT: ${selProd.label} — ${selProd.desc}`:"";
+const pl=selProds.length>0?`\nFEATURED PRODUCTS: ${selProds.map(p=>p.label+" — "+p.desc).join(" | ")}`:"";
 const gc={
 sell:`GOAL: Sell MONAT products.${pl}\nPAIN POINTS: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Lead with deep empathy about the pain FIRST. Make reader feel completely understood before mentioning MONAT. Reveal the product naturally as the solution. Use before/after language. Never sound like an ad.`,
 recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ci.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries, work from home, be your own boss.\nSTRATEGY: Speak to their dream. Sound like a friend sharing something life-changing. Never pressure or pitch.`,
@@ -149,7 +149,7 @@ ig_reel:(b)=>`${b}\n\nWrite an Instagram REEL script in ${lang} (30-45 sec).\n\n
 fb_feed:(b)=>`${b}\n\nWrite a Facebook FEED POST in ${lang}.\n- 200-300 words, first person as ${profile.name}\n- Audience: women 28-55 who love beauty\n- Open with relatable story or question\n- Build connection, reveal MONAT naturally\n- End with question to drive comments\n- CTA + link: ${profile.link}\n- 3-4 natural emojis\n- Real person feel, not a brand\nWrite ONLY the post:`,
 fb_shop:(b)=>`${b}\n\nWrite a Facebook SHOP POST in ${lang} for Facebook Shop tab.\n- Product headline: benefit-driven title\n- Description 150 words: benefits → ingredients → who it's for → transformation → CTA\n- 3 bullet points with ✓\n- "Shop Now" CTA + link: ${profile.link}\n- 15 hashtags\nWrite ONLY the shop post:`,
 tiktok_shop:(b)=>`${b}\n\nWrite a TikTok SHOP video script in ${lang} — optimized for TikTok Shop. MONAT is top 5 haircare on TikTok Shop. Must feel 100% native to TikTok.\n\nHOOK (0-3s): [instant curiosity or shock]\nPROBLEM (3-8s): [hair/skin pain — viewer feels seen]\nPRODUCT REVEAL (8-20s): [name it, texture, 1-2 ingredients]\nTRANSFORMATION (20-35s): [vivid specific result]\nSHOP CTA (35-45s): [link in bio / TikTok Shop — ${profile.name} — ${profile.link}]\n\nTIKTOK SHOP EXTRAS:\nProduct tag moment: [when to tap tag]\nPinned comment: [what to pin]\nCaption: [1-2 lines + #TikTokShop #TikTokMadeMeBuyIt + 8 more hashtags]\nAudio mood: [vibe]\n\nWrite ONLY the TikTok script:`,
-image:(b)=>`${b}\n\nCreate an IMAGE & CANVA DESIGN PACKAGE in ${lang}${selProd?" for "+selProd.label:""}.\n\nAI IMAGE PROMPT:\n[Midjourney/DALL-E prompt — subject, composition, lighting. MONAT colors: #7664D0 purple + white + dark navy. Luxury beauty aesthetic.]\n\nCARROUSEL CONCEPTS (3 slides):\nSlide 1: [hook concept]\nSlide 2: [before/after or ingredients]\nSlide 3: [CTA with ${profile.name} + ${profile.link}]\n\nCANVA TEXT:\nHeadline: [bold short]\nSubheadline: [supporting text]\nCTA button: [text]\n\nCAPTION:\n[2-3 sentences + ${profile.link}]\n\nHASHTAGS: [25]\n\nWrite ONLY the design package:`
+image:(b)=>`${b}\n\nCreate an IMAGE & CANVA DESIGN PACKAGE in ${lang}${selProds.length>0?" for "+selProds.map(p=>p.label).join(", "):""}.\n\nAI IMAGE PROMPT:\n[Midjourney/DALL-E prompt — subject, composition, lighting. MONAT colors: #7664D0 purple + white + dark navy. Luxury beauty aesthetic.]\n\nCARROUSEL CONCEPTS (3 slides):\nSlide 1: [hook concept]\nSlide 2: [before/after or ingredients]\nSlide 3: [CTA with ${profile.name} + ${profile.link}]\n\nCANVA TEXT:\nHeadline: [bold short]\nSubheadline: [supporting text]\nCTA button: [text]\n\nCAPTION:\n[2-3 sentences + ${profile.link}]\n\nHASHTAGS: [25]\n\nWrite ONLY the design package:`
 };
 
 const generate=async()=>{
@@ -175,7 +175,7 @@ setLPct(100);setResult(collected);setTab(platforms[0]||"schedule");
 setLoading(false);setLMsg("");setLPct(0);
 };
 
-const reset=()=>{setResult(null);setStep(1);setGoal("");setProduct("");setContexts([]);setPlatforms([]);setError("");};
+const reset=()=>{setResult(null);setStep(1);setGoal("");setProducts([]);setContexts([]);setPlatforms([]);setError("");};
 const card={background:C.white,border:`1px solid ${C.gl}`,borderRadius:14,padding:"18px 20px",marginBottom:14};
 const btnP=(d)=>({background:d?"#e8e6f0":C.dark,color:d?C.gray:C.white,border:"none",borderRadius:10,padding:"12px 20px",fontSize:14,fontWeight:700,cursor:d?"not-allowed":"pointer"});
 const btnS={background:C.white,color:C.dark,border:`1px solid ${C.gl}`,borderRadius:10,padding:"12px 20px",fontSize:14,cursor:"pointer"};
@@ -201,7 +201,7 @@ return <div style={{minHeight:"100vh",background:C.off}}>
 <div style={{maxWidth:780,margin:"0 auto",padding:"16px 12px 60px"}}>
 <div style={{background:C.dark,borderRadius:12,padding:"11px 16px",marginBottom:14,display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
 <span style={{fontSize:13,color:C.white,fontWeight:"bold"}}>✦ Package Ready!</span>
-{selProd&&<span style={{background:"rgba(255,255,255,0.12)",borderRadius:10,padding:"2px 9px",fontSize:11,color:C.white}}>{selProd.label}</span>}
+{selProds.length>0&&<span style={{background:"rgba(255,255,255,0.12)",borderRadius:10,padding:"2px 9px",fontSize:11,color:C.white}}>{selProds.map(p=>p.label).join(", ")}</span>}
 <span style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginLeft:"auto"}}>{profile.name} · {lang}</span>
 </div>
 <div style={{display:"flex",gap:5,marginBottom:14,flexWrap:"wrap"}}>
@@ -259,7 +259,7 @@ return <div style={{minHeight:"100vh",background:C.off}}>
 <p style={{fontSize:11,color:C.gray,margin:"0 0 12px"}}>Select to focus all content on a specific product.</p>
 {[{k:"hair",l:"💇 Hair Care"},{k:"skin",l:"🌿 Skin Care"},{k:"wellness",l:"💊 Wellness"},{k:"mens",l:"👨 Men's"}].map(cat=><div key={cat.k} style={{marginBottom:12}}>
 <div style={{fontSize:10,fontWeight:700,color:C.gray,letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>{cat.l}</div>
-<div style={{display:"flex",flexWrap:"wrap",gap:6}}>{PRODUCTS[cat.k].map(p=><Chip key={p.value} label={p.label} desc={p.desc} active={product===p.value} onClick={()=>setProduct(prev=>prev===p.value?"":p.value)}/>)}</div>
+<div style={{display:"flex",flexWrap:"wrap",gap:6}}>{PRODUCTS[cat.k].map(p=><Chip key={p.value} label={p.label} desc={p.desc} active={products.includes(p.value)} onClick={()=>setProducts(prev=>prev.includes(p.value)?prev.filter(x=>x!==p.value):[...prev,p.value])}/>)}</div>
 </div>)}
 </div>}
 </>}
@@ -278,7 +278,7 @@ return <div style={{minHeight:"100vh",background:C.off}}>
 <div style={{background:C.gbg,borderRadius:9,padding:"11px 13px",marginTop:12}}>
 <div style={{fontSize:10,color:C.gray,marginBottom:6,fontWeight:700}}>Your content summary:</div>
 <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-{[goalOpts.find(g=>g.value===goal)?.label,selProd?.label,...contexts.slice(0,3).map(c=>ctxOpts.find(o=>o.value===c)?.label),...platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label),TONES.find(t=>t.value===tone)?.label,lang].filter(Boolean).map((tag,i)=><span key={i} style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:10,padding:"2px 9px",fontSize:10,color:C.dark}}>{tag}</span>)}
+{[goalOpts.find(g=>g.value===goal)?.label,...(selProds.length>0?selProds.map(p=>p.label):[]),...contexts.slice(0,3).map(c=>ctxOpts.find(o=>o.value===c)?.label),...platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label),TONES.find(t=>t.value===tone)?.label,lang].filter(Boolean).map((tag,i)=><span key={i} style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:10,padding:"2px 9px",fontSize:10,color:C.dark}}>{tag}</span>)}
 </div>
 </div>
 </>}
