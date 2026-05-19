@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Tools by Streamflux</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; background: #f8f7ff; color: #111; }
+input, textarea, button, select { font-family: inherit; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #b8aff0; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const C = {
+  purple:"#7664d0", dark:"#2e2a4a", light:"#ede9ff", mid:"#b8aff0",
+  white:"#ffffff", off:"#f8f7ff", black:"#111111", gray:"#6b6b6b",
+  gl:"#e8e6f0", gbg:"#f4f3f9", green:"#2d9e6b", glight:"#e6f7f1",
+  red:"#dc2626", redLight:"#fff5f5",
+};
+
+// ── API CALLS ──────────────────────────────────────────────────────────────
+
+const api = {
+  login: async (email, password) => {
+    const r = await fetch("/api/auth", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ action:"login", email, password })
+    });
+    return r.json();
+  },
+  checkSession: async (userId) => {
+    const r = await fetch("/api/auth", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ action:"check", userId })
+    });
+    return r.json();
+  },
+  generate: async (prompt) => {
+    const r = await fetch("/api/claude", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ prompt, maxTokens: 900 })
+    });
+    return r.json();
+  }
+};
+
+// ── LANGUAGES ──────────────────────────────────────────────────────────────
+
+const LANGUAGES = [
+  {value:"English",label:"🇺🇸 English"},
+  {value:"Spanish",label:"🇪🇸 Español"},
+  {value:"Italian",label:"🇮🇹 Italiano"},
+  {value:"French",label:"🇫🇷 Français"},
+  {value:"Portuguese",label:"🇧🇷 Português"},
+  {value:"German",label:"🇩🇪 Deutsch"},
+  {value:"Arabic",label:"🇦🇪 العربية"},
+  {value:"Chinese",label:"🇨🇳 中文"},
+];
+
+const UI = {
+  English:{sub:"by Streamflux",stepOf:(s,t)=>`Step ${s} of ${t}`,profileTitle:"Your Profile",profileName:"Your Name *",profileLink:"Your MONAT Link *",profilePhone:"WhatsApp (optional)",namePh:"e.g. Maria Johnson",linkPh:"yourname.mymonat.com",phonePh:"+1 (555) 000-0000",profileWarn:"Fill in your name and MONAT link to continue",s1l:"Step 1",s1t:"What Is Your Goal?",s1s:"Everything we create will be tailored around this.",s2l:"Step 2",s2sell:"Which Problem Are You Solving?",s2prod:"Choose a Product (optional)",s2prodSub:"Select to focus content on a specific product.",s2other:"Who / What Are You Targeting?",s2sub:"Pick all that apply.",s3l:"Step 3",s3t:"Where Are You Posting?",s3s:"Select all platforms — we generate everything at once.",s3count:(n)=>`✦ ${n} platform${n>1?"s":""} selected + 7-day schedule`,s4l:"Step 4",s4t:"✨ Tone & Style",s4s:"How should all your content feel?",summary:"Your content summary:",back:"← Back",cont:"Continue →",gen:"✦ Generate Full Package",generating:"✦ Generating...",genIn:(l)=>`Generating in ${l}. Please wait...`,newContent:"← New Content",ready:"✦ Package Ready!",scheduleIntro:"Your 7-day action plan.",fillFirst:"Fill in your name and MONAT link first.",completeStep:"Please complete this step to continue.",f1:"Network Tools by Streamflux",f2:"Powered by Claude AI · streamflux.app",catHair:"💇 Hair Care",catSkin:"🌿 Skin Care",catWellness:"💊 Wellness",catMens:"👨 Men's",logout:"Log Out",trialBanner:(n)=>`⏰ ${n} day${n>1?"s":""} left in your free trial`,trialExpired:"Your free trial has ended. Contact support to subscribe.",loginTitle:"Welcome to Network Tools",loginSub:"Sign in to your account",loginEmail:"Email address",loginPassword:"Password",loginBtn:"Sign In →",loginErr:"Invalid email or password. Please try again."},
+  Spanish:{sub:"by Streamflux",stepOf:(s,t)=>`Paso ${s} de ${t}`,profileTitle:"Tu Perfil",profileName:"Tu Nombre *",profileLink:"Tu Enlace MONAT *",profilePhone:"WhatsApp (opcional)",namePh:"ej. María Johnson",linkPh:"tunombre.mymonat.com",phonePh:"+1 (555) 000-0000",profileWarn:"Ingresa tu nombre y enlace MONAT para continuar",s1l:"Paso 1",s1t:"¿Cuál es tu objetivo?",s1s:"Todo el contenido será diseñado en base a esto.",s2l:"Paso 2",s2sell:"¿Qué problema estás resolviendo?",s2prod:"Elige un Producto (opcional)",s2prodSub:"Selecciona para enfocar el contenido en un producto.",s2other:"¿A quién / qué estás dirigiendo?",s2sub:"Elige todos los que apliquen.",s3l:"Paso 3",s3t:"¿Dónde vas a publicar?",s3s:"Selecciona todas las plataformas — generamos todo a la vez.",s3count:(n)=>`✦ ${n} plataforma${n>1?"s":""} + plan de 7 días`,s4l:"Paso 4",s4t:"✨ Tono y Estilo",s4s:"¿Cómo debe sentirse tu contenido?",summary:"Resumen de tu contenido:",back:"← Atrás",cont:"Continuar →",gen:"✦ Generar Paquete Completo",generating:"✦ Generando...",genIn:(l)=>`Generando en ${l}. Por favor espera...`,newContent:"← Nuevo Contenido",ready:"✦ ¡Paquete Listo!",scheduleIntro:"Tu plan de acción de 7 días.",fillFirst:"Ingresa tu nombre y enlace MONAT primero.",completeStep:"Por favor completa este paso.",f1:"Network Tools by Streamflux",f2:"Powered by Claude AI · streamflux.app",catHair:"💇 Cuidado Capilar",catSkin:"🌿 Cuidado de la Piel",catWellness:"💊 Bienestar",catMens:"👨 Para Hombres",logout:"Cerrar Sesión",trialBanner:(n)=>`⏰ Te quedan ${n} día${n>1?"s":""} de prueba gratuita`,trialExpired:"Tu prueba gratuita ha terminado. Contacta soporte para suscribirte.",loginTitle:"Bienvenida a Network Tools",loginSub:"Inicia sesión en tu cuenta",loginEmail:"Correo electrónico",loginPassword:"Contraseña",loginBtn:"Iniciar Sesión →",loginErr:"Email o contraseña incorrectos. Inténtalo de nuevo."},
+};
+
+const GOALS={English:[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products to customers"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join as Market Partners"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire and energize your MONAT team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your MONAT presence & following"}],Spanish:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas a unirse"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo MONAT"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia MONAT"}]};
+
+const PRODUCTS={hair:[{value:"bond_iq",label:"MONAT Bond IQ™",desc:"Smarter Care. Stronger Hair."},{value:"ir_clinical",label:"IR Clinical™",desc:"Hair Thinning Defense System"},{value:"rejuveniqe",label:"Rejuveniqe Oil Intensive™",desc:"13+ natural oils"},{value:"anti_frizz",label:"Smoothing Anti-Frizz™",desc:"Deep Treatment"},{value:"curl",label:"MONAT Curl Perfection™",desc:"Curl & Wave System"},{value:"rejuvabeads",label:"REJUVABEADS®",desc:"Split End Mender"},{value:"scalp_scrub",label:"Scalp Purifying Scrub",desc:"Deep cleanse & balance"},{value:"scalp_comfort",label:"Scalp Comfort™",desc:"Rebalancing Treatment"},{value:"color_care",label:"MONAT Color Care",desc:"Color-Treated Hair"},{value:"densifying",label:"MONAT Densifying System",desc:"Volume & thickness"},{value:"ir_supp",label:"MONAT The IR™ Supplement",desc:"Daily hair health"}],skin:[{value:"barrier",label:"MONAT Barrier Booster™",desc:"Glass Skin Skincare"},{value:"glowtint",label:"MONAT GlowTint™ Lip Oil",desc:"Skincare-infused gloss"}],wellness:[{value:"wellness",label:"MONAT Wellness Supplements",desc:"Energy, sleep & mood"}],mens:[{value:"men",label:"MONAT for MEN™",desc:"Complete men's collection"}]};
+
+const PAIN_POINTS=[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy & Unmanageable Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair & Breakage"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls & Waves"},{value:"color",label:"🎨 Color-Treated Hair Fade"},{value:"aging_skin",label:"🪞 Aging Skin & Wrinkles"},{value:"dull_skin",label:"🌥️ Dull & Uneven Skin Tone"},{value:"no_volume",label:"😔 Flat Hair & No Volume"},{value:"scalp",label:"😣 Itchy / Flaky Scalp"}];
+const RECRUIT_ANGLES=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business anywhere"},{value:"loves_beauty",label:"💄 Loves Beauty & Hair",desc:"Turn passion into income"},{value:"entrepreneur",label:"🚀 Be Their Own Boss",desc:"Business with no ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn while raising family"},{value:"side_hustle",label:"⚡ Looking for a Side Hustle",desc:"Side hustle that pays"},{value:"social_media",label:"📱 Active on Social Media",desc:"Monetize what you post"},{value:"student",label:"🎓 Student / Young Professional",desc:"Build income for the future"}];
+const MOTIVATE_THEMES=[{value:"keep_going",label:"💪 Keep Going — Don't Quit"},{value:"celebrate",label:"🏆 Celebrate a Team Win"},{value:"monday_fire",label:"🔥 Monday Motivation"},{value:"consistency",label:"📅 Consistency Wins"},{value:"belief",label:"✨ Believe in Yourself"},{value:"new_member",label:"🎉 Welcome a New Team Member"}];
+const BRAND_ANGLES=[{value:"natural",label:"🌿 Natural & Clean Ingredients"},{value:"results",label:"📸 Real Results & Transformations"},{value:"cruelty_free",label:"🐰 Cruelty-Free & Certified"},{value:"made_in_usa",label:"🇺🇸 Made in the USA"},{value:"awards",label:"🏅 80+ Product Awards"},{value:"community",label:"👥 The MONAT Community"},{value:"opportunity",label:"💼 The Business Opportunity"},{value:"gratitude",label:"❤️ MONAT Gratitude Foundation"}];
+const PLATFORMS=[{value:"whatsapp",label:"💬 WhatsApp / SMS"},{value:"instagram",label:"📸 Instagram"},{value:"facebook",label:"👍 Facebook"},{value:"tiktok",label:"🎵 TikTok Script"},{value:"image",label:"🖼️ Image Prompt"},{value:"email",label:"📧 Email"}];
+const TONES=[{value:"friendly",label:"Friendly & Warm",desc:"Personal, like a real friend"},{value:"professional",label:"Professional",desc:"Polished and credible"},{value:"exciting",label:"Exciting & Energetic",desc:"High energy, bold"},{value:"inspirational",label:"Inspirational",desc:"Uplifting, heartfelt"},{value:"urgent",label:"Urgent",desc:"Act now, limited time"}];
+const RESULT_TABS=[{id:"whatsapp",label:"💬 WhatsApp"},{id:"instagram",label:"📸 Instagram"},{id:"facebook",label:"👍 Facebook"},{id:"tiktok",label:"🎵 TikTok"},{id:"image",label:"🖼️ Image"},{id:"email",label:"📧 Email"},{id:"schedule",label:"📅 Schedule"}];
+
+const toggle=(arr,val)=>arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];
+const allProducts=Object.values(PRODUCTS).flat();
+
+const parseSchedule=(text)=>{
+  const lines=text.split("\n");const days=[];let cur=null;
+  const icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
+  for(const line of lines){
+    const t=line.trim();if(!t)continue;
+    if(/^(day\s*\d|día\s*\d|jour\s*\d|tag\s*\d|giorno\s*\d|\*\*day|#{1,3}\s*day)/i.test(t)){
+      if(cur)days.push(cur);
+      cur={day:t.replace(/\*\*/g,"").replace(/^#+\s*/,""),icon:icons[days.length]||"📅",tasks:[]};
+    }else if(cur){const clean=t.replace(/^[-•→*✓\d.]+\s*/,"").trim();if(clean.length>5)cur.tasks.push(clean);}
+  }
+  if(cur)days.push(cur);return days.length>=3?days:null;
+};
+
+// ── UI COMPONENTS ──────────────────────────────────────────────────────────
+
+function Chip({label,desc,active,onClick}){
+  return <button onClick={onClick} style={{padding:desc?"11px 14px":"9px 15px",borderRadius:10,cursor:"pointer",textAlign:"left",background:active?C.dark:C.white,border:`1.5px solid ${active?C.dark:C.gl}`,color:active?C.white:C.black,fontSize:13,boxShadow:active?"0 2px 10px rgba(46,42,74,0.2)":"none",transition:"all 0.15s"}}>
+    <div style={{fontWeight:active?700:400}}>{label}</div>
+    {desc&&<div style={{fontSize:11,color:active?C.mid:C.gray,marginTop:3}}>{desc}</div>}
+  </button>;
+}
+
+function ChipGroup({options,selected,onToggle,single=false}){
+  return <div style={{display:"flex",flexWrap:"wrap",gap:9}}>
+    {options.map(o=><Chip key={o.value} label={o.label} desc={o.desc} active={single?selected===o.value:(Array.isArray(selected)&&selected.includes(o.value))} onClick={()=>onToggle(o.value)}/>)}
+  </div>;
+}
+
+function OutputCard({title,content}){
+  const[copied,setCopied]=useState(false);
+  if(!content)return null;
+  return <div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:12,padding:"16px 20px",marginBottom:12,boxShadow:"0 1px 4px rgba(46,42,74,0.06)"}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+      <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.08em",color:C.dark,textTransform:"uppercase"}}>{title}</span>
+      <button onClick={()=>{navigator.clipboard.writeText(content);setCopied(true);setTimeout(()=>setCopied(false),2000);}} style={{padding:"5px 13px",borderRadius:14,cursor:"pointer",fontSize:11,border:`1px solid ${copied?C.green:C.gl}`,background:copied?C.glight:C.gbg,color:copied?C.green:C.gray,transition:"all 0.2s"}}>
+        {copied?"✓ Copied!":"Copy"}
+      </button>
+    </div>
+    <pre style={{whiteSpace:"pre-wrap",wordBreak:"break-word",fontSize:13,lineHeight:1.8,color:C.black,margin:0}}>{content}</pre>
+  </div>;
+}
+
+// ── LOGIN SCREEN ───────────────────────────────────────────────────────────
+
+function LoginScreen({onLogin}){
+  const[email,setEmail]=useState("");
+  const[password,setPassword]=useState("");
+  const[loading,setLoading]=useState(false);
+  const[error,setError]=useState("");
+
+  const handleLogin=async()=>{
+    if(!email||!password){setError("Please enter your email and password.");return;}
+    setLoading(true);setError("");
+    const data=await api.login(email,password);
+    setLoading(false);
+    if(data.success){
+      localStorage.setItem("monat_user",JSON.stringify(data.user));
+      onLogin(data.user);
+    }else{
+      setError(data.error||"Invalid email or password.");
+    }
+  };
+
+  return(
+    <div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+      <div style={{width:"100%",maxWidth:400}}>
+        <div style={{textAlign:"center",marginBottom:28}}>
+          <div style={{width:56,height:56,borderRadius:14,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,color:C.white,margin:"0 auto 14px"}}>✦</div>
+          <div style={{fontSize:22,fontWeight:"bold",letterSpacing:3,marginBottom:4}}>Network Tools</div>
+          <div style={{fontSize:12,color:C.gray}}>by Streamflux</div>
+        </div>
+
+        <div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:16,padding:"28px 24px",boxShadow:"0 2px 20px rgba(46,42,74,0.08)"}}>
+          <h2 style={{fontSize:18,fontWeight:700,marginBottom:6,textAlign:"center"}}>Welcome back</h2>
+          <p style={{fontSize:13,color:C.gray,textAlign:"center",marginBottom:22}}>Sign in to your account</p>
+
+          <div style={{marginBottom:14}}>
+            <label style={{fontSize:11,color:C.gray,display:"block",marginBottom:5,fontWeight:700,letterSpacing:"0.05em",textTransform:"uppercase"}}>Email address</label>
+            <input type="email" value={email} onChange={e=>{setEmail(e.target.value);setError("");}}
+              placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&handleLogin()}
+              style={{width:"100%",padding:"11px 13px",borderRadius:9,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:14,outline:"none",color:C.black}}
+              onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+          </div>
+
+          <div style={{marginBottom:20}}>
+            <label style={{fontSize:11,color:C.gray,display:"block",marginBottom:5,fontWeight:700,letterSpacing:"0.05em",textTransform:"uppercase"}}>Password</label>
+            <input type="password" value={password} onChange={e=>{setPassword(e.target.value);setError("");}}
+              placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&handleLogin()}
+              style={{width:"100%",padding:"11px 13px",borderRadius:9,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:14,outline:"none",color:C.black}}
+              onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+          </div>
+
+          {error&&<div style={{background:C.redLight,border:`1px solid #fecaca`,borderRadius:8,padding:"10px 13px",marginBottom:14,color:C.red,fontSize:13}}>⚠️ {error}</div>}
+
+          <button onClick={handleLogin} disabled={loading} style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:loading?C.gl:C.dark,color:loading?C.gray:C.white,fontSize:15,fontWeight:700,cursor:loading?"not-allowed":"pointer",transition:"all 0.2s"}}>
+            {loading?"Signing in...":"Sign In →"}
+          </button>
+
+          <p style={{fontSize:12,color:C.gray,textAlign:"center",marginTop:16}}>
+            Need help? Email <span style={{color:C.purple}}>support@streamflux.app</span>
+          </p>
+        </div>
+
+        <p style={{textAlign:"center",fontSize:11,color:C.gl,marginTop:20}}>Network Tools by Streamflux · Powered by Claude AI</p>
+      </div>
+    </div>
+  );
+}
+
+// ── MAIN APP ───────────────────────────────────────────────────────────────
+
+function MarketingMachine({user,language,onLogout}){
+  const t=UI[language]||UI.English;
+  const goalOptions=GOALS[language]||GOALS.English;
+  const[step,setStep]=useState(1);
+  const[goal,setGoal]=useState("");
+  const[product,setProduct]=useState("");
+  const[contexts,setContexts]=useState([]);
+  const[platforms,setPlatforms]=useState([]);
+  const[tone,setTone]=useState("friendly");
+  const[profile,setProfile]=useState({name:user.name||"",link:"",phone:""});
+  const[result,setResult]=useState(null);
+  const[loading,setLoading]=useState(false);
+  const[loadingMsg,setLoadingMsg]=useState("");
+  const[loadingPct,setLoadingPct]=useState(0);
+  const[error,setError]=useState("");
+  const[activeTab,setActiveTab]=useState("");
+
+  const isReady=profile.name.trim()&&profile.link.trim();
+  const contextOptions=goal==="sell"?PAIN_POINTS:goal==="recruit"?RECRUIT_ANGLES:goal==="motivate"?MOTIVATE_THEMES:BRAND_ANGLES;
+  const selectedProduct=allProducts.find(p=>p.value===product);
+
+  const canProceed=()=>{
+    if(step===1)return!!goal&&isReady;
+    if(step===2)return contexts.length>0;
+    if(step===3)return platforms.length>0;
+    if(step===4)return!!tone;
+    return false;
+  };
+
+  const buildPrompt=(platform)=>{
+    const ctxItems=contexts.map(c=>contextOptions.find(o=>o.value===c)).filter(Boolean);
+    const toneLabel=TONES.find(t2=>t2.value===tone)?.label||tone;
+    const prodLine=selectedProduct?`\nFEATURED PRODUCT: ${selectedProduct.label} — ${selectedProduct.desc}`:"";
+    const goalCtx={
+      sell:`GOAL: Sell MONAT products.${prodLine}\nPAIN POINTS: ${ctxItems.map(c=>c.label).join(", ")}\nRULE: Open with vivid empathy about the pain. Make reader feel understood BEFORE mentioning MONAT.`,
+      recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ctxItems.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries, work from home.\nRULE: Speak to their dream. Sound like a friend sharing something life-changing.`,
+      motivate:`GOAL: Motivate MONAT team.\nTHEMES: ${ctxItems.map(c=>c.label).join(", ")}\nRULE: Raw, real, uplifting.`,
+      brand:`GOAL: Build MONAT brand awareness.\nANGLES: ${ctxItems.map(c=>c.label).join(", ")}\nRULE: Educate and inspire. Premium brand.`,
+    }[goal]||"";
+    const base=`You are an elite MONAT Global marketing copywriter. Write authentic human content.
+MONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA
+PARTNER: ${profile.name} | LINK: ${profile.link}${profile.phone?` | WHATSAPP: ${profile.phone}`:""}
+TONE: ${toneLabel}
+${goalCtx}
+CRITICAL: Write ALL content in ${language}. Every word in ${language}.`;
+    const prompts={
+      whatsapp:`${base}\n\nWrite a WhatsApp/SMS message in ${language}.\n- 80-140 words, warm and personal\n- 3-5 natural emojis\n- Hook about the pain/goal\n- Include: ${profile.link} | Sign as: ${profile.name}\nWrite ONLY the message:`,
+      instagram:`${base}\n\nWrite an Instagram caption in ${language}.\n- Line 1: scroll-stopping hook\n- 3-5 sentences: story, empathy, MONAT reveal\n- CTA + ${profile.link} — ${profile.name}\n- 25 hashtags on a new line\nWrite ONLY caption + hashtags:`,
+      facebook:`${base}\n\nWrite a Facebook post in ${language}.\n- 200-280 words, first person as ${profile.name}\n- Relatable opening, empathy, natural reveal\n- Question at end, CTA + ${profile.link}\nWrite ONLY the post:`,
+      tiktok:`${base}\n\nWrite a TikTok script in ${language} (45-60 sec).\nHOOK (0-3s):\nPROBLEM (3-10s):\nDISCOVERY (10-25s):\nRESULTS (25-40s):\nCTA (40-60s): [${profile.name} | ${profile.link}]\nAudio:\nText overlays (3):\nHashtags (10):\nWrite ONLY the script:`,
+      image:`${base}\n\nCreate an AI image prompt package for MONAT in ${language}${selectedProduct?" for "+selectedProduct.label:""}.\nAI PROMPT: [Midjourney/DALL-E: MONAT colors: periwinkle purple + white + dark navy, luxury beauty${selectedProduct?", "+selectedProduct.label+" prominently, 3 carousel concepts":""}]\nCAPTION: [2-3 sentences]\nOVERLAY A/B/C: [options]\nCTA: [with ${profile.link}]\nHASHTAGS: [20]\nWrite ONLY the package:`,
+      email:`${base}\n\nWrite an email in ${language}.\nSUBJECT: [under 9 words]\nBODY: [150-200 words, personal, empathy, ${profile.link}, signed ${profile.name}]\nWrite ONLY subject + body:`,
+    };
+    return prompts[platform]||base;
+  };
+
+  const generate=async()=>{
+    if(!canProceed()||!isReady||loading)return;
+    setError("");setLoading(true);setResult(null);setLoadingPct(0);
+    const collected={};
+    try{
+      const pctStep=Math.floor(80/(platforms.length+1));let pct=5;
+      for(const platform of platforms){
+        setLoadingMsg(`Writing ${PLATFORMS.find(p=>p.value===platform)?.label||platform}...`);
+        pct+=pctStep;setLoadingPct(Math.min(pct,85));
+        const data=await api.generate(buildPrompt(platform));
+        if(data.error)throw new Error(data.error);
+        const text=data.text;
+        if(platform==="email"){
+          const sub=text.match(/SUBJECT:?\s*(.+)/i);
+          const body=text.match(/BODY:?\s*([\s\S]+)/i);
+          collected.email_subject=sub?sub[1].trim():text.split("\n")[0];
+          collected.email_body=body?body[1].trim():text;
+        }else{collected[platform]=text;}
+      }
+      setLoadingMsg("Building 7-day schedule...");setLoadingPct(90);
+      const platLabels=platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label||p).join(", ");
+      const schedData=await api.generate(`You are a MONAT marketing expert. Create a 7-day posting schedule in ${language}.\nPlatforms: ${platLabels}\nGoal: ${goalOptions.find(g=>g.value===goal)?.label}\n\nDay 1 — Launch Day\n- task\n- task\n\nDay 2\n- task\n\n...7 days. Write ONLY the schedule:`);
+      collected.schedule=parseSchedule(schedData.text)||[
+        {day:"Day 1",icon:"🚀",tasks:["Post on all platforms","Send WhatsApp to 10 contacts"]},
+        {day:"Day 2",icon:"📱",tasks:["Follow up replies","Post a story"]},
+        {day:"Day 3",icon:"🎯",tasks:["Re-share top post","Reach out to 5 new people"]},
+        {day:"Day 4",icon:"🎬",tasks:["Post TikTok","Reply to comments"]},
+        {day:"Day 5",icon:"📊",tasks:["Check engagement","Repost top content"]},
+        {day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share a result"]},
+        {day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]},
+      ];
+      setLoadingPct(100);setResult(collected);setActiveTab(platforms[0]||"schedule");
+    }catch(err){setError(err.message||"Error. Please try again.");}
+    setLoading(false);setLoadingMsg("");setLoadingPct(0);
+  };
+
+  const resetAll=()=>{setResult(null);setStep(1);setGoal("");setProduct("");setContexts([]);setPlatforms([]);setError("");};
+  const card={background:C.white,border:`1px solid ${C.gl}`,borderRadius:14,padding:"20px 22px",marginBottom:16,boxShadow:"0 1px 4px rgba(46,42,74,0.06)"};
+  const btnP=(dis)=>({background:dis?"#e8e6f0":C.dark,color:dis?C.gray:C.white,border:"none",borderRadius:10,padding:"13px 22px",fontSize:14,fontWeight:700,cursor:dis?"not-allowed":"pointer"});
+  const btnS={background:C.white,color:C.dark,border:`1px solid ${C.gl}`,borderRadius:10,padding:"13px 22px",fontSize:14,cursor:"pointer"};
+
+  const Header=()=>(
+    <header style={{background:C.white,borderBottom:`1px solid ${C.gl}`,padding:"0 20px",height:56,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:0,zIndex:50}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <div style={{width:32,height:32,borderRadius:8,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",color:C.white,fontSize:14}}>✦</div>
+        <div><div style={{fontSize:14,fontWeight:"bold",letterSpacing:2,lineHeight:1.1}}>Network Tools</div><div style={{fontSize:8,color:C.purple,letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        {user.trialActive&&<span style={{fontSize:11,color:C.purple,background:C.light,borderRadius:12,padding:"4px 10px"}}>{t.trialBanner(user.daysLeft)}</span>}
+        <span style={{fontSize:12,color:C.gray}}>{user.name}</span>
+        <button onClick={onLogout} style={{...btnS,padding:"5px 12px",fontSize:11}}>{t.logout}</button>
+      </div>
+    </header>
+  );
+
+  if(result){
+    const tabs=RESULT_TABS.filter(tb=>tb.id==="schedule"||platforms.includes(tb.id));
+    return(
+      <div style={{minHeight:"100vh",background:C.off}}>
+        <Header/>
+        <div style={{maxWidth:760,margin:"0 auto",padding:"18px 14px 60px"}}>
+          <div style={{background:C.dark,borderRadius:12,padding:"12px 18px",marginBottom:16,display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+            <span style={{fontSize:13,color:C.white,fontWeight:"bold"}}>{t.ready}</span>
+            {selectedProduct&&<span style={{background:"rgba(255,255,255,0.12)",borderRadius:12,padding:"3px 10px",fontSize:11,color:C.white}}>{selectedProduct.label}</span>}
+            <span style={{fontSize:12,color:"rgba(255,255,255,0.4)",marginLeft:"auto"}}>{profile.name}</span>
+          </div>
+          <div style={{display:"flex",gap:6,marginBottom:16,flexWrap:"wrap"}}>
+            {tabs.map(tb=><button key={tb.id} onClick={()=>setActiveTab(tb.id)} style={{padding:"7px 12px",borderRadius:8,cursor:"pointer",fontSize:12,background:activeTab===tb.id?C.dark:C.white,color:activeTab===tb.id?C.white:C.gray,border:`1px solid ${activeTab===tb.id?C.dark:C.gl}`,fontWeight:activeTab===tb.id?700:400}}>{tb.label}</button>)}
+          </div>
+          {activeTab==="whatsapp"&&<OutputCard title="💬 WhatsApp / SMS" content={result.whatsapp}/>}
+          {activeTab==="instagram"&&<OutputCard title="📸 Instagram Caption" content={result.instagram}/>}
+          {activeTab==="facebook"&&<OutputCard title="👍 Facebook Post" content={result.facebook}/>}
+          {activeTab==="tiktok"&&<OutputCard title="🎵 TikTok Script" content={result.tiktok}/>}
+          {activeTab==="image"&&<OutputCard title="🖼️ Image Prompt & Caption" content={result.image}/>}
+          {activeTab==="email"&&<><OutputCard title="📧 Subject Line" content={result.email_subject}/><OutputCard title="📨 Email Body" content={result.email_body}/></>}
+          {activeTab==="schedule"&&<div>
+            <p style={{fontSize:13,color:C.gray,marginBottom:12}}>{t.scheduleIntro}</p>
+            {result.schedule?.map((day,i)=>(
+              <div key={i} style={{...card,marginBottom:10}}>
+                <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:10}}><span style={{fontSize:20}}>{day.icon}</span><span style={{fontSize:14,fontWeight:700,color:C.dark}}>{day.day}</span></div>
+                {day.tasks?.map((task,j)=><div key={j} style={{display:"flex",gap:9,alignItems:"flex-start",marginBottom:6}}><span style={{color:C.purple,fontWeight:700,flexShrink:0}}>→</span><span style={{fontSize:13,lineHeight:1.6}}>{task}</span></div>)}
+              </div>
+            ))}
+          </div>}
+          <button onClick={resetAll} style={{...btnS,marginTop:8}}>{t.newContent}</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{minHeight:"100vh",background:C.off}}>
+      <Header/>
+      <div style={{maxWidth:680,margin:"0 auto",padding:"22px 14px 60px"}}>
+        <div style={{display:"flex",gap:5,marginBottom:22}}>
+          {[1,2,3,4].map(s=>(
+            <div key={s} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+              <div style={{width:"100%",height:3,borderRadius:2,background:step>=s?C.dark:C.gl,transition:"background 0.3s"}}/>
+              <span style={{fontSize:10,color:step>=s?C.dark:C.gray,fontWeight:step===s?700:400}}>{["🎯","💡","📣","✨"][s-1]}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={card}>
+          <div style={{fontSize:10,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:10}}>👤 {t.profileTitle}</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[{key:"name",label:t.profileName,ph:t.namePh},{key:"link",label:t.profileLink,ph:t.linkPh},{key:"phone",label:t.profilePhone,ph:t.phonePh}].map(f=>(
+              <div key={f.key}>
+                <label style={{fontSize:10,color:C.gray,display:"block",marginBottom:4}}>{f.label}</label>
+                <input value={profile[f.key]} onChange={e=>setProfile(p=>({...p,[f.key]:e.target.value}))} placeholder={f.ph}
+                  style={{width:"100%",padding:"9px 11px",borderRadius:8,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:13,outline:"none",color:C.black}}
+                  onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+              </div>
+            ))}
+          </div>
+          {!isReady&&<div style={{marginTop:9,fontSize:12,color:C.purple,background:C.light,borderRadius:7,padding:"7px 11px"}}>{t.profileWarn}</div>}
+        </div>
+
+        <div style={card}>
+          {step===1&&<>
+            <div style={{fontSize:10,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:4}}>{t.s1l}</div>
+            <h2 style={{fontSize:17,fontWeight:700,margin:"0 0 5px"}}>🎯 {t.s1t}</h2>
+            <p style={{fontSize:13,color:C.gray,margin:"0 0 16px"}}>{t.s1s}</p>
+            <ChipGroup options={goalOptions} selected={goal} onToggle={setGoal} single/>
+          </>}
+
+          {step===2&&<>
+            <div style={{fontSize:10,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:4}}>{t.s2l}</div>
+            <h2 style={{fontSize:17,fontWeight:700,margin:"0 0 5px"}}>💡 {goal==="sell"?t.s2sell:t.s2other}</h2>
+            <p style={{fontSize:13,color:C.gray,margin:"0 0 16px"}}>{t.s2sub}</p>
+            <ChipGroup options={contextOptions} selected={contexts} onToggle={val=>setContexts(prev=>toggle(prev,val))}/>
+            {contexts.length>0&&<div style={{marginTop:10,fontSize:12,color:C.purple,background:C.light,borderRadius:7,padding:"7px 11px"}}>✦ {contexts.length} selected</div>}
+            {goal==="sell"&&<div style={{marginTop:20,paddingTop:18,borderTop:`1px solid ${C.gl}`}}>
+              <div style={{fontSize:13,fontWeight:700,marginBottom:3}}>🛍️ {t.s2prod}</div>
+              <p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>{t.s2prodSub}</p>
+              {[{key:"hair",lk:"catHair"},{key:"skin",lk:"catSkin"},{key:"wellness",lk:"catWellness"},{key:"mens",lk:"catMens"}].map(cat=>(
+                <div key={cat.key} style={{marginBottom:14}}>
+                  <div style={{fontSize:11,fontWeight:700,color:C.gray,letterSpacing:1,textTransform:"uppercase",marginBottom:7}}>{t[cat.lk]}</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
+                    {PRODUCTS[cat.key].map(p=><Chip key={p.value} label={p.label} desc={p.desc} active={product===p.value} onClick={()=>setProduct(prev=>prev===p.value?"":p.value)}/>)}
+                  </div>
+                </div>
+              ))}
+            </div>}
+          </>}
+
+          {step===3&&<>
+            <div style={{fontSize:10,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:4}}>{t.s3l}</div>
+            <h2 style={{fontSize:17,fontWeight:700,margin:"0 0 5px"}}>📣 {t.s3t}</h2>
+            <p style={{fontSize:13,color:C.gray,margin:"0 0 16px"}}>{t.s3s}</p>
+            <ChipGroup options={PLATFORMS} selected={platforms} onToggle={val=>setPlatforms(prev=>toggle(prev,val))}/>
+            {platforms.length>0&&<div style={{marginTop:10,fontSize:12,color:C.purple,background:C.light,borderRadius:7,padding:"7px 11px"}}>{t.s3count(platforms.length)}</div>}
+          </>}
+
+          {step===4&&<>
+            <div style={{fontSize:10,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:4}}>{t.s4l}</div>
+            <h2 style={{fontSize:17,fontWeight:700,margin:"0 0 5px"}}>{t.s4t}</h2>
+            <p style={{fontSize:13,color:C.gray,margin:"0 0 16px"}}>{t.s4s}</p>
+            <ChipGroup options={TONES} selected={tone} onToggle={setTone} single/>
+            <div style={{background:C.gbg,borderRadius:10,padding:"12px 14px",marginTop:14}}>
+              <div style={{fontSize:11,color:C.gray,marginBottom:7,fontWeight:700}}>{t.summary}</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                {[goalOptions.find(g=>g.value===goal)?.label,selectedProduct?.label,...contexts.slice(0,3).map(c=>contextOptions.find(o=>o.value===c)?.label),...platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label),TONES.find(t2=>t2.value===tone)?.label,language].filter(Boolean).map((tag,i)=>(
+                  <span key={i} style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:12,padding:"3px 10px",fontSize:11,color:C.dark}}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          </>}
+        </div>
+
+        {loading&&<div style={{...card,marginBottom:14}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}>
+            <span style={{fontSize:13,color:C.dark,fontWeight:600}}>{loadingMsg}</span>
+            <span style={{fontSize:12,color:C.gray}}>{loadingPct}%</span>
+          </div>
+          <div style={{width:"100%",height:5,background:C.gl,borderRadius:3}}>
+            <div style={{width:`${loadingPct}%`,height:"100%",background:`linear-gradient(90deg,${C.dark},${C.purple})`,borderRadius:3,transition:"width 0.4s ease"}}/>
+          </div>
+          <div style={{fontSize:12,color:C.gray,marginTop:7}}>{t.genIn(language)}</div>
+        </div>}
+
+        {error&&<div style={{background:C.redLight,border:"1px solid #fecaca",borderRadius:10,padding:"11px 14px",marginBottom:14,color:C.red,fontSize:13}}>⚠️ {error}</div>}
+
+        <div style={{display:"flex",justifyContent:"space-between",gap:10}}>
+          <button onClick={()=>step>1&&setStep(s=>s-1)} disabled={loading} style={btnS}>{t.back}</button>
+          {step<4
+            ?<button onClick={()=>{if(!isReady){setError(t.fillFirst);return;}if(canProceed()){setError("");setStep(s=>s+1);}else setError(t.completeStep);}} style={btnP(!canProceed()||!isReady)}>{t.cont}</button>
+            :<button onClick={()=>canProceed()&&isReady&&!loading&&generate()} disabled={loading||!canProceed()||!isReady} style={{...btnP(!canProceed()||!isReady||loading),minWidth:220}}>{loading?t.generating:t.gen}</button>
+          }
+        </div>
+
+        <div style={{marginTop:38,textAlign:"center"}}>
+          <div style={{fontSize:9,letterSpacing:2,color:C.gl,textTransform:"uppercase"}}>{t.f1}</div>
+          <div style={{fontSize:9,color:C.gl,marginTop:3}}>{t.f2}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── ROOT ───────────────────────────────────────────────────────────────────
+
+function Root(){
+  const[user,setUser]=useState(null);
+  const[language,setLanguage]=useState("English");
+  const[checking,setChecking]=useState(true);
+
+  useEffect(()=>{
+    const stored=localStorage.getItem("monat_user");
+    if(stored){
+      try{
+        const u=JSON.parse(stored);
+        api.checkSession(u.id).then(data=>{
+          if(data.success){setUser(data.user);}
+          else{localStorage.removeItem("monat_user");}
+          setChecking(false);
+        }).catch(()=>setChecking(false));
+      }catch{setChecking(false);}
+    }else{setChecking(false);}
+  },[]);
+
+  const handleLogin=(u)=>{setUser(u);};
+  const handleLogout=()=>{localStorage.removeItem("monat_user");setUser(null);};
+
+  if(checking){
+    return <div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center"}}>
+        <div style={{width:48,height:48,borderRadius:12,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:C.white,margin:"0 auto 12px"}}>✦</div>
+        <div style={{fontSize:13,color:C.gray}}>Loading...</div>
+      </div>
+    </div>;
+  }
+
+  if(!user) return <LoginScreen onLogin={handleLogin}/>;
+  return <MarketingMachine user={user} language={language} onLogout={handleLogout}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
+</script>
+</body>
+</html>
