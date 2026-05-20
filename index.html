@@ -16,6 +16,7 @@ input,textarea,button,select{font-family:inherit}
 <script>
 const G={bg:"#f8f7ff",card:"#ffffff",border:"#e8e6f0",purple:"#7664d0",purpleDim:"#ede9ff",purpleBorder:"rgba(118,100,208,0.3)",dark:"#2e2a4a",white:"#fff",muted:"#6b6b6b",green:"#2d9e6b",red:"#dc2626",gbg:"#f4f3f9",gl:"#e8e6f0"};
 
+let appLang=localStorage.getItem("nt_lang")||"English";
 const T={
 English:{welcome:"Welcome",choose:tt(appLang).choose,lang:"Language",logout:tt(appLang).logout,trial:"d left",
 loginTitle:tt(appLang).loginTitle,loginSub:tt(appLang).loginSub,loginEmail:tt(appLang).loginEmail,loginPass:tt(appLang).loginPass,
@@ -323,7 +324,6 @@ return d.text||"";
 };
 
 let state={screen:"login",user:null};
-let appLang=localStorage.getItem("nt_lang")||"English";
 const setState=(updates)=>{state={...state,...updates};render();};
 
 const btnStyle=(disabled,bg)=>({background:disabled?"#e8e6f0":bg||G.dark,color:disabled?G.muted:"#fff",border:"none",borderRadius:"10px",padding:"13px 24px",fontSize:"14px",fontWeight:"700",cursor:disabled?"not-allowed":"pointer",fontFamily:"inherit"});
@@ -978,11 +978,13 @@ const saved=localStorage.getItem("nt_u");
 if(saved){
 try{
 const u=JSON.parse(saved);
+const checkTimeout=setTimeout(()=>{localStorage.removeItem("nt_u");render();},5000);
 apiAuth({action:"check",userId:u.id}).then(res=>{
+clearTimeout(checkTimeout);
 if(res.success){state={screen:"dashboard",user:res.user};render();}
 else{localStorage.removeItem("nt_u");render();}
-}).catch(()=>render());
-}catch(e){render();}
+}).catch(()=>{clearTimeout(checkTimeout);localStorage.removeItem("nt_u");render();});
+}catch(e){localStorage.removeItem("nt_u");render();}
 }else{render();}
 </script>
 </body>
