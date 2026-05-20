@@ -8,6 +8,8 @@
 { "src": "/api/auth", "dest": "/auth.js" },
 { "src": "/api/claude", "dest": "/claude.js" },
 { "src": "/api/admin", "dest": "/admin.js" },
+{ "src": "/marketing.html", "dest": "/public/marketing.html" },
+{ "src": "/outreach.html", "dest": "/public/outreach.html" },
 { "src": "/(.*)", "dest": "/public/$1" }
 ]
 }
