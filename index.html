@@ -5,87 +5,672 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Network Tools by Streamflux</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Georgia, serif; background: #f8f7ff; color: #111; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-.wrap { width: 100%; max-width: 480px; }
-.logo { text-align: center; margin-bottom: 28px; }
-.logo-icon { width: 52px; height: 52px; border-radius: 13px; background: #2e2a4a; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; margin: 0 auto 12px; }
-.logo h1 { font-size: 20px; letter-spacing: 2px; }
-.logo p { font-size: 12px; color: #6b6b6b; margin-top: 2px; }
-.lang-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; }
-.lang-row label { font-size: 12px; color: #6b6b6b; }
-select { padding: 6px 12px; border-radius: 16px; border: 1px solid #e8e6f0; background: #fff; font-size: 13px; cursor: pointer; outline: none; font-family: inherit; }
-.tools { display: flex; flex-direction: column; gap: 14px; }
-.tool { display: block; text-decoration: none; border-radius: 14px; padding: 22px 20px; cursor: pointer; }
-.tool-mkt { background: #2e2a4a; }
-.tool-out { background: #1a1a3a; }
-.tool-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.tool-icon { font-size: 26px; }
-.tool-title { font-size: 17px; font-weight: bold; color: #fff; }
-.tool-sub { font-size: 8px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
-.tool-arrow { margin-left: auto; color: rgba(255,255,255,0.5); font-size: 18px; }
-.tool-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 12px; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tag { font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.65); border-radius: 10px; padding: 3px 9px; }
-.foot { text-align: center; margin-top: 32px; font-size: 9px; color: #e8e6f0; letter-spacing: 2px; text-transform: uppercase; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#f8f7ff;color:#111;min-height:100vh}
+input,textarea,button,select{font-family:inherit}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f0eeff}::-webkit-scrollbar-thumb{background:#b8aff0;border-radius:3px}
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="logo">
-<div class="logo-icon">✦</div>
-<h1>Network Tools</h1>
-<p>by Streamflux</p>
-</div>
-<div class="lang-row">
-<label>Language:</label>
-<select id="langSel" onchange="saveLang(this.value)">
-<option value="English">🇺🇸 English</option>
-<option value="Spanish">🇪🇸 Español (España)</option>
-<option value="Mexican">🇲🇽 Español (México)</option>
-<option value="Italian">🇮🇹 Italiano</option>
-<option value="French">🇫🇷 Français</option>
-<option value="Portuguese">🇧🇷 Português</option>
-<option value="German">🇩🇪 Deutsch</option>
-<option value="Arabic">🇦🇪 العربية</option>
-<option value="Chinese">🇨🇳 中文</option>
-</select>
-</div>
-<div class="tools">
-<a class="tool tool-mkt" href="#" onclick="goTo('marketing')">
-<div class="tool-head">
-<span class="tool-icon">📣</span>
-<div><div class="tool-title">Marketing Machine</div><div class="tool-sub">by Streamflux</div></div>
-<span class="tool-arrow">→</span>
-</div>
-<p class="tool-desc">Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Full posting package in seconds.</p>
-<div class="tags">
-<span class="tag">WhatsApp Status</span><span class="tag">Instagram Feed</span><span class="tag">Instagram Shop</span>
-<span class="tag">Instagram Reel</span><span class="tag">Facebook Feed</span><span class="tag">Facebook Shop</span>
-<span class="tag">TikTok Shop</span><span class="tag">Image / Canva</span><span class="tag">7-Day Schedule</span>
-</div>
-</a>
-<a class="tool tool-out" href="#" onclick="goTo('outreach')">
-<div class="tool-head">
-<span class="tool-icon">🤝</span>
-<div><div class="tool-title">Outreach Machine</div><div class="tool-sub">by Streamflux</div></div>
-<span class="tool-arrow">→</span>
-</div>
-<p class="tool-desc">Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters.</p>
-<div class="tags">
-<span class="tag">WhatsApp Message</span><span class="tag">SMS</span><span class="tag">Phone Script</span>
-<span class="tag">Email</span><span class="tag">Formal Letter</span><span class="tag">4 Follow-Ups</span>
-</div>
-</a>
-</div>
-<div class="foot">Network Tools by Streamflux · Powered by Claude AI</div>
-</div>
+<div id="root"><div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f8f7ff"><div style="text-align:center"><div style="font-size:32px;margin-bottom:12px">✦</div><div style="color:#6b6b6b;font-size:13px">Loading...</div></div></div></div>
 <script>
-const lang = localStorage.getItem('nt_lang') || 'English';
-document.getElementById('langSel').value = lang;
-function saveLang(v) { localStorage.setItem('nt_lang', v); }
-function goTo(tool) { window.location.href = '/' + tool + '.html'; }
+const G={bg:"#f8f7ff",card:"#ffffff",border:"#e8e6f0",purple:"#7664d0",purpleDim:"#ede9ff",purpleBorder:"rgba(118,100,208,0.3)",dark:"#2e2a4a",white:"#fff",muted:"#6b6b6b",green:"#2d9e6b",red:"#dc2626",gbg:"#f4f3f9",gl:"#e8e6f0"};
+
+const apiAuth=async(body)=>{try{const r=await fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.json();}catch(e){return{error:e.message};}};
+const apiClaude=async(prompt,maxTokens=1000)=>{
+const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens})});
+const d=await r.json();
+if(d.error)throw new Error(d.error);
+return d.text||"";
+};
+
+let state={screen:"login",user:null};
+const setState=(updates)=>{state={...state,...updates};render();};
+
+const btnStyle=(disabled,bg)=>({background:disabled?"#e8e6f0":bg||G.dark,color:disabled?G.muted:"#fff",border:"none",borderRadius:"10px",padding:"13px 24px",fontSize:"14px",fontWeight:"700",cursor:disabled?"not-allowed":"pointer",fontFamily:"inherit"});
+const inputStyle={width:"100%",background:G.gbg,border:`1.5px solid ${G.gl}`,borderRadius:"9px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
+const cardStyle={background:G.card,border:`1px solid ${G.border}`,borderRadius:"14px",padding:"22px",marginBottom:"16px"};
+const labelStyle={display:"block",fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:G.muted,textTransform:"uppercase",marginBottom:"4px"};
+
+function el(tag,attrs,...children){
+const e=document.createElement(tag);
+if(attrs)Object.entries(attrs).forEach(([k,v])=>{
+if(k==="style"&&typeof v==="object")Object.assign(e.style,v);
+else if(k.startsWith("on"))e.addEventListener(k.slice(2).toLowerCase(),v);
+else if(k==="class")e.className=v;
+else e.setAttribute(k,v);
+});
+children.flat().forEach(c=>{if(c==null||c===false)return;e.appendChild(typeof c==="string"?document.createTextNode(c):c);});
+return e;
+}
+
+function field(label,type,value,onChange,placeholder,hint){
+const wrap=el("div",{style:{marginBottom:"14px"}});
+if(label)wrap.appendChild(el("label",{style:labelStyle},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));
+const inp=el("input",{type:type||"text",placeholder:placeholder||"",style:inputStyle});
+inp.value=value||"";
+inp.addEventListener("input",e=>onChange(e.target.value));
+wrap.appendChild(inp);
+return wrap;
+}
+
+function textarea(label,value,onChange,placeholder,rows,hint){
+const wrap=el("div",{style:{marginBottom:"14px"}});
+if(label)wrap.appendChild(el("label",{style:labelStyle},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));
+const ta=el("textarea",{placeholder:placeholder||"",rows:rows||3,style:{...inputStyle,resize:"vertical"}});
+ta.value=value||"";
+ta.addEventListener("input",e=>onChange(e.target.value));
+wrap.appendChild(ta);
+return wrap;
+}
+
+function chips(label,hint,options,selected,onToggle,single){
+const wrap=el("div",{style:{marginBottom:"18px"}});
+if(label)wrap.appendChild(el("label",{style:labelStyle},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},hint));
+const grid=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"7px"}});
+options.forEach(opt=>{
+const val=typeof opt==="string"?opt:opt.value;
+const lbl=typeof opt==="string"?opt:opt.label;
+const sub=typeof opt==="object"?opt.desc:null;
+const active=single?selected===val:(selected||[]).includes(val);
+const btn=el("button",{style:{background:active?G.dark:G.gbg,border:`1.5px solid ${active?G.dark:G.gl}`,borderRadius:"9px",color:active?"#fff":"#555",fontSize:"12px",padding:sub?"9px 13px":"7px 12px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",transition:"all 0.15s"}},
+el("div",{style:{fontWeight:active?"700":"400"}},lbl),
+...(sub?[el("div",{style:{fontSize:"11px",color:active?"#b8aff0":G.muted,marginTop:"2px"}},sub)]:[])
+);
+btn.addEventListener("click",()=>onToggle(val));
+grid.appendChild(btn);
+});
+wrap.appendChild(grid);
+return wrap;
+}
+
+function copyCard(title,content){
+const card=el("div",{style:{background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"12px",padding:"14px 16px",marginBottom:"11px"}});
+const copyBtn=el("button",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"6px",color:G.muted,fontSize:"11px",padding:"4px 11px",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},"Copy");
+copyBtn.addEventListener("click",()=>{
+navigator.clipboard.writeText(content||"");
+copyBtn.textContent="✓ Copied";copyBtn.style.color=G.green;copyBtn.style.borderColor=G.green;
+setTimeout(()=>{copyBtn.textContent="Copy";copyBtn.style.color=G.muted;copyBtn.style.borderColor=G.gl;},1800);
+});
+card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"9px"}},
+el("span",{style:{fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:G.dark,textTransform:"uppercase"}},title),
+copyBtn
+));
+card.appendChild(el("p",{style:{color:"#111",fontSize:"13px",lineHeight:"1.8",margin:"0",whiteSpace:"pre-wrap"}},content||""));
+return card;
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+function renderLogin(){
+let email="",password="",loading=false;
+const wrap=el("div",{style:{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"24px",background:G.bg}});
+const inner=el("div",{style:{width:"100%",maxWidth:"400px"}});
+inner.appendChild(el("div",{style:{textAlign:"center",marginBottom:"28px"}},
+el("div",{style:{width:"52px",height:"52px",borderRadius:"13px",background:G.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",color:"#fff",margin:"0 auto 12px"}},"✦"),
+el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Network Tools"),
+el("div",{style:{fontSize:"12px",color:G.muted,marginTop:"2px"}},"by Streamflux")
+));
+const card=el("div",{style:cardStyle});
+card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},"Welcome back"));
+card.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"20px"}},"Sign in to your account"));
+const emailInp=el("input",{type:"email",placeholder:"your@email.com",style:{...inputStyle,marginBottom:"12px"}});
+const passInp=el("input",{type:"password",placeholder:"••••••••",style:{...inputStyle,marginBottom:"16px"}});
+emailInp.addEventListener("input",e=>email=e.target.value);
+passInp.addEventListener("input",e=>password=e.target.value);
+const errDiv=el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"9px 12px",color:G.red,fontSize:"13px",marginBottom:"12px",display:"none"}});
+const loginBtn=el("button",{style:{...btnStyle(false),width:"100%",fontSize:"15px"}},"Sign In →");
+const doLogin=async()=>{
+if(!email||!password){errDiv.textContent="Please enter your email and password.";errDiv.style.display="block";return;}
+loginBtn.textContent="Signing in...";loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color=G.muted;
+errDiv.style.display="none";
+const res=await apiAuth({action:"login",email,password});
+if(res.success){localStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}
+else{errDiv.textContent="⚠ "+(res.error||"Login failed.");errDiv.style.display="block";loginBtn.textContent="Sign In →";loginBtn.disabled=false;loginBtn.style.background=G.dark;loginBtn.style.color="#fff";}
+};
+loginBtn.addEventListener("click",doLogin);
+passInp.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+card.appendChild(el("label",{style:labelStyle},"Email"));
+card.appendChild(emailInp);
+card.appendChild(el("label",{style:labelStyle},"Password"));
+card.appendChild(passInp);
+card.appendChild(errDiv);
+card.appendChild(loginBtn);
+card.appendChild(el("p",{style:{textAlign:"center",color:G.muted,fontSize:"11px",marginTop:"14px"}},"Need help? ",el("span",{style:{color:G.purple}},"support@streamflux.app")));
+inner.appendChild(card);
+wrap.appendChild(inner);
+return wrap;
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────────────────
+function renderDashboard(){
+const user=state.user;
+const wrap=el("div",{style:{minHeight:"100vh",background:G.bg}});
+const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 22px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
+const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"10px"}});
+navLeft.appendChild(el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:G.dark,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"));
+navLeft.appendChild(el("div",{},
+el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
+el("div",{style:{fontSize:"8px",color:G.purple,letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
+));
+nav.appendChild(navLeft);
+const navRight=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
+if(user.trialActive){const badge=el("span",{style:{fontSize:"10px",color:G.purple,background:G.purpleDim,borderRadius:"10px",padding:"3px 8px"}},`⏰ ${user.daysLeft}d left`);navRight.appendChild(badge);}
+navRight.appendChild(el("span",{style:{fontSize:"12px",color:G.muted}},user.name));
+const logoutBtn=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},"Log Out");
+logoutBtn.addEventListener("click",()=>{localStorage.removeItem("nt_u");setState({screen:"login",user:null});});
+navRight.appendChild(logoutBtn);
+nav.appendChild(navRight);
+wrap.appendChild(nav);
+
+const content=el("div",{style:{maxWidth:"700px",margin:"0 auto",padding:"40px 18px 60px"}});
+const savedLang=localStorage.getItem("nt_lang")||"English";
+content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"36px"}},
+el("div",{style:{fontSize:"28px",marginBottom:"8px"}},"✦"),
+el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},`Welcome, ${user.name.split(" ")[0]}!`),
+el("p",{style:{fontSize:"14px",color:G.muted,marginBottom:"16px"}},"Choose a tool to get started."),
+el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
+el("span",{style:{fontSize:"12px",color:G.muted}},"Language:"),
+(()=>{
+const sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:`1px solid ${G.gl}`,background:G.card,fontSize:"13px",cursor:"pointer",outline:"none"}});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===savedLang)o.selected=true;sel.appendChild(o);});
+sel.addEventListener("change",e=>localStorage.setItem("nt_lang",e.target.value));
+return sel;
+})()
+)
+));
+
+const grid=el("div",{style:{display:"flex",flexDirection:"column",gap:"16px"}});
+
+// Marketing Machine card
+const mktCard=el("div",{style:{background:G.dark,borderRadius:"16px",padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(46,42,74,0.15)"}});
+mktCard.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"10px"}},
+el("span",{style:{fontSize:"28px"}},"📣"),
+el("div",{},el("div",{style:{fontSize:"18px",fontWeight:"700",color:"#fff"}},"Marketing Machine"),el("div",{style:{fontSize:"8px",color:"rgba(255,255,255,0.5)",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")),
+el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px"}},"→")
+));
+mktCard.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6",marginBottom:"14px"}},"Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Full posting package in seconds."));
+const mktTags=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"6px"}});
+["WhatsApp Status","Instagram Feed","Instagram Shop","Instagram Reel","Facebook Feed","Facebook Shop","TikTok Shop","Image / Canva","7-Day Schedule"].forEach(t=>mktTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
+mktCard.appendChild(mktTags);
+mktCard.addEventListener("click",()=>setState({screen:"app1"}));
+grid.appendChild(mktCard);
+
+// Outreach Machine card
+const outCard=el("div",{style:{background:"#1a1a3a",borderRadius:"16px",padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(26,26,58,0.15)"}});
+outCard.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"10px"}},
+el("span",{style:{fontSize:"28px"}},"🤝"),
+el("div",{},el("div",{style:{fontSize:"18px",fontWeight:"700",color:"#fff"}},"Outreach Machine"),el("div",{style:{fontSize:"8px",color:"rgba(255,255,255,0.5)",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")),
+el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px"}},"→")
+));
+outCard.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6",marginBottom:"14px"}},"Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters."));
+const outTags=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"6px"}});
+["WhatsApp Message","SMS","Phone Script","Email","Formal Letter","4 Follow-Ups","Schedule"].forEach(t=>outTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
+outCard.appendChild(outTags);
+outCard.addEventListener("click",()=>setState({screen:"app2"}));
+grid.appendChild(outCard);
+
+content.appendChild(grid);
+content.appendChild(el("div",{style:{marginTop:"40px",textAlign:"center",fontSize:"9px",color:G.gl,letterSpacing:"2px",textTransform:"uppercase"}},"Network Tools by Streamflux · Powered by Claude AI"));
+wrap.appendChild(content);
+return wrap;
+}
+
+// ── APP 1 - MARKETING MACHINE ──────────────────────────────────────────────
+function renderApp1(){
+const LANGS=[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}];
+const GOALS=[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products to customers"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join as Market Partners"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire and energize your MONAT team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your MONAT presence & following"}];
+const PAIN_POINTS=[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls"},{value:"color",label:"🎨 Color Fade"},{value:"aging_skin",label:"🪞 Aging Skin"},{value:"dull_skin",label:"🌥️ Dull Skin"},{value:"no_volume",label:"😔 No Volume"},{value:"scalp",label:"😣 Itchy Scalp"}];
+const RECRUIT=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business"},{value:"loves_beauty",label:"💄 Loves Beauty",desc:"Passion into income"},{value:"entrepreneur",label:"🚀 Own Boss",desc:"No ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn & raise family"},{value:"side_hustle",label:"⚡ Side Hustle",desc:"That actually pays"},{value:"social_media",label:"📱 Social Media",desc:"Monetize posts"},{value:"student",label:"🎓 Student",desc:"Build income"}];
+const MOTIVATE=[{value:"keep_going",label:"💪 Keep Going"},{value:"celebrate",label:"🏆 Celebrate Win"},{value:"monday_fire",label:"🔥 Monday Motivation"},{value:"consistency",label:"📅 Consistency"},{value:"belief",label:"✨ Believe in Yourself"},{value:"new_member",label:"🎉 Welcome New Member"}];
+const BRAND=[{value:"natural",label:"🌿 Natural Ingredients"},{value:"results",label:"📸 Real Results"},{value:"cruelty_free",label:"🐰 Cruelty-Free"},{value:"made_in_usa",label:"🇺🇸 Made in USA"},{value:"awards",label:"🏅 80+ Awards"},{value:"community",label:"👥 Community"},{value:"opportunity",label:"💼 Opportunity"},{value:"gratitude",label:"❤️ Gratitude Foundation"}];
+const PRODUCTS={hair:[{value:"bond_iq",label:"MONAT Bond IQ™",desc:"Stronger Hair"},{value:"ir_clinical",label:"IR Clinical™",desc:"Hair Thinning Defense"},{value:"rejuveniqe",label:"Rejuveniqe Oil™",desc:"13+ natural oils"},{value:"anti_frizz",label:"Anti-Frizz™",desc:"Deep Treatment"},{value:"curl",label:"Curl Perfection™",desc:"Curl & Wave"},{value:"rejuvabeads",label:"REJUVABEADS®",desc:"Split End Mender"},{value:"scalp_scrub",label:"Scalp Purifying Scrub",desc:"Deep cleanse"},{value:"scalp_comfort",label:"Scalp Comfort™",desc:"Rebalancing"},{value:"color_care",label:"Color Care",desc:"Color-Treated Hair"},{value:"densifying",label:"Densifying System",desc:"Volume & thickness"},{value:"ir_supp",label:"IR™ Supplement",desc:"Daily hair health"}],skin:[{value:"barrier",label:"Barrier Booster™",desc:"Glass Skin"},{value:"glowtint",label:"GlowTint™ Lip Oil",desc:"Skincare gloss"}],wellness:[{value:"wellness",label:"Wellness Supplements",desc:"Energy & mood"}],mens:[{value:"men",label:"MONAT for MEN™",desc:"Men's collection"}]};
+const PLATFORMS=[{value:"wa_status",label:"📱 WhatsApp Status",desc:"Post to all contacts"},{value:"wa_message",label:"💬 WhatsApp Message",desc:"Personal 1-on-1"},{value:"ig_feed",label:"📸 Instagram Feed",desc:"Post + hashtags"},{value:"ig_shop",label:"🛍️ Instagram Shop",desc:"Shop-optimized post"},{value:"ig_reel",label:"🎬 Instagram Reel",desc:"Video script"},{value:"fb_feed",label:"👍 Facebook Feed",desc:"Facebook post"},{value:"fb_shop",label:"🛒 Facebook Shop",desc:"Shop-optimized post"},{value:"tiktok_shop",label:"🎵 TikTok Shop",desc:"TikTok video script"},{value:"image",label:"🖼️ Image / Canva",desc:"AI prompts + design brief"}];
+const TONES=[{value:"friendly",label:"Friendly & Warm",desc:"Like a real friend"},{value:"professional",label:"Professional",desc:"Polished & credible"},{value:"exciting",label:"Exciting & Energetic",desc:"High energy"},{value:"inspirational",label:"Inspirational",desc:"Uplifting"},{value:"urgent",label:"Urgent",desc:"Act now"}];
+const TABS=[{id:"wa_status",label:"📱 WA Status"},{id:"wa_message",label:"💬 WA Message"},{id:"ig_feed",label:"📸 IG Feed"},{id:"ig_shop",label:"🛍️ IG Shop"},{id:"ig_reel",label:"🎬 IG Reel"},{id:"fb_feed",label:"👍 FB Feed"},{id:"fb_shop",label:"🛒 FB Shop"},{id:"tiktok_shop",label:"🎵 TikTok"},{id:"image",label:"🖼️ Image"},{id:"schedule",label:"📅 Schedule"}];
+const allProds=Object.values(PRODUCTS).flat();
+function tog(arr,val){return arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];}
+
+let s={step:1,language:localStorage.getItem("nt_lang")||"English",goal:"",products:[],contexts:[],platforms:[],tone:"friendly",name:"",link:"",phone:"",loading:false,loadingMsg:"",loadingPct:0,result:{},activeTab:"wa_status",error:""};
+
+const wrap=el("div",{style:{minHeight:"100vh",background:G.bg}});
+
+function canProceed(){
+if(s.step===1)return!!s.goal&&!!s.name&&!!s.link;
+if(s.step===2)return s.contexts.length>0;
+if(s.step===3)return s.platforms.length>0;
+if(s.step===4)return!!s.tone;
+return false;
+}
+
+function ctxOpts(){return s.goal==="sell"?PAIN_POINTS:s.goal==="recruit"?RECRUIT:s.goal==="motivate"?MOTIVATE:BRAND;}
+
+function buildBase(){
+const ci=s.contexts.map(c=>ctxOpts().find(o=>o.value===c)).filter(Boolean);
+const selProds=allProds.filter(p=>s.products.includes(p.value));
+const tl=TONES.find(t=>t.value===s.tone)?.label||s.tone;
+const pl=selProds.length>0?`\nFEATURED PRODUCTS: ${selProds.map(p=>p.label+" — "+p.desc).join(" | ")}`:"";
+const langLabel=s.language==="Mexican"?"Mexican Spanish (use Mexican expressions and phrases natural to Mexico — not Spain Spanish)":s.language;
+const gc={
+sell:`GOAL: Sell MONAT products.${pl}\nPAIN POINTS: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Lead with deep empathy FIRST. ONE pain point per version, ONE product, ONE CTA.`,
+recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ci.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.`,
+motivate:`GOAL: Motivate MONAT team.\nTHEMES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.`,
+brand:`GOAL: Build MONAT brand awareness.\nANGLES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Educate and inspire. Premium trustworthy brand.`
+}[s.goal]||"";
+return `You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Paraben-free | Made in USA | 80+ awards\nPARTNER: ${s.name} | LINK: ${s.link}${s.phone?" | WHATSAPP: "+s.phone:""}\nTONE: ${tl}\n${gc}\nGOLDEN RULES: ONE message per version. SHORT is powerful. Never sound like an ad.\nCRITICAL: Write ALL content in ${langLabel}.`;
+}
+
+function platPrompt(plat,base){
+const selProds=allProds.filter(p=>s.products.includes(p.value));
+const prodStr=selProds.length>0?" for "+selProds.map(p=>p.label).join(", "):"";
+const p={
+wa_status:`${base}\n\nWrite TWO WhatsApp STATUS versions in ${s.language}. Max 70 words each. 2-3 emojis. ONE focus per version. Link: ${s.link}. Signed: ${s.name}.\nVersion A: personal story angle.\nVersion B: surprising result or question hook.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]`,
+wa_message:`${base}\n\nWrite TWO personal WhatsApp MESSAGES in ${s.language} to send 1-on-1. 70-100 words each. ONE focus. Genuine. No pressure. Link: ${s.link}. Signed: ${s.name}. 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]`,
+ig_feed:`${base}\n\nWrite TWO Instagram FEED captions in ${s.language}. Line 1 stops scroll (max 125 chars). ONE story per version. CTA + link: ${s.link}. Signed: ${s.name}. Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]`,
+ig_shop:`${base}\n\nWrite TWO Instagram SHOP POSTS in ${s.language}. ONE benefit focus. 100-130 words each. Shop now → + link: ${s.link}.\nVersion A: lead with transformation.\nVersion B: lead with problem.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]`,
+ig_reel:`${base}\n\nWrite TWO Instagram REEL scripts in ${s.language} (30-45 sec). ONE hook, ONE problem, ONE solution per version.\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): [${s.name} | ${s.link}]\n\nThen once: Audio mood, Thumbnail text, Caption + 12 hashtags.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[audio, thumbnail, caption]`,
+fb_feed:`${base}\n\nWrite TWO Facebook FEED POSTS in ${s.language}. 150-200 words each. ONE story per version. End with question. CTA + link: ${s.link}. 2-3 emojis.\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]`,
+fb_shop:`${base}\n\nWrite TWO Facebook SHOP POSTS in ${s.language}. ONE benefit focus. 100-130 words each. 3 bullet points with ✓. Shop Now + link: ${s.link}.\nVersion A: focus on result.\nVersion B: focus on solving pain.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]`,
+tiktok_shop:`${base}\n\nWrite TWO TikTok SHOP scripts in ${s.language} (35-45 sec). Native TikTok feel. ONE hook, ONE problem, ONE product, ONE result.\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): [${s.name} — ${s.link}]\n\nThen once: Product tag moment, Pinned comment, Caption + hashtags, Audio mood.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[extras]`,
+image:`${base}\n\nCreate a complete IMAGE CONTENT PACKAGE in ${s.language}${prodStr}. ONE hair problem focus only.\n\nIMAGE PROMPT 1 — HAIR TRANSFORMATION (paste into ChatGPT/Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. No product bottle. Show gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean white background, editorial beauty photography, hyperrealistic, 8K. One detailed paragraph ready to paste.\n\nIMAGE PROMPT 2 — MONAT PRODUCT SHOT (paste into ChatGPT/Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy #2e2a4a + periwinkle purple #7664d0 + white label. MONAT logo visible, product name on label, premium material. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 — Hook (transformation photo): [exact short headline, 5-7 words]\nSlide 2 — Before/After split: LEFT: [BEFORE label] RIGHT: [AFTER label] CENTER: [VS]\nSlide 3 — Product Shot: [product name + ONE benefit]\nSlide 4 — CTA: [CTA text + ${s.name} + ${s.link}]\n\nCANVA DESIGN NOTES:\n• Colors: navy #2e2a4a + purple #7664d0 + white\n• White serif headline on dark overlay bar\n• Luxury beauty brand feel\n\nCAPTION (ready to post in ${s.language}):\n[3 powerful sentences. One pain → solution → CTA. Link: ${s.link} — ${s.name}]\n\nHASHTAGS: [25 hashtags]`
+};
+return p[plat]||"";
+}
+
+async function generate(){
+s.loading=true;s.error="";s.result={};s.loadingPct=0;renderApp1Content();
+const base=buildBase();
+try{
+const pStep=Math.floor(80/(s.platforms.length+1));let pct=5;
+for(const plat of s.platforms){
+const lbl=PLATFORMS.find(p=>p.value===plat)?.label||plat;
+s.loadingMsg=`Writing ${lbl}...`;pct+=pStep;s.loadingPct=Math.min(pct,85);renderApp1Content();
+const prompt=platPrompt(plat,base);
+if(!prompt)continue;
+const text=await apiClaude(prompt,1000);
+s.result[plat]=text;
+}
+s.loadingMsg="Building 7-day schedule...";s.loadingPct=90;renderApp1Content();
+const platLbls=s.platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label||p).join(", ");
+const schedText=await apiClaude(`MONAT social media strategist. Create a 7-day posting schedule in ${s.language}.\nPlatforms: ${platLbls}\nGoal: ${GOALS.find(g=>g.value===s.goal)?.label}\n\nFormat:\nDay 1 — Launch Day\n- specific task\n- specific task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule.`,700);
+s.result.scheduleRaw=schedText;
+s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";
+}catch(err){s.error=err.message||"Error. Please try again.";}
+s.loading=false;renderApp1Content();
+}
+
+function parseSched(text){
+const lines=text.split("\n"),days=[];let cur=null;
+const icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
+for(const line of lines){const t=line.trim();if(!t)continue;
+if(/^(day\s*\d|día\s*\d|jour\s*\d|tag\s*\d|giorno\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}
+else if(cur){const c=t.replace(/^[-•→*✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}}
+if(cur)days.push(cur);
+return days.length>=3?days:[{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},{day:"Day 3",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged"]},{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},{day:"Day 5",icon:"📊",tasks:["Share before/after result","Engage with community"]},{day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share product demo"]},{day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]}];
+}
+
+function renderApp1Content(){
+wrap.innerHTML="";
+const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
+const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
+const backBtn=el("button",{style:{background:G.gbg,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},"← Home");
+backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
+navLeft.appendChild(backBtn);
+navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px"}},"📣 Marketing Machine"));
+nav.appendChild(navLeft);
+nav.appendChild(el("span",{style:{fontSize:"10px",color:G.purple,background:G.purpleDim,borderRadius:"10px",padding:"3px 8px"}},s.language));
+wrap.appendChild(nav);
+
+if(Object.keys(s.result).length>0&&!s.loading){
+const content=el("div",{style:{maxWidth:"780px",margin:"0 auto",padding:"16px 12px 60px"}});
+content.appendChild(el("div",{style:{background:G.dark,borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},"✦ Package Ready!"),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},`${s.name} · ${s.language}`)));
+const visTabs=TABS.filter(tb=>tb.id==="schedule"||s.platforms.includes(tb.id));
+const tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
+visTabs.forEach(tb=>{
+const btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:s.activeTab===tb.id?G.dark:G.card,color:s.activeTab===tb.id?"#fff":G.muted,border:`1px solid ${s.activeTab===tb.id?G.dark:G.gl}`,fontWeight:s.activeTab===tb.id?"700":"400"}},tb.label);
+btn.addEventListener("click",()=>{s.activeTab=tb.id;renderApp1Content();});
+tabBar.appendChild(btn);
+});
+content.appendChild(tabBar);
+if(s.platforms.includes(s.activeTab)&&s.result[s.activeTab]){content.appendChild(copyCard(TABS.find(tb=>tb.id===s.activeTab)?.label||s.activeTab,s.result[s.activeTab]));}
+if(s.activeTab==="schedule"){
+content.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"10px"}},"Your 7-day posting plan."));
+const days=parseSched(s.result.scheduleRaw||"");
+days.forEach(d=>{
+const dc=el("div",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
+dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:G.dark}},d.day)));
+d.tasks.forEach(t=>{const row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:G.purple,fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
+content.appendChild(dc);
+});
+}
+const newBtn=el("button",{style:{...btnStyle(false),marginTop:"8px"}},"← New Content");
+newBtn.addEventListener("click",()=>{s.result={};s.step=1;s.goal="";s.products=[];s.contexts=[];s.platforms=[];s.error="";renderApp1Content();});
+content.appendChild(newBtn);
+wrap.appendChild(content);
+return;
+}
+
+const content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
+const prog=el("div",{style:{display:"flex",gap:"4px",marginBottom:"20px"}});
+for(let i=0;i<4;i++){prog.appendChild(el("div",{style:{flex:"1",height:"3px",background:s.step>i+1?G.dark:s.step===i+1?G.purple:G.gl,borderRadius:"2px"}}));}
+content.appendChild(prog);
+
+// Profile card
+const profCard=el("div",{style:cardStyle});
+profCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"8px"}},"👤 Your Profile"));
+const profGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px"}});
+[{k:"name",l:"Name *",p:"e.g. Maria"},{k:"link",l:"MONAT Link *",p:"yourname.mymonat.com"},{k:"phone",l:"WhatsApp",p:"+1 (555) 000"}].forEach(f=>{
+const d=el("div",{});
+d.appendChild(el("label",{style:{fontSize:"9px",color:G.muted,display:"block",marginBottom:"3px"}},f.l));
+const inp=el("input",{type:"text",placeholder:f.p,style:{...inputStyle,padding:"8px 10px",fontSize:"12px",borderRadius:"7px"}});
+inp.value=s[f.k]||"";
+inp.addEventListener("input",e=>s[f.k]=e.target.value);
+d.appendChild(inp);
+profGrid.appendChild(d);
+});
+profCard.appendChild(profGrid);
+if(!s.name||!s.link)profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},"Fill in your name and MONAT link to continue"));
+content.appendChild(profCard);
+
+const stepCard=el("div",{style:cardStyle});
+if(s.step===1){
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 1"));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"🎯 What Is Your Goal?"));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Everything will be tailored around this."));
+stepCard.appendChild(chips(null,null,GOALS,s.goal,v=>{s.goal=v;renderApp1Content();},true));
+}
+if(s.step===2){
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 2"));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},`💡 ${s.goal==="sell"?"Which Problem Are You Solving?":s.goal==="recruit"?"Who Are You Targeting?":s.goal==="motivate"?"What's the Theme?":"What to Highlight?"}`));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Pick all that apply."));
+stepCard.appendChild(chips(null,null,ctxOpts(),s.contexts,v=>{s.contexts=tog(s.contexts,v);renderApp1Content();}));
+if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.contexts.length} selected`));
+if(s.goal==="sell"){
+stepCard.appendChild(el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:`1px solid ${G.gl}`}},el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},"🛍️ Choose a Product (optional)"),el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 12px"}},"Select to focus all content on a specific product.")));
+[{k:"hair",l:"💇 Hair Care"},{k:"skin",l:"🌿 Skin Care"},{k:"wellness",l:"💊 Wellness"},{k:"mens",l:"👨 Men's"}].forEach(cat=>{
+stepCard.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:G.muted,letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.l));
+stepCard.appendChild(chips(null,null,PRODUCTS[cat.k],s.products,v=>{s.products=tog(s.products,v);renderApp1Content();}));
+});
+}
+}
+if(s.step===3){
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 3"));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"📣 Where Are You Posting?"));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Select all platforms — we generate everything at once."));
+stepCard.appendChild(chips(null,null,PLATFORMS,s.platforms,v=>{s.platforms=tog(s.platforms,v);renderApp1Content();}));
+if(s.platforms.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.platforms.length} platform${s.platforms.length>1?"s":""} selected + 7-day schedule`));
+}
+if(s.step===4){
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 4"));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"✨ Tone & Style"));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"How should your content feel?"));
+stepCard.appendChild(chips(null,null,TONES,s.tone,v=>{s.tone=v;renderApp1Content();},true));
+}
+content.appendChild(stepCard);
+
+if(s.loading){
+const lc=el("div",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"14px 18px",marginBottom:"12px"}});
+lc.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"6px"}},el("span",{style:{fontSize:"12px",color:G.dark,fontWeight:"600"}},s.loadingMsg),el("span",{style:{fontSize:"11px",color:G.muted}},`${s.loadingPct}%`)));
+const bar=el("div",{style:{width:"100%",height:"4px",background:G.gl,borderRadius:"2px"}});
+bar.appendChild(el("div",{style:{width:`${s.loadingPct}%`,height:"100%",background:`linear-gradient(90deg,${G.dark},${G.purple})`,borderRadius:"2px",transition:"width 0.4s ease"}}));
+lc.appendChild(bar);
+lc.appendChild(el("div",{style:{fontSize:"11px",color:G.muted,marginTop:"6px"}},`Generating in ${s.language}. Please wait...`));
+content.appendChild(lc);
+}
+if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"9px",padding:"10px 13px",marginBottom:"12px",color:G.red,fontSize:"12px"}},`⚠️ ${s.error}`));
+
+const btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9px"}});
+const backB=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"12px 20px",fontSize:"14px",cursor:"pointer"}},"← Back");
+backB.addEventListener("click",()=>{s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});renderApp1Content();});
+btnRow.appendChild(backB);
+if(s.step<4){
+const nextB=el("button",{style:btnStyle(!canProceed()||!s.name||!s.link)},"Continue →");
+nextB.addEventListener("click",()=>{if(!s.name||!s.link){s.error="Fill in your name and MONAT link first.";renderApp1Content();}else if(canProceed()){s.error="";s.step++;renderApp1Content();}else{s.error="Please complete this step to continue.";renderApp1Content();}});
+btnRow.appendChild(nextB);
+}else{
+const genB=el("button",{style:{...btnStyle(!canProceed()||s.loading||!s.name||!s.link),minWidth:"200px"}},s.loading?"✦ Generating...":"✦ Generate Full Package");
+genB.addEventListener("click",()=>{if(canProceed()&&!s.loading&&s.name&&s.link)generate();});
+btnRow.appendChild(genB);
+}
+content.appendChild(btnRow);
+wrap.appendChild(content);
+}
+
+renderApp1Content();
+return wrap;
+}
+
+// ── APP 2 - OUTREACH MACHINE ────────────────────────────────────────────────
+function renderApp2(){
+const DK={bg:"#0a0c0f",card:"#13161b",border:"#1e2330",purple:"#7664d0",text:"#e8eaf0",muted:"#6b7280",green:"#2d9e6b"};
+const CONTACT_TYPES=[{value:"potential_customer",label:"🛍️ Potential Customer",desc:"Interested in buying products"},{value:"potential_partner",label:"🤝 Potential Partner",desc:"Might want to join MONAT"},{value:"existing_customer",label:"💎 Existing Customer",desc:"Already bought products"},{value:"cold_lead",label:"❄️ Cold Lead",desc:"First outreach — no prior contact"},{value:"past_partner",label:"🔄 Past Partner",desc:"Used to be a Market Partner"},{value:"team_member",label:"🌟 Team Member",desc:"Part of your MONAT team"}];
+const REASONS=[{value:"first_outreach",label:"👋 First Outreach",desc:"Never contacted before"},{value:"follow_up_interest",label:"🔥 Follow Up — Showed Interest",desc:"They liked something"},{value:"follow_up_no_reply",label:"👻 Follow Up — No Reply",desc:"No response to first message"},{value:"product_recommendation",label:"💊 Product Recommendation",desc:"Specific product for their problem"},{value:"recruit_invite",label:"🚀 Recruit — Business Invite",desc:"Invite to join as Market Partner"},{value:"repeat_sale",label:"🔁 Repeat Sale / Reorder",desc:"Product running out"},{value:"special_offer",label:"🎁 Special Offer",desc:"Sharing a current deal"},{value:"check_in",label:"💬 Check In",desc:"Just keeping in touch"},{value:"handle_objection",label:"🛡️ Handle Objection",desc:"They said no or not right now"},{value:"welcome_new",label:"🎉 Welcome New Customer/Partner",desc:"They just joined or bought"},{value:"referral_request",label:"🙏 Ask for Referral",desc:"Ask to refer friends/family"},{value:"reconnect",label:"🔗 Reconnect",desc:"Haven't spoken in a long time"}];
+const HAIR=["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"];
+const OUT_PRODUCTS=["MONAT Bond IQ™","IR Clinical™","Rejuveniqe Oil Intensive™","Smoothing Anti-Frizz™","MONAT Curl Perfection™","REJUVABEADS®","Scalp Purifying Scrub","Scalp Comfort™","MONAT Color Care","MONAT Densifying System","MONAT Barrier Booster™","MONAT GlowTint™ Lip Oil","MONAT Wellness Supplements","MONAT for MEN™"];
+const PARTNER_TARGETS=["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"];
+const OBJECTIONS=[{value:"too_expensive",label:"Too Expensive",desc:"Can't afford it"},{value:"not_interested",label:"Not Interested",desc:"General rejection"},{value:"already_have_products",label:"Already Have Products",desc:"Using another brand"},{value:"mlm_skeptical",label:"Skeptical About MLM",desc:"Doesn't believe in network marketing"},{value:"no_time",label:"No Time",desc:"Too busy"},{value:"need_to_think",label:"Need to Think",desc:"Not ready to decide"},{value:"bad_timing",label:"Bad Timing",desc:"Life circumstances"},{value:"tried_before",label:"Tried It Before",desc:"Had a bad experience"}];
+const TONES=[{value:"warm",label:"Warm & Personal",desc:"Friendly, human"},{value:"professional",label:"Professional",desc:"Polished, credible"},{value:"excited",label:"Excited & Enthusiastic",desc:"High energy"},{value:"casual",label:"Casual & Relaxed",desc:"Low pressure"},{value:"urgent",label:"Urgent & Direct",desc:"Time-sensitive"}];
+const TABS=[{id:"messages",label:"💬 WhatsApp & SMS"},{id:"voice",label:"🎙️ Voice Script"},{id:"email",label:"📧 Email"},{id:"letter",label:"✉️ Formal Letter"},{id:"followups",label:"🔄 Follow-Ups"},{id:"schedule",label:"📅 Schedule"}];
+function tog(arr,val){return arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];}
+
+const dkInput={width:"100%",background:"#0d1017",border:`1px solid ${DK.border}`,borderRadius:"8px",color:DK.text,fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
+const dkCard={background:DK.card,border:`1px solid ${DK.border}`,borderRadius:"14px",padding:"22px",marginBottom:"16px"};
+const dkLabel={display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.1em",color:DK.muted,textTransform:"uppercase",marginBottom:"3px"};
+
+let s={language:localStorage.getItem("nt_lang")||"English",contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user?.name||"",yourPhone:"",yourLink:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
+
+const wrap=el("div",{style:{minHeight:"100vh",background:DK.bg,color:DK.text}});
+
+const isPartner=()=>s.contactType==="potential_partner"||s.contactType==="past_partner";
+const isObjection=()=>s.contactReason==="handle_objection";
+const canGenerate=()=>s.contactName&&s.contactType&&s.contactReason&&s.tone&&s.yourName;
+
+function buildCtx(){
+const langLabel=s.language==="Mexican"?"Mexican Spanish (use Mexican expressions, phrases natural to Mexico — not Spain Spanish)":s.language;
+return {ctx:`CONTACT:\n- Name: ${s.contactName}\n- Type: ${CONTACT_TYPES.find(t=>t.value===s.contactType)?.label||s.contactType}\n- Reason: ${REASONS.find(r=>r.value===s.contactReason)?.label||s.contactReason}\n- Tone: ${TONES.find(t=>t.value===s.tone)?.label||s.tone}\n- Prior contact: ${s.priorContact||"none"}\n- Personal note: ${s.personalNote||"none"}${isObjection()?`\n- Objection: ${OBJECTIONS.find(o=>o.value===s.objection)?.label||s.objection}${s.exactObjection?`\n- Their exact words: "${s.exactObjection}"`:""}`:""}\n${s.hairProblems.length>0?`- Hair/skin problems: ${s.hairProblems.join(", ")}`:""}${s.products.length>0?`\n- Products: ${s.products.join(", ")}`:""}${isPartner()&&s.partnerTargets.length>0?`\n- Partner profile: ${s.partnerTargets.join(", ")}`:""}SENDER: ${s.yourName}${s.yourPhone?" | "+s.yourPhone:""}${s.yourLink?" | "+s.yourLink:""}\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | Top 5 haircare on TikTok Shop${isPartner()?"\nPARTNER OPPORTUNITY: Earn up to 5x/month | $1.5B+ paid | Work from home | Be your own boss":""}`,langNote:s.language!=="English"?`\n\nCRITICAL: Write ALL content in ${langLabel}. Every single word must be in that language.`:""};
+}
+
+async function generate(){
+s.loading=true;s.error="";s.result=null;renderApp2Content();
+const {ctx,langNote}=buildCtx();
+try{
+s.loadingMsg="✦ Writing messages & voice script...";renderApp2Content();
+let p1;
+if(isObjection()){p1=`You are an elite MONAT network marketing coach. Write objection-handling responses.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"whatsapp": "60-80 words. ${s.exactObjection?`Respond directly to: "${s.exactObjection}".`:"Acknowledge their concern genuinely."} Reframe positively. Soft question at end. Never pushy.",\n"sms": "Max 160 chars. Warm, understanding.",\n"voice_script": "Phone script. OPENING: acknowledge warmly. EMPATHY: understand concern. REFRAME: new perspective. QUESTION: one soft discovery question. CLOSE: low-commitment next step. Label each section.",\n"email_subject": "Under 9 words. Doesn't feel like sales.",\n"email_body": "140-160 words. Handle objection gracefully. Signed by ${s.yourName}."\n}`;}
+else{p1=`You are an elite MONAT network marketing coach. Write personalised outreach messages.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"whatsapp": "60-90 words. Warm, personal, use ${s.contactName}'s name. Reference their specific situation. Build curiosity. ONE easy question at end. Never salesy. Real friend feel.",\n"sms": "Max 160 chars. Punchy and personal. Their name. Soft CTA.",\n"voice_script": "Phone script. OPENING: greet ${s.contactName} warmly. REASON: why calling specifically for them. VALUE: what's in it for them. CLOSE: one specific low-commitment next step. Label each section. Natural spoken language.",\n"email_subject": "Personal, curiosity-driving. Under 10 words.",\n"email_body": "140-170 words. Personal opener about their situation. Value. CTA. Signed ${s.yourName}${s.yourLink?" | "+s.yourLink:""}."\n}`;}
+const text1=await apiClaude(p1,1300);
+let part1={};try{part1=JSON.parse(text1);}catch{const cm=text1.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part1=JSON.parse(cm[1].trim());}catch{}}const jm=text1.match(/\{[\s\S]*\}/);if(jm){try{part1=JSON.parse(jm[0]);}catch{}}}
+
+s.loadingMsg="✦ Writing letter & follow-ups...";renderApp2Content();
+const p2=`You are an elite MONAT network marketing coach.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"formal_letter": "Full formal letter 260-300 words. Format:\\n[Date]\\n\\n${s.contactName}\\n[Their Address]\\n\\nDear ${s.contactName},\\n\\n4 paragraphs.\\n\\nWarm regards,\\n${s.yourName}${s.yourPhone?"\\n"+s.yourPhone:""}${s.yourLink?"\\n"+s.yourLink:""}",\n"followup_1": "Day 3 no reply. 50-65 words. Friendly nudge. Different angle. Easy question.",\n"followup_2": "Week 1 no reply. 50-65 words. New angle. Light urgency.",\n"followup_3": "Week 2 no reply. 40-55 words. Casual. Zero pressure.",\n"followup_4": "Month 1 no reply. 40-50 words. Final warm touch."\n}`;
+const text2=await apiClaude(p2,1400);
+let part2={};try{part2=JSON.parse(text2);}catch{const cm=text2.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part2=JSON.parse(cm[1].trim());}catch{}}const jm=text2.match(/\{[\s\S]*\}/);if(jm){try{part2=JSON.parse(jm[0]);}catch{}}}
+
+s.loadingMsg="✦ Building follow-up schedule...";renderApp2Content();
+const p3=`MONAT coach. Create a 7-day follow-up schedule for ${s.contactName}.${langNote}\n\nReturn ONLY raw JSON:\n{"schedule":[{"day":"Today — First Contact","icon":"🚀","tasks":["Send the WhatsApp message","If no reply after 3 hours, send the SMS","Note the contact with today's date"]},{"day":"Day 3 — First Follow-Up","icon":"💬","tasks":["Send Follow-Up #1 if no reply","Check if they viewed your message","Note their response or silence"]},{"day":"Day 7 — Week 1","icon":"📞","tasks":["Send Follow-Up #2 with a fresh angle","Make a phone call using your voice script","Listen first before sharing anything"]},{"day":"Day 14 — Two Week Touch","icon":"🔄","tasks":["Send Follow-Up #3 — casual, zero pressure","Share a relevant result or before/after","Update your records"]},{"day":"Day 30 — Monthly Touch","icon":"🌱","tasks":["Send Follow-Up #4 — final warm message","If still no reply add to monthly check-in","Timing is everything — stay patient"]},{"day":"Ongoing","icon":"📅","tasks":["Share MONAT results on WhatsApp Status","Check in every 90 days","Life situations change — keep door open"]}]}`;
+const text3=await apiClaude(p3,900);
+let part3={schedule:[]};try{part3=JSON.parse(text3);}catch{const cm=text3.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part3=JSON.parse(cm[1].trim());}catch{}}const jm=text3.match(/\{[\s\S]*\}/);if(jm){try{part3=JSON.parse(jm[0]);}catch{}}}
+
+s.result={...part1,...part2,...part3};s.activeTab="messages";
+}catch(e){s.error="Error: "+e.message;}
+s.loading=false;renderApp2Content();
+}
+
+function dkCopyCard(title,content,badge){
+const card=el("div",{style:{background:"#0d1017",border:`1px solid ${DK.border}`,borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});
+const copyBtn=el("button",{style:{background:"#13161b",border:`1px solid ${DK.border}`,borderRadius:"6px",color:"#9ca3af",fontSize:"11px",padding:"4px 11px",cursor:"pointer",flexShrink:"0"}},"Copy");
+copyBtn.addEventListener("click",()=>{navigator.clipboard.writeText(content||"");copyBtn.textContent="✓ Copied";copyBtn.style.color="#4caf50";copyBtn.style.borderColor="#2a5a2a";setTimeout(()=>{copyBtn.textContent="Copy";copyBtn.style.color="#9ca3af";copyBtn.style.borderColor=DK.border;},1800);});
+card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"9px"}},
+el("div",{style:{display:"flex",alignItems:"center",gap:"7px"}},el("span",{style:{fontSize:"10px",fontWeight:"700",letterSpacing:"0.1em",color:DK.purple,textTransform:"uppercase"}},title),badge?el("span",{style:{fontSize:"10px",background:"#1a1a2e",color:"#7664d0",border:"1px solid #2e2a4a",borderRadius:"4px",padding:"2px 7px"}},badge):null),
+copyBtn
+));
+card.appendChild(el("p",{style:{color:"#d1d5db",fontSize:"13px",lineHeight:"1.75",margin:"0",whiteSpace:"pre-wrap"}},content||""));
+return card;
+}
+
+function dkChips(label,hint,opts,sel,toggle,single){
+const wrap=el("div",{style:{marginBottom:"16px"}});
+if(label)wrap.appendChild(el("label",{style:{...dkLabel}},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#4b5563",margin:"0 0 5px",fontStyle:"italic"}},hint));
+const grid=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"7px"}});
+opts.forEach(opt=>{
+const val=typeof opt==="string"?opt:opt.value,lbl=typeof opt==="string"?opt:opt.label,sub=typeof opt==="object"?opt.desc:null;
+const active=single?sel===val:(Array.isArray(sel)&&sel.includes(val));
+const btn=el("button",{style:{background:active?"#1a1a2e":"#0d1017",border:`1px solid ${active?DK.purple:DK.border}`,borderRadius:"7px",color:active?"#b8aff0":"#9ca3af",fontSize:"12px",padding:sub?"9px 13px":"7px 12px",cursor:"pointer",textAlign:"left"}},el("div",{style:{fontWeight:active?"700":"400"}},lbl),...(sub?[el("div",{style:{fontSize:"11px",color:active?"#7664d0":DK.muted,marginTop:"2px"}},sub)]:[]));
+btn.addEventListener("click",()=>toggle(val));
+grid.appendChild(btn);
+});
+wrap.appendChild(grid);
+return wrap;
+}
+
+function dkField(label,type,value,onChange,placeholder,hint){
+const wrap=el("div",{style:{marginBottom:"14px"}});
+if(label)wrap.appendChild(el("label",{style:{...dkLabel}},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#4b5563",margin:"0 0 4px",fontStyle:"italic"}},hint));
+const inp=el("input",{type:type||"text",placeholder:placeholder||"",style:dkInput});
+inp.value=value||"";
+inp.addEventListener("input",e=>onChange(e.target.value));
+wrap.appendChild(inp);
+return wrap;
+}
+
+function dkTextarea(label,value,onChange,placeholder,rows,hint){
+const wrap=el("div",{style:{marginBottom:"14px"}});
+if(label)wrap.appendChild(el("label",{style:{...dkLabel}},label));
+if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#4b5563",margin:"0 0 4px",fontStyle:"italic"}},hint));
+const ta=el("textarea",{placeholder:placeholder||"",rows:rows||3,style:{...dkInput,resize:"vertical"}});
+ta.value=value||"";
+ta.addEventListener("input",e=>onChange(e.target.value));
+wrap.appendChild(ta);
+return wrap;
+}
+
+function renderApp2Content(){
+wrap.innerHTML="";
+const nav=el("div",{style:{background:DK.card,borderBottom:`1px solid ${DK.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:"0",zIndex:"50"}});
+const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
+const backBtn=el("button",{style:{background:"transparent",color:DK.muted,border:`1px solid ${DK.border}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},"← Home");
+backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
+navLeft.appendChild(backBtn);
+navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",color:DK.text}},"🤝 Outreach Machine"));
+nav.appendChild(navLeft);
+nav.appendChild(el("span",{style:{fontSize:"10px",color:DK.purple,background:"#2e2a4a",borderRadius:"10px",padding:"3px 8px"}},s.language));
+wrap.appendChild(nav);
+
+if(s.result){
+const content=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
+content.appendChild(el("div",{style:{background:"#2e2a4a",border:"1px solid #7664d0",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",justifyContent:"space-between",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#b8aff0",fontWeight:"bold"}},`✦ Outreach Package for ${s.contactName}`),el("button",{onclick:()=>{s.result=null;s.error="";renderApp2Content();},style:{background:"transparent",color:DK.muted,border:`1px solid ${DK.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},"← New Message")));
+const tabBar=el("div",{style:{display:"flex",gap:"6px",marginBottom:"16px",flexWrap:"wrap"}});
+TABS.forEach(tb=>{const btn=el("button",{style:{background:s.activeTab===tb.id?DK.purple:"#0d1017",color:s.activeTab===tb.id?"#fff":DK.muted,border:`1px solid ${s.activeTab===tb.id?DK.purple:DK.border}`,borderRadius:"8px",padding:"7px 12px",fontSize:"11px",fontWeight:s.activeTab===tb.id?"700":"400",cursor:"pointer"}},tb.label);btn.addEventListener("click",()=>{s.activeTab=tb.id;renderApp2Content();});tabBar.appendChild(btn);});
+content.appendChild(tabBar);
+if(s.activeTab==="messages"){content.appendChild(dkCopyCard("WhatsApp",s.result.whatsapp,"WhatsApp"));content.appendChild(dkCopyCard("SMS",s.result.sms,"160 chars"));}
+if(s.activeTab==="voice"){content.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 12px"}},"Read naturally — don't sound scripted."));content.appendChild(dkCopyCard("Phone Call Script",s.result.voice_script));}
+if(s.activeTab==="email"){content.appendChild(dkCopyCard("Email Subject Line",s.result.email_subject));content.appendChild(dkCopyCard("Email Body",s.result.email_body));}
+if(s.activeTab==="letter"){content.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 12px"}},"Replace brackets before printing."));content.appendChild(dkCopyCard("Formal Letter",s.result.formal_letter));}
+if(s.activeTab==="followups"){content.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 12px"}},"Send in order if no reply."));[["Follow-Up #1",s.result.followup_1,"Day 3"],["Follow-Up #2",s.result.followup_2,"Week 1"],["Follow-Up #3",s.result.followup_3,"Week 2"],["Follow-Up #4",s.result.followup_4,"Month 1"]].forEach(([t,c,b])=>content.appendChild(dkCopyCard(t,c,b)));}
+if(s.activeTab==="schedule"&&s.result.schedule){
+content.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 14px"}},`Your exact follow-up plan for ${s.contactName}.`));
+s.result.schedule.forEach(d=>{
+const dc=el("div",{style:{background:"#0d1017",border:`1px solid ${DK.border}`,borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});
+dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"9px",marginBottom:"9px"}},el("span",{style:{fontSize:"20px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:DK.purple}},d.day)));
+(d.tasks||[]).forEach(t=>{const row=el("div",{style:{display:"flex",gap:"9px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:DK.purple,fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",color:"#d1d5db",lineHeight:"1.6"}},t));dc.appendChild(row);});
+content.appendChild(dc);
+});
+}
+wrap.appendChild(content);
+return;
+}
+
+const content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
+
+content.appendChild(el("div",{style:dkCard},el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"👤 Who Are You Contacting?"),el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 16px"}},"The more detail, the more personalised the messages."),dkField("Their First Name","text",s.contactName,v=>s.contactName=v,"Maria"),dkChips("Contact Type",null,CONTACT_TYPES,s.contactType,v=>{s.contactType=v;renderApp2Content();},true),dkChips("Reason for Reaching Out","Why are you contacting them right now?",REASONS,s.contactReason,v=>{s.contactReason=v;renderApp2Content();},true),dkChips("Communication Tone",null,TONES,s.tone,v=>{s.tone=v;renderApp2Content();},true)));
+
+if(isObjection()){
+const objCard=el("div",{style:dkCard});
+objCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"🛡️ What Objection Did They Raise?"));
+objCard.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 16px"}},"Select the category and paste their exact words for a much more powerful response."));
+objCard.appendChild(dkChips("Objection Category",null,OBJECTIONS,s.objection,v=>{s.objection=v;renderApp2Content();},true));
+objCard.appendChild(el("div",{style:{marginTop:"14px"}},el("label",{style:{...dkLabel}},"Their Exact Words "),el("span",{style:{fontSize:"10px",fontWeight:"400",color:"#4b5563"}},"(optional but recommended)"),el("p",{style:{fontSize:"11px",color:"#4b5563",margin:"4px 0 6px",fontStyle:"italic"}},"Paste exactly what they said — AI responds to their specific words")));
+const ta=el("textarea",{placeholder:'e.g. "I tried MONAT before and my hair fell out"',rows:3,style:{...dkInput,resize:"vertical"}});
+ta.value=s.exactObjection||"";
+ta.addEventListener("input",e=>s.exactObjection=e.target.value);
+objCard.querySelector("div:last-child").appendChild(ta);
+content.appendChild(objCard);
+}
+
+const hairCard=el("div",{style:dkCard});
+hairCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"💇 Their Hair & Skin Situation"));
+hairCard.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 16px"}},"The AI will tailor content around their specific problems."));
+hairCard.appendChild(dkChips("Their Hair / Skin Problems","Select all that apply",HAIR,s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
+hairCard.appendChild(dkChips("Products to Mention","Optional",OUT_PRODUCTS,s.products,v=>{s.products=tog(s.products,v);renderApp2Content();}));
+content.appendChild(hairCard);
+
+if(isPartner()){
+const pCard=el("div",{style:dkCard});
+pCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"🚀 Why Would They Be a Great Partner?"));
+pCard.appendChild(dkChips("Their Profile",null,PARTNER_TARGETS,s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
+content.appendChild(pCard);
+}
+
+const ctxCard=el("div",{style:dkCard});
+ctxCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"💡 Personal Context"));
+ctxCard.appendChild(el("p",{style:{color:DK.muted,fontSize:"13px",margin:"0 0 16px"}},"Personal details make messages feel real — not copy-paste."));
+ctxCard.appendChild(dkTextarea("Prior Contact History",s.priorContact,v=>s.priorContact=v,'e.g. "Met at a MONAT event. Said she was interested but wanted to think about it."',2,"Have you spoken before? What did they say?"));
+ctxCard.appendChild(dkTextarea("Personal Note",s.personalNote,v=>s.personalNote=v,'e.g. "Has 2 young kids, dry hair since having kids."',2,"Kids, job, lifestyle — anything personal you know"));
+content.appendChild(ctxCard);
+
+const agCard=el("div",{style:dkCard});
+agCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:DK.text}},"🏷️ Your Details"));
+const agGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}});
+agGrid.appendChild(dkField("Your Name","text",s.yourName,v=>s.yourName=v,"Maria Johnson"));
+agGrid.appendChild(dkField("Your WhatsApp / Phone","text",s.yourPhone,v=>s.yourPhone=v,"+1 (555) 000-0000"));
+agCard.appendChild(agGrid);
+agCard.appendChild(dkField("Your MONAT Shop Link","text",s.yourLink,v=>s.yourLink=v,"yourname.mymonat.com"));
+content.appendChild(agCard);
+
+if(s.error)content.appendChild(el("div",{style:{background:"#1a0a0a",border:"1px solid #3a1a1a",borderRadius:"8px",padding:"11px 13px",color:"#f87171",fontSize:"12px",marginBottom:"12px"}},`⚠ ${s.error}`));
+if(s.loading){
+const lc=el("div",{style:{background:DK.card,border:`1px solid ${DK.border}`,borderRadius:"10px",padding:"15px 19px",marginBottom:"13px",textAlign:"center"}});
+lc.appendChild(el("p",{style:{color:DK.purple,fontSize:"14px",margin:"0",fontWeight:"600"}},s.loadingMsg));
+lc.appendChild(el("p",{style:{color:DK.muted,fontSize:"12px",margin:"6px 0 0"}},`Generating in ${s.language}. Takes about 20 seconds...`));
+content.appendChild(lc);
+}
+const genBtn=el("button",{style:{...btnStyle(!canGenerate()||s.loading,DK.purple),width:"100%",fontSize:"15px"}},s.loading?"Generating...":"✦ Generate Full Outreach Package");
+genBtn.addEventListener("click",()=>{if(canGenerate()&&!s.loading)generate();});
+content.appendChild(genBtn);
+if(!canGenerate())content.appendChild(el("p",{style:{color:DK.muted,fontSize:"12px",marginTop:"8px",textAlign:"center"}},"Fill in their name, contact type, reason, tone and your name to continue."));
+
+wrap.appendChild(content);
+}
+
+renderApp2Content();
+return wrap;
+}
+
+// ── MAIN RENDER ─────────────────────────────────────────────────────────────
+function render(){
+const root=document.getElementById("root");
+root.innerHTML="";
+if(state.screen==="login")root.appendChild(renderLogin());
+else if(state.screen==="dashboard")root.appendChild(renderDashboard());
+else if(state.screen==="app1")root.appendChild(renderApp1());
+else if(state.screen==="app2")root.appendChild(renderApp2());
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+const saved=localStorage.getItem("nt_u");
+if(saved){
+try{
+const u=JSON.parse(saved);
+apiAuth({action:"check",userId:u.id}).then(res=>{
+if(res.success){state={screen:"dashboard",user:res.user};render();}
+else{localStorage.removeItem("nt_u");render();}
+}).catch(()=>render());
+}catch(e){render();}
+}else{render();}
 </script>
 </body>
 </html>
-
