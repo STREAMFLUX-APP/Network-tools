@@ -10,317 +10,194 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Georgia', serif; background: #f8f7ff; color: #111; }
-input, textarea, button, select { font-family: inherit; }
+input, button { font-family: inherit; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect } = React;
-const C = { purple:"#7664d0",dark:"#2e2a4a",light:"#ede9ff",mid:"#b8aff0",white:"#ffffff",off:"#f8f7ff",black:"#111111",gray:"#6b6b6b",gl:"#e8e6f0",gbg:"#f4f3f9",green:"#2d9e6b",glight:"#e6f7f1",red:"#dc2626",redLight:"#fff5f5" };
+const C = { purple:"#7664d0", dark:"#2e2a4a", light:"#ede9ff", white:"#ffffff", off:"#f8f7ff", gray:"#6b6b6b", gl:"#e8e6f0", gbg:"#f4f3f9", green:"#2d9e6b", glight:"#e6f7f1", red:"#dc2626", redLight:"#fff5f5" };
 
-const LANGS=[{value:"English",label:"🇺🇸 English"},{value:"Spanish",label:"🇪🇸 Español"},{value:"Italian",label:"🇮🇹 Italiano"},{value:"French",label:"🇫🇷 Français"},{value:"Portuguese",label:"🇧🇷 Português"},{value:"German",label:"🇩🇪 Deutsch"},{value:"Arabic",label:"🇦🇪 العربية"},{value:"Chinese",label:"🇨🇳 中文"}];
-
-const GOALS={English:[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire your team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your presence"}],Spanish:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia"}],Italian:[{value:"sell",label:"🛍️ Vendere Prodotti",desc:"Promuovi prodotti"},{value:"recruit",label:"🤝 Reclutare Partner",desc:"Invita persone"},{value:"motivate",label:"🔥 Motivare il Team",desc:"Ispira il team"},{value:"brand",label:"✨ Brand Awareness",desc:"Cresci la presenza"}],French:[{value:"sell",label:"🛍️ Vendre Produits",desc:"Promouvoir les produits"},{value:"recruit",label:"🤝 Recruter Partenaires",desc:"Inviter des gens"},{value:"motivate",label:"🔥 Motiver l'Équipe",desc:"Inspirer votre équipe"},{value:"brand",label:"✨ Notoriété",desc:"Développer votre présence"}],Portuguese:[{value:"sell",label:"🛍️ Vender Produtos",desc:"Promover produtos"},{value:"recruit",label:"🤝 Recrutar Parceiras",desc:"Convidar pessoas"},{value:"motivate",label:"🔥 Motivar Time",desc:"Inspirar sua equipe"},{value:"brand",label:"✨ Marca",desc:"Crescer presença"}],German:[{value:"sell",label:"🛍️ Verkaufen",desc:"Produkte vermarkten"},{value:"recruit",label:"🤝 Partner gewinnen",desc:"Menschen einladen"},{value:"motivate",label:"🔥 Motivieren",desc:"Team inspirieren"},{value:"brand",label:"✨ Marke",desc:"Präsenz aufbauen"}],Arabic:[{value:"sell",label:"🛍️ بيع المنتجات",desc:"الترويج للمنتجات"},{value:"recruit",label:"🤝 توظيف شركاء",desc:"دعوة للانضمام"},{value:"motivate",label:"🔥 تحفيز الفريق",desc:"إلهام الفريق"},{value:"brand",label:"✨ الوعي بالعلامة",desc:"تنمية الحضور"}],Chinese:[{value:"sell",label:"🛍️ 销售产品",desc:"推广产品"},{value:"recruit",label:"🤝 招募合伙人",desc:"邀请加入"},{value:"motivate",label:"🔥 激励团队",desc:"激励团队"},{value:"brand",label:"✨ 品牌",desc:"发展影响力"}]};
-
-const PRODUCTS={hair:[{value:"bond_iq",label:"MONAT Bond IQ™",desc:"Stronger Hair"},{value:"ir_clinical",label:"IR Clinical™",desc:"Hair Thinning Defense"},{value:"rejuveniqe",label:"Rejuveniqe Oil™",desc:"13+ natural oils"},{value:"anti_frizz",label:"Anti-Frizz™",desc:"Deep Treatment"},{value:"curl",label:"Curl Perfection™",desc:"Curl & Wave System"},{value:"rejuvabeads",label:"REJUVABEADS®",desc:"Split End Mender"},{value:"scalp_scrub",label:"Scalp Purifying Scrub",desc:"Deep cleanse"},{value:"scalp_comfort",label:"Scalp Comfort™",desc:"Rebalancing"},{value:"color_care",label:"Color Care",desc:"Color-Treated Hair"},{value:"densifying",label:"Densifying System",desc:"Volume & thickness"},{value:"ir_supp",label:"IR™ Supplement",desc:"Daily hair health"}],skin:[{value:"barrier",label:"Barrier Booster™",desc:"Glass Skin"},{value:"glowtint",label:"GlowTint™ Lip Oil",desc:"Skincare gloss"}],wellness:[{value:"wellness",label:"Wellness Supplements",desc:"Energy & mood"}],mens:[{value:"men",label:"MONAT for MEN™",desc:"Men's collection"}]};
-
-const PAIN_POINTS=[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls"},{value:"color",label:"🎨 Color Fade"},{value:"aging_skin",label:"🪞 Aging Skin"},{value:"dull_skin",label:"🌥️ Dull Skin"},{value:"no_volume",label:"😔 No Volume"},{value:"scalp",label:"😣 Itchy Scalp"}];
-const RECRUIT=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business"},{value:"loves_beauty",label:"💄 Loves Beauty",desc:"Passion into income"},{value:"entrepreneur",label:"🚀 Own Boss",desc:"No ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn & raise family"},{value:"side_hustle",label:"⚡ Side Hustle",desc:"That actually pays"},{value:"social_media",label:"📱 Social Media",desc:"Monetize posts"},{value:"student",label:"🎓 Student",desc:"Build income"}];
-const MOTIVATE=[{value:"keep_going",label:"💪 Keep Going"},{value:"celebrate",label:"🏆 Celebrate Win"},{value:"monday_fire",label:"🔥 Monday Motivation"},{value:"consistency",label:"📅 Consistency"},{value:"belief",label:"✨ Believe in Yourself"},{value:"new_member",label:"🎉 Welcome New Member"}];
-const BRAND=[{value:"natural",label:"🌿 Natural Ingredients"},{value:"results",label:"📸 Real Results"},{value:"cruelty_free",label:"🐰 Cruelty-Free"},{value:"made_in_usa",label:"🇺🇸 Made in USA"},{value:"awards",label:"🏅 80+ Awards"},{value:"community",label:"👥 Community"},{value:"opportunity",label:"💼 Opportunity"},{value:"gratitude",label:"❤️ Gratitude Foundation"}];
-
-const PLATFORMS=[{value:"wa_status",label:"📱 WhatsApp Status",desc:"Post to all contacts"},{value:"wa_message",label:"💬 WhatsApp Message",desc:"Personal 1-on-1 message"},{value:"ig_feed",label:"📸 Instagram Feed",desc:"Post + caption + hashtags"},{value:"ig_shop",label:"🛍️ Instagram Shop",desc:"Shop-optimized product post"},{value:"ig_reel",label:"🎬 Instagram Reel",desc:"Short video script"},{value:"fb_feed",label:"👍 Facebook Feed",desc:"Facebook post"},{value:"fb_shop",label:"🛒 Facebook Shop",desc:"Shop-optimized post"},{value:"tiktok_shop",label:"🎵 TikTok Shop",desc:"TikTok Shop video script"},{value:"image",label:"🖼️ Image / Canva",desc:"AI image prompt + design brief"}];
-const TONES=[{value:"friendly",label:"Friendly & Warm",desc:"Like a real friend"},{value:"professional",label:"Professional",desc:"Polished & credible"},{value:"exciting",label:"Exciting & Energetic",desc:"High energy, bold"},{value:"inspirational",label:"Inspirational",desc:"Uplifting, heartfelt"},{value:"urgent",label:"Urgent",desc:"Act now"}];
-const TABS=[{id:"wa_status",label:"📱 WA Status"},{id:"wa_message",label:"💬 WA Message"},{id:"ig_feed",label:"📸 IG Feed"},{id:"ig_shop",label:"🛍️ IG Shop"},{id:"ig_reel",label:"🎬 IG Reel"},{id:"fb_feed",label:"👍 FB Feed"},{id:"fb_shop",label:"🛒 FB Shop"},{id:"tiktok_shop",label:"🎵 TikTok"},{id:"image",label:"🖼️ Image"},{id:"schedule",label:"📅 Schedule"}];
-
-const toggle=(a,v)=>a.includes(v)?a.filter(x=>x!==v):[...a,v];
-const allProds=Object.values(PRODUCTS).flat();
-
-const callAuth=async(body)=>{const r=await fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.json();};
-const callClaude=async(prompt)=>{const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens:1000})});return r.json();};
-
-const parseSched=(text)=>{
-const lines=text.split("\n"),days=[];let cur=null;
-const icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
-for(const line of lines){const t=line.trim();if(!t)continue;
-if(/^(day\s*\d|día\s*\d|jour\s*\d|tag\s*\d|giorno\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}
-else if(cur){const c=t.replace(/^[-•→*✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}
-}
-if(cur)days.push(cur);return days.length>=3?days:null;
+const callAuth = async (body) => {
+const r = await fetch("/api/auth", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
+return r.json();
 };
 
-function Chip({label,desc,active,onClick}){
-return <button onClick={onClick} style={{padding:desc?"10px 13px":"8px 14px",borderRadius:10,cursor:"pointer",textAlign:"left",background:active?C.dark:C.white,border:`1.5px solid ${active?C.dark:C.gl}`,color:active?C.white:C.black,fontSize:13,transition:"all 0.15s"}}>
-<div style={{fontWeight:active?700:400}}>{label}</div>
-{desc&&<div style={{fontSize:11,color:active?C.mid:C.gray,marginTop:2}}>{desc}</div>}
-</button>;
-}
-function Chips({opts,sel,toggle,single=false}){
-return <div style={{display:"flex",flexWrap:"wrap",gap:8}}>{opts.map(o=><Chip key={o.value} label={o.label} desc={o.desc} active={single?sel===o.value:(Array.isArray(sel)&&sel.includes(o.value))} onClick={()=>toggle(o.value)}/>)}</div>;
-}
-function Card({content,title}){
-const[cp,setCp]=useState(false);
-if(!content)return null;
-return <div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:12,padding:"15px 18px",marginBottom:12}}>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-<span style={{fontSize:11,fontWeight:700,color:C.dark,textTransform:"uppercase",letterSpacing:"0.08em"}}>{title}</span>
-<button onClick={()=>{navigator.clipboard.writeText(content);setCp(true);setTimeout(()=>setCp(false),2000);}} style={{padding:"4px 12px",borderRadius:12,cursor:"pointer",fontSize:11,border:`1px solid ${cp?C.green:C.gl}`,background:cp?C.glight:C.gbg,color:cp?C.green:C.gray}}>{cp?"✓ Copied!":"Copy"}</button>
-</div>
-<pre style={{whiteSpace:"pre-wrap",wordBreak:"break-word",fontSize:13,lineHeight:1.8,color:C.black,margin:0}}>{content}</pre>
-</div>;
-}
-
-function Login({onLogin}){
-const[em,setEm]=useState(""),[pw,setPw]=useState(""),[loading,setL]=useState(false),[err,setErr]=useState("");
-const go=async()=>{if(!em||!pw){setErr("Please enter email and password.");return;}setL(true);setErr("");const d=await callAuth({action:"login",email:em,password:pw});setL(false);if(d.success){localStorage.setItem("nt_u",JSON.stringify(d.user));onLogin(d.user);}else setErr(d.error||"Invalid credentials.");};
-const inp={width:"100%",padding:"11px 13px",borderRadius:9,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:14,outline:"none",color:C.black};
-return <div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-<div style={{width:"100%",maxWidth:400}}>
-<div style={{textAlign:"center",marginBottom:24}}>
-<div style={{width:52,height:52,borderRadius:13,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,color:C.white,margin:"0 auto 12px"}}>✦</div>
-<div style={{fontSize:20,fontWeight:"bold",letterSpacing:2}}>Network Tools</div>
-<div style={{fontSize:12,color:C.gray,marginTop:2}}>by Streamflux</div>
-</div>
-<div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:16,padding:"26px 22px"}}>
-<h2 style={{fontSize:17,fontWeight:700,textAlign:"center",marginBottom:4}}>Welcome back</h2>
-<p style={{fontSize:13,color:C.gray,textAlign:"center",marginBottom:20}}>Sign in to your account</p>
-<label style={{fontSize:10,color:C.gray,display:"block",marginBottom:4,fontWeight:700,textTransform:"uppercase"}}>Email</label>
-<input type="email" value={em} onChange={e=>setEm(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp,marginBottom:12}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
-<label style={{fontSize:10,color:C.gray,display:"block",marginBottom:4,fontWeight:700,textTransform:"uppercase"}}>Password</label>
-<input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp,marginBottom:16}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
-{err&&<div style={{background:C.redLight,border:"1px solid #fecaca",borderRadius:8,padding:"9px 12px",marginBottom:12,color:C.red,fontSize:13}}>⚠️ {err}</div>}
-<button onClick={go} disabled={loading} style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:loading?C.gl:C.dark,color:loading?C.gray:C.white,fontSize:14,fontWeight:700,cursor:loading?"not-allowed":"pointer"}}>{loading?"Signing in...":"Sign In →"}</button>
-<p style={{fontSize:11,color:C.gray,textAlign:"center",marginTop:14}}>Need help? <span style={{color:C.purple}}>support@streamflux.app</span></p>
-</div>
-</div>
-</div>;
-}
-
-function App({user,onLogout}){
-const[lang,setLang]=useState("English");
-const[step,setStep]=useState(1);
-const[goal,setGoal]=useState("");
-const[products,setProducts]=useState([]);
-const[contexts,setContexts]=useState([]);
-const[platforms,setPlatforms]=useState([]);
-const[tone,setTone]=useState("friendly");
-const[profile,setProfile]=useState({name:user.name||"",link:"",phone:""});
-const[result,setResult]=useState(null);
-const[loading,setLoading]=useState(false);
-const[lMsg,setLMsg]=useState("");
-const[lPct,setLPct]=useState(0);
-const[error,setError]=useState("");
-const[tab,setTab]=useState("");
-
-const isReady=profile.name.trim()&&profile.link.trim();
-const goalOpts=GOALS[lang]||GOALS.English;
-const ctxOpts=goal==="sell"?PAIN_POINTS:goal==="recruit"?RECRUIT:goal==="motivate"?MOTIVATE:BRAND;
-const selProds=allProds.filter(p=>products.includes(p.value));
-
-const ok=()=>{if(step===1)return!!goal&&isReady;if(step===2)return contexts.length>0;if(step===3)return platforms.length>0;if(step===4)return!!tone;return false;};
-
-const base=()=>{
-const ci=contexts.map(c=>ctxOpts.find(o=>o.value===c)).filter(Boolean);
-const tl=TONES.find(t=>t.value===tone)?.label||tone;
-const pl=selProds.length>0?`\nFEATURED PRODUCTS: ${selProds.map(p=>p.label+" — "+p.desc).join(" | ")}`:"";
-const gc={
-sell:`GOAL: Sell MONAT products.${pl}\nPAIN POINTS: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Lead with deep empathy about the pain FIRST. Make reader feel completely understood before mentioning MONAT. Reveal the product naturally as the solution. Use before/after language. Never sound like an ad.`,
-recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ci.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries, work from home, be your own boss.\nSTRATEGY: Speak to their dream. Sound like a friend sharing something life-changing. Never pressure or pitch.`,
-motivate:`GOAL: Motivate MONAT team.\nTHEMES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Raw, real, uplifting. Reference sisterhood and shared mission. Make them feel seen and believed in.`,
-brand:`GOAL: Build MONAT brand awareness.\nANGLES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Educate and inspire. Premium trustworthy science-backed brand. Never salesy.`,
-}[goal]||"";
-return `You are an elite MONAT content strategist. You write authentic human content that converts because it connects.
-
-MONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Paraben-free | Sulfate-free | Made in USA | 80+ awards | Rejuveniqe Oil (13+ natural oils)
-
-PARTNER: ${profile.name} | LINK: ${profile.link}${profile.phone?` | WHATSAPP: ${profile.phone}`:""}
-TONE: ${tl}
-${gc}
-CRITICAL: Write ALL content in ${lang}. Every word in ${lang}.`;
+function Login({ onLogin }) {
+const [em, setEm] = useState("");
+const [pw, setPw] = useState("");
+const [loading, setL] = useState(false);
+const [err, setErr] = useState("");
+const go = async () => {
+if (!em || !pw) { setErr("Please enter email and password."); return; }
+setL(true); setErr("");
+const d = await callAuth({ action:"login", email:em, password:pw });
+setL(false);
+if (d.success) { localStorage.setItem("nt_u", JSON.stringify(d.user)); onLogin(d.user); }
+else setErr(d.error || "Invalid credentials.");
 };
-
-const prompts={
-wa_status:(b)=>`${b}\n\nWrite a WhatsApp STATUS in ${lang}.\n- 60-100 words max\n- Scroll-stopping hook\n- 2-3 emojis only\n- Soft CTA + link: ${profile.link}\n- Signed: ${profile.name}\n- Feels like a real person sharing something exciting\nWrite ONLY the status:`,
-wa_message:(b)=>`${b}\n\nWrite a personal WhatsApp MESSAGE in ${lang} to send 1-on-1.\n- 80-130 words\n- Opens genuinely, not salesy\n- Builds curiosity naturally\n- Soft invitation, no pressure\n- Link: ${profile.link}\n- Signed: ${profile.name}\n- 2-3 emojis\n- Feels like a real friend texting, not a mass message\nWrite ONLY the message:`,
-ig_feed:(b)=>`${b}\n\nWrite an Instagram FEED POST caption in ${lang}.\n- Line 1: hook before "more" button (max 125 chars)\n- 4-6 sentences: story → pain → relatable moment → MONAT → result\n- CTA + link: ${profile.link}\n- Signed: ${profile.name}\n- Line breaks between paragraphs\n- 30 hashtags on new line\n- Natural emojis\nWrite ONLY the caption and hashtags:`,
-ig_shop:(b)=>`${b}\n\nWrite an Instagram SHOP POST in ${lang} for the Instagram Shop tab.\n- Product title line: name + powerful benefit\n- Caption 150-200 words: transformation/result → product benefits → ingredients/features → desire → CTA\n- "Shop now →" with link: ${profile.link}\n- 20 shopping hashtags\n- 3 Story overlay text options\nWrite ONLY the complete shop post:`,
-ig_reel:(b)=>`${b}\n\nWrite an Instagram REEL script in ${lang} (30-45 sec).\n\nHOOK (0-3s): [text on screen + what to say]\nPROBLEM (3-12s): [relatable pain]\nSOLUTION (12-28s): [MONAT reveal + result]\nCTA (28-45s): [soft CTA + ${profile.link}]\n\nVIRAL ELEMENTS:\nAudio mood: [style]\nOn-screen overlays: [3 options]\nThumbnail text: [cover text]\nCaption: [short + 15 hashtags]\n\nWrite ONLY the reel script:`,
-fb_feed:(b)=>`${b}\n\nWrite a Facebook FEED POST in ${lang}.\n- 200-300 words, first person as ${profile.name}\n- Audience: women 28-55 who love beauty\n- Open with relatable story or question\n- Build connection, reveal MONAT naturally\n- End with question to drive comments\n- CTA + link: ${profile.link}\n- 3-4 natural emojis\n- Real person feel, not a brand\nWrite ONLY the post:`,
-fb_shop:(b)=>`${b}\n\nWrite a Facebook SHOP POST in ${lang} for Facebook Shop tab.\n- Product headline: benefit-driven title\n- Description 150 words: benefits → ingredients → who it's for → transformation → CTA\n- 3 bullet points with ✓\n- "Shop Now" CTA + link: ${profile.link}\n- 15 hashtags\nWrite ONLY the shop post:`,
-tiktok_shop:(b)=>`${b}\n\nWrite a TikTok SHOP video script in ${lang} — optimized for TikTok Shop. MONAT is top 5 haircare on TikTok Shop. Must feel 100% native to TikTok.\n\nHOOK (0-3s): [instant curiosity or shock]\nPROBLEM (3-8s): [hair/skin pain — viewer feels seen]\nPRODUCT REVEAL (8-20s): [name it, texture, 1-2 ingredients]\nTRANSFORMATION (20-35s): [vivid specific result]\nSHOP CTA (35-45s): [link in bio / TikTok Shop — ${profile.name} — ${profile.link}]\n\nTIKTOK SHOP EXTRAS:\nProduct tag moment: [when to tap tag]\nPinned comment: [what to pin]\nCaption: [1-2 lines + #TikTokShop #TikTokMadeMeBuyIt + 8 more hashtags]\nAudio mood: [vibe]\n\nWrite ONLY the TikTok script:`,
-image:(b)=>`${b}\n\nCreate an IMAGE & CANVA DESIGN PACKAGE in ${lang}${selProds.length>0?" for "+selProds.map(p=>p.label).join(", "):""}.\n\nAI IMAGE PROMPT:\n[Midjourney/DALL-E prompt — subject, composition, lighting. MONAT colors: #7664D0 purple + white + dark navy. Luxury beauty aesthetic.]\n\nCARROUSEL CONCEPTS (3 slides):\nSlide 1: [hook concept]\nSlide 2: [before/after or ingredients]\nSlide 3: [CTA with ${profile.name} + ${profile.link}]\n\nCANVA TEXT:\nHeadline: [bold short]\nSubheadline: [supporting text]\nCTA button: [text]\n\nCAPTION:\n[2-3 sentences + ${profile.link}]\n\nHASHTAGS: [25]\n\nWrite ONLY the design package:`
-};
-
-const generate=async()=>{
-if(!ok()||!isReady||loading)return;
-setError("");setLoading(true);setResult(null);setLPct(0);
-const b=base();const collected={};
-try{
-const pStep=Math.floor(80/(platforms.length+1));let pct=5;
-for(const plat of platforms){
-const lbl=PLATFORMS.find(p=>p.value===plat)?.label||plat;
-setLMsg(`Writing ${lbl}...`);pct+=pStep;setLPct(Math.min(pct,85));
-const fn=prompts[plat];if(!fn)continue;
-const d=await callClaude(fn(b));
-if(d.error)throw new Error(d.error);
-collected[plat]=d.text;
-}
-setLMsg("Building 7-day schedule...");setLPct(90);
-const platLbls=platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label||p).join(", ");
-const sd=await callClaude(`MONAT social media strategist. Create a 7-day posting schedule in ${lang}.\nPlatforms: ${platLbls}\nGoal: ${goalOpts.find(g=>g.value===goal)?.label}\n\nFormat:\nDay 1 — Launch Day\n- specific task\n- specific task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule:`);
-collected.schedule=parseSched(sd.text)||[{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2 — Stories",icon:"📱",tasks:["Post Instagram Story with poll","Follow up with replies","Share behind-the-scenes"]},{day:"Day 3 — Engage",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged","Post TikTok if selected"]},{day:"Day 4 — Shop",icon:"🛍️",tasks:["Post to Instagram/Facebook Shop","Add product tags","Pin best comment"]},{day:"Day 5 — Social Proof",icon:"📊",tasks:["Share before/after result","Post to WhatsApp Status","Engage with MONAT community"]},{day:"Day 6 — Follow Up",icon:"🔄",tasks:["Follow up warm leads via WhatsApp","Share product demo","Repost top content"]},{day:"Day 7 — Push",icon:"💥",tasks:["Strong CTA on all platforms","Send personal WhatsApp messages","Plan next week"]}];
-setLPct(100);setResult(collected);setTab(platforms[0]||"schedule");
-}catch(e){setError(e.message||"Error. Please try again.");}
-setLoading(false);setLMsg("");setLPct(0);
-};
-
-const reset=()=>{setResult(null);setStep(1);setGoal("");setProducts([]);setContexts([]);setPlatforms([]);setError("");};
-const card={background:C.white,border:`1px solid ${C.gl}`,borderRadius:14,padding:"18px 20px",marginBottom:14};
-const btnP=(d)=>({background:d?"#e8e6f0":C.dark,color:d?C.gray:C.white,border:"none",borderRadius:10,padding:"12px 20px",fontSize:14,fontWeight:700,cursor:d?"not-allowed":"pointer"});
-const btnS={background:C.white,color:C.dark,border:`1px solid ${C.gl}`,borderRadius:10,padding:"12px 20px",fontSize:14,cursor:"pointer"};
-
-const Hdr=()=><header style={{background:C.white,borderBottom:`1px solid ${C.gl}`,padding:"0 18px",height:54,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:0,zIndex:50}}>
-<div style={{display:"flex",alignItems:"center",gap:9}}>
-<div style={{width:30,height:30,borderRadius:8,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",color:C.white,fontSize:13}}>✦</div>
-<div><div style={{fontSize:13,fontWeight:"bold",letterSpacing:2,lineHeight:1.1}}>Network Tools</div><div style={{fontSize:8,color:C.purple,letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div>
+const inp = { width:"100%", padding:"11px 13px", borderRadius:9, boxSizing:"border-box", background:C.gbg, border:`1.5px solid ${C.gl}`, fontSize:14, outline:"none", color:"#111", fontFamily:"inherit" };
+return (
+<div style={{ minHeight:"100vh", background:C.off, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
+<div style={{ width:"100%", maxWidth:400 }}>
+<div style={{ textAlign:"center", marginBottom:24 }}>
+<div style={{ width:52, height:52, borderRadius:13, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, color:"#fff", margin:"0 auto 12px" }}>✦</div>
+<div style={{ fontSize:20, fontWeight:"bold", letterSpacing:2 }}>Network Tools</div>
+<div style={{ fontSize:12, color:C.gray, marginTop:2 }}>by Streamflux</div>
 </div>
-<div style={{display:"flex",alignItems:"center",gap:7}}>
-{user.trialActive&&<span style={{fontSize:10,color:C.purple,background:C.light,borderRadius:10,padding:"3px 8px"}}>⏰ {user.daysLeft}d left</span>}
-<select value={lang} onChange={e=>setLang(e.target.value)} style={{padding:"4px 7px",borderRadius:12,border:`1px solid ${C.gl}`,background:C.white,color:C.dark,fontSize:11,cursor:"pointer",outline:"none"}}>
-{LANGS.map(l=><option key={l.value} value={l.value}>{l.label}</option>)}
+<div style={{ background:C.white, border:`1px solid ${C.gl}`, borderRadius:16, padding:"26px 22px" }}>
+<h2 style={{ fontSize:17, fontWeight:700, textAlign:"center", marginBottom:4 }}>Welcome back</h2>
+<p style={{ fontSize:13, color:C.gray, textAlign:"center", marginBottom:20 }}>Sign in to your account</p>
+<label style={{ fontSize:10, color:C.gray, display:"block", marginBottom:4, fontWeight:700, textTransform:"uppercase" }}>Email</label>
+<input type="email" value={em} onChange={e=>setEm(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp, marginBottom:12}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+<label style={{ fontSize:10, color:C.gray, display:"block", marginBottom:4, fontWeight:700, textTransform:"uppercase" }}>Password</label>
+<input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp, marginBottom:16}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+{err && <div style={{ background:C.redLight, border:"1px solid #fecaca", borderRadius:8, padding:"9px 12px", marginBottom:12, color:C.red, fontSize:13 }}>⚠️ {err}</div>}
+<button onClick={go} disabled={loading} style={{ width:"100%", padding:"13px", borderRadius:10, border:"none", background:loading?C.gl:C.dark, color:loading?C.gray:"#fff", fontSize:14, fontWeight:700, cursor:loading?"not-allowed":"pointer" }}>
+{loading ? "Signing in..." : "Sign In →"}
+</button>
+<p style={{ fontSize:11, color:C.gray, textAlign:"center", marginTop:14 }}>Need help? <span style={{ color:C.purple }}>support@streamflux.app</span></p>
+</div>
+</div>
+</div>
+);
+}
+
+function Home({ user, onLogout }) {
+// Load saved language
+const [homeLang, setHomeLang] = useState(() => localStorage.getItem("nt_lang") || "English");
+const saveLang = (l) => { setHomeLang(l); localStorage.setItem("nt_lang", l); };
+
+const HOME_LANGS = [
+{value:"English",label:"🇺🇸 English"},
+{value:"Spanish",label:"🇪🇸 Español (España)"},
+{value:"Mexican",label:"🇲🇽 Español (México)"},
+{value:"Italian",label:"🇮🇹 Italiano"},
+{value:"French",label:"🇫🇷 Français"},
+{value:"Portuguese",label:"🇧🇷 Português"},
+{value:"German",label:"🇩🇪 Deutsch"},
+{value:"Arabic",label:"🇦🇪 العربية"},
+{value:"Chinese",label:"🇨🇳 中文"},
+];
+
+const tools = [
+{
+href: `/marketing.html?lang=${homeLang}`,
+icon: "📣",
+title: "Marketing Machine",
+desc: "Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Generate a full posting package in seconds.",
+tags: ["WhatsApp Status", "Instagram Feed", "Instagram Shop", "Instagram Reel", "Facebook Feed", "Facebook Shop", "TikTok Shop", "Image / Canva", "7-Day Schedule"],
+color: C.dark,
+},
+{
+href: `/outreach.html?lang=${homeLang}`,
+icon: "🤝",
+title: "Outreach Machine",
+desc: "Create personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters.",
+tags: ["WhatsApp Message", "SMS", "Phone Script", "Email", "Formal Letter", "4 Follow-Ups", "Follow-Up Schedule"],
+color: "#1a1a3a",
+},
+];
+
+return (
+<div style={{ minHeight:"100vh", background:C.off }}>
+<header style={{ background:C.white, borderBottom:`1px solid ${C.gl}`, padding:"0 20px", height:56, display:"flex", alignItems:"center", justifyContent:"space-between", boxShadow:"0 1px 6px rgba(46,42,74,0.07)", position:"sticky", top:0, zIndex:50 }}>
+<div style={{ display:"flex", alignItems:"center", gap:10 }}>
+<div style={{ width:32, height:32, borderRadius:8, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:14 }}>✦</div>
+<div>
+<div style={{ fontSize:13, fontWeight:"bold", letterSpacing:2, lineHeight:1.1 }}>Network Tools</div>
+<div style={{ fontSize:8, color:C.purple, letterSpacing:2, textTransform:"uppercase" }}>by Streamflux</div>
+</div>
+</div>
+<div style={{ display:"flex", alignItems:"center", gap:10 }}>
+{user.trialActive && <span style={{ fontSize:10, color:C.purple, background:C.light, borderRadius:10, padding:"3px 8px" }}>⏰ {user.daysLeft}d left</span>}
+<span style={{ fontSize:12, color:C.gray }}>{user.name}</span>
+<button onClick={onLogout} style={{ background:C.white, color:C.dark, border:`1px solid ${C.gl}`, borderRadius:8, padding:"5px 12px", fontSize:11, cursor:"pointer" }}>Log Out</button>
+</div>
+</header>
+
+<div style={{ maxWidth:680, margin:"0 auto", padding:"36px 16px 60px" }}>
+<div style={{ textAlign:"center", marginBottom:36 }}>
+<div style={{ fontSize:28, marginBottom:8 }}>✦</div>
+<h1 style={{ fontSize:22, fontWeight:700, letterSpacing:1, marginBottom:8 }}>Welcome, {user.name.split(" ")[0]}!</h1>
+<p style={{ fontSize:14, color:C.gray }}>Choose a tool to get started.</p>
+<div style={{ marginTop:16, display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
+<span style={{ fontSize:12, color:C.gray }}>Language:</span>
+<select value={homeLang} onChange={e=>saveLang(e.target.value)} style={{ padding:"6px 12px", borderRadius:16, border:`1px solid ${C.gl}`, background:C.white, color:C.dark, fontSize:13, cursor:"pointer", outline:"none" }}>
+{HOME_LANGS.map(l=><option key={l.value} value={l.value}>{l.label}</option>)}
 </select>
-<button onClick={onLogout} style={{...btnS,padding:"4px 10px",fontSize:10}}>Log Out</button>
 </div>
-</header>;
+</div>
 
-if(result){
-const visTabs=TABS.filter(tb=>tb.id==="schedule"||platforms.includes(tb.id));
-return <div style={{minHeight:"100vh",background:C.off}}>
-<Hdr/>
-<div style={{maxWidth:780,margin:"0 auto",padding:"16px 12px 60px"}}>
-<div style={{background:C.dark,borderRadius:12,padding:"11px 16px",marginBottom:14,display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
-<span style={{fontSize:13,color:C.white,fontWeight:"bold"}}>✦ Package Ready!</span>
-{selProds.length>0&&<span style={{background:"rgba(255,255,255,0.12)",borderRadius:10,padding:"2px 9px",fontSize:11,color:C.white}}>{selProds.map(p=>p.label).join(", ")}</span>}
-<span style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginLeft:"auto"}}>{profile.name} · {lang}</span>
+<div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+{tools.map(tool => (
+<a key={tool.href} href={tool.href} style={{ textDecoration:"none" }}>
+<div style={{ background:tool.color, borderRadius:16, padding:"26px 24px", cursor:"pointer", transition:"transform 0.15s", boxShadow:"0 4px 20px rgba(46,42,74,0.15)" }}
+onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"}
+onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
+<div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10 }}>
+<span style={{ fontSize:28 }}>{tool.icon}</span>
+<div>
+<div style={{ fontSize:18, fontWeight:700, color:"#fff", letterSpacing:0.5 }}>{tool.title}</div>
+<div style={{ fontSize:8, color:"rgba(255,255,255,0.5)", letterSpacing:2, textTransform:"uppercase" }}>by Streamflux</div>
 </div>
-<div style={{display:"flex",gap:5,marginBottom:14,flexWrap:"wrap"}}>
-{visTabs.map(tb=><button key={tb.id} onClick={()=>setTab(tb.id)} style={{padding:"6px 11px",borderRadius:8,cursor:"pointer",fontSize:11,background:tab===tb.id?C.dark:C.white,color:tab===tb.id?C.white:C.gray,border:`1px solid ${tab===tb.id?C.dark:C.gl}`,fontWeight:tab===tb.id?700:400}}>{tb.label}</button>)}
+<div style={{ marginLeft:"auto", color:"rgba(255,255,255,0.6)", fontSize:20 }}>→</div>
 </div>
-{platforms.includes(tab)&&<Card title={TABS.find(tb=>tb.id===tab)?.label||tab} content={result[tab]}/>}
-{tab==="schedule"&&<div>
-<p style={{fontSize:13,color:C.gray,marginBottom:10}}>Your 7-day posting plan. Follow this every week.</p>
-{result.schedule?.map((d,i)=><div key={i} style={{...card,marginBottom:10}}>
-<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><span style={{fontSize:18}}>{d.icon}</span><span style={{fontSize:13,fontWeight:700,color:C.dark}}>{d.day}</span></div>
-{d.tasks?.map((t,j)=><div key={j} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:5}}><span style={{color:C.purple,fontWeight:700,flexShrink:0}}>→</span><span style={{fontSize:12,lineHeight:1.6}}>{t}</span></div>)}
-</div>)}
-</div>}
-<button onClick={reset} style={{...btnS,marginTop:6}}>← New Content</button>
+<p style={{ fontSize:13, color:"rgba(255,255,255,0.75)", lineHeight:1.6, marginBottom:14 }}>{tool.desc}</p>
+<div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+{tool.tags.map(tag => (
+<span key={tag} style={{ fontSize:10, background:"rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.7)", borderRadius:10, padding:"3px 9px" }}>{tag}</span>
+))}
 </div>
-</div>;
+</div>
+</a>
+))}
+</div>
+
+<div style={{ marginTop:40, textAlign:"center" }}>
+<div style={{ fontSize:9, letterSpacing:2, color:C.gl, textTransform:"uppercase" }}>Network Tools by Streamflux</div>
+<div style={{ fontSize:9, color:C.gl, marginTop:3 }}>Powered by Claude AI · streamflux.app</div>
+</div>
+</div>
+</div>
+);
 }
 
-return <div style={{minHeight:"100vh",background:C.off}}>
-<Hdr/>
-<div style={{maxWidth:660,margin:"0 auto",padding:"20px 12px 60px"}}>
-<div style={{display:"flex",gap:4,marginBottom:20}}>
-{[1,2,3,4].map(s=><div key={s} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-<div style={{width:"100%",height:3,borderRadius:2,background:step>=s?C.dark:C.gl,transition:"background 0.3s"}}/>
-<span style={{fontSize:9,color:step>=s?C.dark:C.gray,fontWeight:step===s?700:400}}>{["🎯","💡","📣","✨"][s-1]}</span>
-</div>)}
-</div>
+function Root() {
+const [user, setUser] = useState(null);
+const [checking, setChecking] = useState(true);
 
-<div style={card}>
-<div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:8}}>👤 Your Profile</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>
-{[{k:"name",l:"Name *",p:"e.g. Maria"},{k:"link",l:"MONAT Link *",p:"yourname.mymonat.com"},{k:"phone",l:"WhatsApp",p:"+1 (555) 000"}].map(f=><div key={f.k}>
-<label style={{fontSize:9,color:C.gray,display:"block",marginBottom:3}}>{f.l}</label>
-<input value={profile[f.k]} onChange={e=>setProfile(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",padding:"8px 10px",borderRadius:7,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:12,outline:"none",color:C.black}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
-</div>)}
-</div>
-{!isReady&&<div style={{marginTop:8,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>Fill in your name and MONAT link to continue</div>}
-</div>
+useEffect(() => {
+const s = localStorage.getItem("nt_u");
+if (s) {
+try {
+const u = JSON.parse(s);
+callAuth({ action:"check", userId:u.id }).then(d => {
+if (d.success) setUser(d.user);
+else localStorage.removeItem("nt_u");
+setChecking(false);
+}).catch(() => setChecking(false));
+} catch { setChecking(false); }
+} else setChecking(false);
+}, []);
 
-<div style={card}>
-{step===1&&<>
-<div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 1</div>
-<h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>🎯 What Is Your Goal?</h2>
-<p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Everything will be tailored around this.</p>
-<Chips opts={goalOpts} sel={goal} toggle={setGoal} single/>
-</>}
-{step===2&&<>
-<div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 2</div>
-<h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>💡 {goal==="sell"?"Which Problem Are You Solving?":goal==="recruit"?"Who Are You Targeting?":goal==="motivate"?"What's the Theme?":"What to Highlight?"}</h2>
-<p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Pick all that apply.</p>
-<Chips opts={ctxOpts} sel={contexts} toggle={v=>setContexts(prev=>toggle(prev,v))}/>
-{contexts.length>0&&<div style={{marginTop:9,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>✦ {contexts.length} selected</div>}
-{goal==="sell"&&<div style={{marginTop:18,paddingTop:16,borderTop:`1px solid ${C.gl}`}}>
-<div style={{fontSize:12,fontWeight:700,marginBottom:2}}>🛍️ Choose a Product <span style={{fontSize:11,fontWeight:400,color:C.gray}}>(optional)</span></div>
-<p style={{fontSize:11,color:C.gray,margin:"0 0 12px"}}>Select to focus all content on a specific product.</p>
-{[{k:"hair",l:"💇 Hair Care"},{k:"skin",l:"🌿 Skin Care"},{k:"wellness",l:"💊 Wellness"},{k:"mens",l:"👨 Men's"}].map(cat=><div key={cat.k} style={{marginBottom:12}}>
-<div style={{fontSize:10,fontWeight:700,color:C.gray,letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>{cat.l}</div>
-<div style={{display:"flex",flexWrap:"wrap",gap:6}}>{PRODUCTS[cat.k].map(p=><Chip key={p.value} label={p.label} desc={p.desc} active={products.includes(p.value)} onClick={()=>setProducts(prev=>prev.includes(p.value)?prev.filter(x=>x!==p.value):[...prev,p.value])}/>)}</div>
-</div>)}
-</div>}
-</>}
-{step===3&&<>
-<div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 3</div>
-<h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>📣 Where Are You Posting?</h2>
-<p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Select all platforms — we generate everything at once.</p>
-<Chips opts={PLATFORMS} sel={platforms} toggle={v=>setPlatforms(prev=>toggle(prev,v))}/>
-{platforms.length>0&&<div style={{marginTop:9,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>✦ {platforms.length} platform{platforms.length>1?"s":""} selected + 7-day schedule</div>}
-</>}
-{step===4&&<>
-<div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 4</div>
-<h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>✨ Tone & Style</h2>
-<p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>How should your content feel?</p>
-<Chips opts={TONES} sel={tone} toggle={setTone} single/>
-<div style={{background:C.gbg,borderRadius:9,padding:"11px 13px",marginTop:12}}>
-<div style={{fontSize:10,color:C.gray,marginBottom:6,fontWeight:700}}>Your content summary:</div>
-<div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-{[goalOpts.find(g=>g.value===goal)?.label,...(selProds.length>0?selProds.map(p=>p.label):[]),...contexts.slice(0,3).map(c=>ctxOpts.find(o=>o.value===c)?.label),...platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label),TONES.find(t=>t.value===tone)?.label,lang].filter(Boolean).map((tag,i)=><span key={i} style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:10,padding:"2px 9px",fontSize:10,color:C.dark}}>{tag}</span>)}
-</div>
-</div>
-</>}
-</div>
+const logout = () => { localStorage.removeItem("nt_u"); setUser(null); };
 
-{loading&&<div style={{...card,marginBottom:12}}>
-<div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:12,color:C.dark,fontWeight:600}}>{lMsg}</span><span style={{fontSize:11,color:C.gray}}>{lPct}%</span></div>
-<div style={{width:"100%",height:4,background:C.gl,borderRadius:2}}><div style={{width:`${lPct}%`,height:"100%",background:`linear-gradient(90deg,${C.dark},${C.purple})`,borderRadius:2,transition:"width 0.4s ease"}}/></div>
-<div style={{fontSize:11,color:C.gray,marginTop:6}}>Generating in {lang}. Please wait...</div>
-</div>}
-{error&&<div style={{background:C.redLight,border:"1px solid #fecaca",borderRadius:9,padding:"10px 13px",marginBottom:12,color:C.red,fontSize:12}}>⚠️ {error}</div>}
+if (checking) return (
+<div style={{ minHeight:"100vh", background:C.off, display:"flex", alignItems:"center", justifyContent:"center" }}>
+<div style={{ textAlign:"center" }}>
+<div style={{ width:44, height:44, borderRadius:11, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, color:"#fff", margin:"0 auto 10px" }}>✦</div>
+<div style={{ fontSize:12, color:C.gray }}>Loading...</div>
+</div>
+</div>
+);
 
-<div style={{display:"flex",justifyContent:"space-between",gap:9}}>
-<button onClick={()=>step>1&&setStep(s=>s-1)} disabled={loading} style={btnS}>← Back</button>
-{step<4
-?<button onClick={()=>{if(!isReady){setError("Fill in your name and MONAT link first.");return;}if(ok()){setError("");setStep(s=>s+1);}else setError("Please complete this step to continue.");}} style={btnP(!ok()||!isReady)}>Continue →</button>
-:<button onClick={()=>ok()&&isReady&&!loading&&generate()} disabled={loading||!ok()||!isReady} style={{...btnP(!ok()||!isReady||loading),minWidth:200}}>{loading?"✦ Generating...":"✦ Generate Full Package"}</button>
-}
-</div>
-<div style={{marginTop:34,textAlign:"center"}}>
-<div style={{fontSize:8,letterSpacing:2,color:C.gl,textTransform:"uppercase"}}>Network Tools by Streamflux</div>
-<div style={{fontSize:8,color:C.gl,marginTop:2}}>Powered by Claude AI · streamflux.app</div>
-</div>
-</div>
-</div>;
+if (!user) return <Login onLogin={setUser} />;
+return <Home user={user} onLogout={logout} />;
 }
 
-function Root(){
-const[user,setUser]=useState(null);
-const[checking,setChecking]=useState(true);
-useEffect(()=>{
-const s=localStorage.getItem("nt_u");
-if(s){try{const u=JSON.parse(s);callAuth({action:"check",userId:u.id}).then(d=>{if(d.success)setUser(d.user);else localStorage.removeItem("nt_u");setChecking(false);}).catch(()=>setChecking(false));}catch{setChecking(false);}}
-else setChecking(false);
-},[]);
-const logout=()=>{localStorage.removeItem("nt_u");setUser(null);};
-if(checking)return<div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center"}}><div style={{width:44,height:44,borderRadius:11,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,color:C.white,margin:"0 auto 10px"}}>✦</div><div style={{fontSize:12,color:C.gray}}>Loading...</div></div></div>;
-if(!user)return<Login onLogin={setUser}/>;
-return<App user={user} onLogout={logout}/>;
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
 </script>
 </body>
 </html>
