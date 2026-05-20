@@ -10,194 +10,236 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Georgia', serif; background: #f8f7ff; color: #111; }
-input, button { font-family: inherit; }
+input, textarea, button, select { font-family: inherit; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect } = React;
-const C = { purple:"#7664d0", dark:"#2e2a4a", light:"#ede9ff", white:"#ffffff", off:"#f8f7ff", gray:"#6b6b6b", gl:"#e8e6f0", gbg:"#f4f3f9", green:"#2d9e6b", glight:"#e6f7f1", red:"#dc2626", redLight:"#fff5f5" };
 
-const callAuth = async (body) => {
-const r = await fetch("/api/auth", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
-return r.json();
-};
+// ── COLORS ──────────────────────────────────────────────────────────────────
+const C = { purple:"#7664d0",dark:"#2e2a4a",light:"#ede9ff",mid:"#b8aff0",white:"#fff",off:"#f8f7ff",black:"#111",gray:"#6b6b6b",gl:"#e8e6f0",gbg:"#f4f3f9",green:"#2d9e6b",glight:"#e6f7f1",red:"#dc2626",redLight:"#fff5f5" };
+const G = { bg:"#0a0c0f",card:"#13161b",border:"#1e2330",purple:"#7664d0",purpleDim:"#2e2a4a",text:"#e8eaf0",muted:"#6b7280",green:"#2d9e6b" };
 
-function Login({ onLogin }) {
-const [em, setEm] = useState("");
-const [pw, setPw] = useState("");
-const [loading, setL] = useState(false);
-const [err, setErr] = useState("");
-const go = async () => {
-if (!em || !pw) { setErr("Please enter email and password."); return; }
-setL(true); setErr("");
-const d = await callAuth({ action:"login", email:em, password:pw });
-setL(false);
-if (d.success) { localStorage.setItem("nt_u", JSON.stringify(d.user)); onLogin(d.user); }
-else setErr(d.error || "Invalid credentials.");
-};
-const inp = { width:"100%", padding:"11px 13px", borderRadius:9, boxSizing:"border-box", background:C.gbg, border:`1.5px solid ${C.gl}`, fontSize:14, outline:"none", color:"#111", fontFamily:"inherit" };
-return (
-<div style={{ minHeight:"100vh", background:C.off, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}>
-<div style={{ width:"100%", maxWidth:400 }}>
-<div style={{ textAlign:"center", marginBottom:24 }}>
-<div style={{ width:52, height:52, borderRadius:13, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, color:"#fff", margin:"0 auto 12px" }}>✦</div>
-<div style={{ fontSize:20, fontWeight:"bold", letterSpacing:2 }}>Network Tools</div>
-<div style={{ fontSize:12, color:C.gray, marginTop:2 }}>by Streamflux</div>
+// ── SHARED DATA ──────────────────────────────────────────────────────────────
+const LANGS=[{value:"English",label:"🇺🇸 English"},{value:"Spanish",label:"🇪🇸 Español (España)"},{value:"Mexican",label:"🇲🇽 Español (México)"},{value:"Italian",label:"🇮🇹 Italiano"},{value:"French",label:"🇫🇷 Français"},{value:"Portuguese",label:"🇧🇷 Português"},{value:"German",label:"🇩🇪 Deutsch"},{value:"Arabic",label:"🇦🇪 العربية"},{value:"Chinese",label:"🇨🇳 中文"}];
+
+const callAuth=async(body)=>{const r=await fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.json();};
+const callClaude=async(prompt,maxTokens=1000)=>{const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens})});return r.json();};
+const callClaudeJSON=async(prompt,maxTokens=1300)=>{const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens})});const d=await r.json();if(d.error)throw new Error(d.error);if(!d.result)throw new Error("No result");return d.result;};
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+function Login({onLogin}){
+const[em,setEm]=useState(""),[pw,setPw]=useState(""),[loading,setL]=useState(false),[err,setErr]=useState("");
+const go=async()=>{if(!em||!pw){setErr("Please enter email and password.");return;}setL(true);setErr("");const d=await callAuth({action:"login",email:em,password:pw});setL(false);if(d.success){localStorage.setItem("nt_u",JSON.stringify(d.user));onLogin(d.user);}else setErr(d.error||"Invalid credentials.");};
+const inp={width:"100%",padding:"11px 13px",borderRadius:9,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:14,outline:"none",color:C.black,fontFamily:"inherit"};
+return <div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+<div style={{width:"100%",maxWidth:400}}>
+<div style={{textAlign:"center",marginBottom:24}}>
+<div style={{width:52,height:52,borderRadius:13,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,color:"#fff",margin:"0 auto 12px"}}>✦</div>
+<div style={{fontSize:20,fontWeight:"bold",letterSpacing:2}}>Network Tools</div>
+<div style={{fontSize:12,color:C.gray,marginTop:2}}>by Streamflux</div>
 </div>
-<div style={{ background:C.white, border:`1px solid ${C.gl}`, borderRadius:16, padding:"26px 22px" }}>
-<h2 style={{ fontSize:17, fontWeight:700, textAlign:"center", marginBottom:4 }}>Welcome back</h2>
-<p style={{ fontSize:13, color:C.gray, textAlign:"center", marginBottom:20 }}>Sign in to your account</p>
-<label style={{ fontSize:10, color:C.gray, display:"block", marginBottom:4, fontWeight:700, textTransform:"uppercase" }}>Email</label>
-<input type="email" value={em} onChange={e=>setEm(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp, marginBottom:12}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
-<label style={{ fontSize:10, color:C.gray, display:"block", marginBottom:4, fontWeight:700, textTransform:"uppercase" }}>Password</label>
-<input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp, marginBottom:16}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
-{err && <div style={{ background:C.redLight, border:"1px solid #fecaca", borderRadius:8, padding:"9px 12px", marginBottom:12, color:C.red, fontSize:13 }}>⚠️ {err}</div>}
-<button onClick={go} disabled={loading} style={{ width:"100%", padding:"13px", borderRadius:10, border:"none", background:loading?C.gl:C.dark, color:loading?C.gray:"#fff", fontSize:14, fontWeight:700, cursor:loading?"not-allowed":"pointer" }}>
-{loading ? "Signing in..." : "Sign In →"}
-</button>
-<p style={{ fontSize:11, color:C.gray, textAlign:"center", marginTop:14 }}>Need help? <span style={{ color:C.purple }}>support@streamflux.app</span></p>
+<div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:16,padding:"26px 22px"}}>
+<h2 style={{fontSize:17,fontWeight:700,textAlign:"center",marginBottom:4}}>Welcome back</h2>
+<p style={{fontSize:13,color:C.gray,textAlign:"center",marginBottom:20}}>Sign in to your account</p>
+<label style={{fontSize:10,color:C.gray,display:"block",marginBottom:4,fontWeight:700,textTransform:"uppercase"}}>Email</label>
+<input type="email" value={em} onChange={e=>setEm(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp,marginBottom:12}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+<label style={{fontSize:10,color:C.gray,display:"block",marginBottom:4,fontWeight:700,textTransform:"uppercase"}}>Password</label>
+<input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&go()} style={{...inp,marginBottom:16}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/>
+{err&&<div style={{background:C.redLight,border:"1px solid #fecaca",borderRadius:8,padding:"9px 12px",marginBottom:12,color:C.red,fontSize:13}}>⚠️ {err}</div>}
+<button onClick={go} disabled={loading} style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:loading?C.gl:C.dark,color:loading?C.gray:"#fff",fontSize:14,fontWeight:700,cursor:loading?"not-allowed":"pointer"}}>{loading?"Signing in...":"Sign In →"}</button>
+<p style={{fontSize:11,color:C.gray,textAlign:"center",marginTop:14}}>Need help? <span style={{color:C.purple}}>support@streamflux.app</span></p>
 </div>
 </div>
-</div>
-);
+</div>;
 }
 
-function Home({ user, onLogout }) {
-// Load saved language
-const [homeLang, setHomeLang] = useState(() => localStorage.getItem("nt_lang") || "English");
-const saveLang = (l) => { setHomeLang(l); localStorage.setItem("nt_lang", l); };
-
-const HOME_LANGS = [
-{value:"English",label:"🇺🇸 English"},
-{value:"Spanish",label:"🇪🇸 Español (España)"},
-{value:"Mexican",label:"🇲🇽 Español (México)"},
-{value:"Italian",label:"🇮🇹 Italiano"},
-{value:"French",label:"🇫🇷 Français"},
-{value:"Portuguese",label:"🇧🇷 Português"},
-{value:"German",label:"🇩🇪 Deutsch"},
-{value:"Arabic",label:"🇦🇪 العربية"},
-{value:"Chinese",label:"🇨🇳 中文"},
-];
-
-const tools = [
-{
-href: `/marketing.html?lang=${homeLang}`,
-icon: "📣",
-title: "Marketing Machine",
-desc: "Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Generate a full posting package in seconds.",
-tags: ["WhatsApp Status", "Instagram Feed", "Instagram Shop", "Instagram Reel", "Facebook Feed", "Facebook Shop", "TikTok Shop", "Image / Canva", "7-Day Schedule"],
-color: C.dark,
-},
-{
-href: `/outreach.html?lang=${homeLang}`,
-icon: "🤝",
-title: "Outreach Machine",
-desc: "Create personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters.",
-tags: ["WhatsApp Message", "SMS", "Phone Script", "Email", "Formal Letter", "4 Follow-Ups", "Follow-Up Schedule"],
-color: "#1a1a3a",
-},
-];
-
-return (
-<div style={{ minHeight:"100vh", background:C.off }}>
-<header style={{ background:C.white, borderBottom:`1px solid ${C.gl}`, padding:"0 20px", height:56, display:"flex", alignItems:"center", justifyContent:"space-between", boxShadow:"0 1px 6px rgba(46,42,74,0.07)", position:"sticky", top:0, zIndex:50 }}>
-<div style={{ display:"flex", alignItems:"center", gap:10 }}>
-<div style={{ width:32, height:32, borderRadius:8, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:14 }}>✦</div>
-<div>
-<div style={{ fontSize:13, fontWeight:"bold", letterSpacing:2, lineHeight:1.1 }}>Network Tools</div>
-<div style={{ fontSize:8, color:C.purple, letterSpacing:2, textTransform:"uppercase" }}>by Streamflux</div>
+// ── HOME ─────────────────────────────────────────────────────────────────────
+function Home({user,lang,setLang,setTool,onLogout}){
+return <div style={{minHeight:"100vh",background:C.off}}>
+<header style={{background:C.white,borderBottom:`1px solid ${C.gl}`,padding:"0 20px",height:56,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:0,zIndex:50}}>
+<div style={{display:"flex",alignItems:"center",gap:10}}>
+<div style={{width:32,height:32,borderRadius:8,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:14}}>✦</div>
+<div><div style={{fontSize:13,fontWeight:"bold",letterSpacing:2,lineHeight:1.1}}>Network Tools</div><div style={{fontSize:8,color:C.purple,letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div>
 </div>
-</div>
-<div style={{ display:"flex", alignItems:"center", gap:10 }}>
-{user.trialActive && <span style={{ fontSize:10, color:C.purple, background:C.light, borderRadius:10, padding:"3px 8px" }}>⏰ {user.daysLeft}d left</span>}
-<span style={{ fontSize:12, color:C.gray }}>{user.name}</span>
-<button onClick={onLogout} style={{ background:C.white, color:C.dark, border:`1px solid ${C.gl}`, borderRadius:8, padding:"5px 12px", fontSize:11, cursor:"pointer" }}>Log Out</button>
+<div style={{display:"flex",alignItems:"center",gap:8}}>
+{user.trialActive&&<span style={{fontSize:10,color:C.purple,background:C.light,borderRadius:10,padding:"3px 8px"}}>⏰ {user.daysLeft}d left</span>}
+<span style={{fontSize:12,color:C.gray}}>{user.name}</span>
+<button onClick={onLogout} style={{background:C.white,color:C.dark,border:`1px solid ${C.gl}`,borderRadius:8,padding:"5px 12px",fontSize:11,cursor:"pointer"}}>Log Out</button>
 </div>
 </header>
-
-<div style={{ maxWidth:680, margin:"0 auto", padding:"36px 16px 60px" }}>
-<div style={{ textAlign:"center", marginBottom:36 }}>
-<div style={{ fontSize:28, marginBottom:8 }}>✦</div>
-<h1 style={{ fontSize:22, fontWeight:700, letterSpacing:1, marginBottom:8 }}>Welcome, {user.name.split(" ")[0]}!</h1>
-<p style={{ fontSize:14, color:C.gray }}>Choose a tool to get started.</p>
-<div style={{ marginTop:16, display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
-<span style={{ fontSize:12, color:C.gray }}>Language:</span>
-<select value={homeLang} onChange={e=>saveLang(e.target.value)} style={{ padding:"6px 12px", borderRadius:16, border:`1px solid ${C.gl}`, background:C.white, color:C.dark, fontSize:13, cursor:"pointer", outline:"none" }}>
-{HOME_LANGS.map(l=><option key={l.value} value={l.value}>{l.label}</option>)}
+<div style={{maxWidth:680,margin:"0 auto",padding:"36px 16px 60px"}}>
+<div style={{textAlign:"center",marginBottom:32}}>
+<div style={{fontSize:28,marginBottom:8}}>✦</div>
+<h1 style={{fontSize:22,fontWeight:700,letterSpacing:1,marginBottom:8}}>Welcome, {user.name.split(" ")[0]}!</h1>
+<p style={{fontSize:14,color:C.gray,marginBottom:16}}>Choose a tool to get started.</p>
+<div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+<span style={{fontSize:12,color:C.gray}}>Language:</span>
+<select value={lang} onChange={e=>setLang(e.target.value)} style={{padding:"6px 12px",borderRadius:16,border:`1px solid ${C.gl}`,background:C.white,color:C.dark,fontSize:13,cursor:"pointer",outline:"none"}}>
+{LANGS.map(l=><option key={l.value} value={l.value}>{l.label}</option>)}
 </select>
 </div>
 </div>
-
-<div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-{tools.map(tool => (
-<a key={tool.href} href={tool.href} style={{ textDecoration:"none" }}>
-<div style={{ background:tool.color, borderRadius:16, padding:"26px 24px", cursor:"pointer", transition:"transform 0.15s", boxShadow:"0 4px 20px rgba(46,42,74,0.15)" }}
-onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"}
-onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
-<div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:10 }}>
-<span style={{ fontSize:28 }}>{tool.icon}</span>
-<div>
-<div style={{ fontSize:18, fontWeight:700, color:"#fff", letterSpacing:0.5 }}>{tool.title}</div>
-<div style={{ fontSize:8, color:"rgba(255,255,255,0.5)", letterSpacing:2, textTransform:"uppercase" }}>by Streamflux</div>
+<div style={{display:"flex",flexDirection:"column",gap:16}}>
+{[
+{tool:"marketing",icon:"📣",title:"Marketing Machine",desc:"Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Generate a full posting package in seconds.",tags:["WhatsApp Status","Instagram Feed","Instagram Shop","Instagram Reel","Facebook Feed","Facebook Shop","TikTok Shop","Image / Canva","7-Day Schedule"],color:C.dark},
+{tool:"outreach",icon:"🤝",title:"Outreach Machine",desc:"Create personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters.",tags:["WhatsApp Message","SMS","Phone Script","Email","Formal Letter","4 Follow-Ups","Follow-Up Schedule"],color:"#1a1a3a"},
+].map(t=>(
+<div key={t.tool} onClick={()=>setTool(t.tool)} style={{background:t.color,borderRadius:16,padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(46,42,74,0.15)"}}>
+<div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+<span style={{fontSize:28}}>{t.icon}</span>
+<div><div style={{fontSize:18,fontWeight:700,color:"#fff"}}>{t.title}</div><div style={{fontSize:8,color:"rgba(255,255,255,0.5)",letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div>
+<div style={{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:20}}>→</div>
 </div>
-<div style={{ marginLeft:"auto", color:"rgba(255,255,255,0.6)", fontSize:20 }}>→</div>
+<p style={{fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.6,marginBottom:14}}>{t.desc}</p>
+<div style={{display:"flex",flexWrap:"wrap",gap:6}}>{t.tags.map(tag=><span key={tag} style={{fontSize:10,background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:10,padding:"3px 9px"}}>{tag}</span>)}</div>
 </div>
-<p style={{ fontSize:13, color:"rgba(255,255,255,0.75)", lineHeight:1.6, marginBottom:14 }}>{tool.desc}</p>
-<div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-{tool.tags.map(tag => (
-<span key={tag} style={{ fontSize:10, background:"rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.7)", borderRadius:10, padding:"3px 9px" }}>{tag}</span>
 ))}
 </div>
 </div>
-</a>
-))}
-</div>
-
-<div style={{ marginTop:40, textAlign:"center" }}>
-<div style={{ fontSize:9, letterSpacing:2, color:C.gl, textTransform:"uppercase" }}>Network Tools by Streamflux</div>
-<div style={{ fontSize:9, color:C.gl, marginTop:3 }}>Powered by Claude AI · streamflux.app</div>
-</div>
-</div>
-</div>
-);
+</div>;
 }
 
-function Root() {
-const [user, setUser] = useState(null);
-const [checking, setChecking] = useState(true);
+// ── MARKETING MACHINE ────────────────────────────────────────────────────────
+const MKT_GOALS={English:[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire your team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your presence"}],Spanish:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia"}],Mexican:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia"}],Italian:[{value:"sell",label:"🛍️ Vendere Prodotti",desc:"Promuovi prodotti"},{value:"recruit",label:"🤝 Reclutare Partner",desc:"Invita persone"},{value:"motivate",label:"🔥 Motivare il Team",desc:"Ispira il team"},{value:"brand",label:"✨ Brand Awareness",desc:"Cresci la presenza"}],French:[{value:"sell",label:"🛍️ Vendre Produits",desc:"Promouvoir les produits"},{value:"recruit",label:"🤝 Recruter Partenaires",desc:"Inviter des gens"},{value:"motivate",label:"🔥 Motiver l'Équipe",desc:"Inspirer votre équipe"},{value:"brand",label:"✨ Notoriété",desc:"Développer votre présence"}],Portuguese:[{value:"sell",label:"🛍️ Vender Produtos",desc:"Promover produtos"},{value:"recruit",label:"🤝 Recrutar Parceiras",desc:"Convidar pessoas"},{value:"motivate",label:"🔥 Motivar Time",desc:"Inspirar sua equipe"},{value:"brand",label:"✨ Marca",desc:"Crescer presença"}],German:[{value:"sell",label:"🛍️ Verkaufen",desc:"Produkte vermarkten"},{value:"recruit",label:"🤝 Partner gewinnen",desc:"Menschen einladen"},{value:"motivate",label:"🔥 Motivieren",desc:"Team inspirieren"},{value:"brand",label:"✨ Marke",desc:"Präsenz aufbauen"}],Arabic:[{value:"sell",label:"🛍️ بيع المنتجات",desc:"الترويج للمنتجات"},{value:"recruit",label:"🤝 توظيف شركاء",desc:"دعوة للانضمام"},{value:"motivate",label:"🔥 تحفيز الفريق",desc:"إلهام الفريق"},{value:"brand",label:"✨ الوعي بالعلامة",desc:"تنمية الحضور"}],Chinese:[{value:"sell",label:"🛍️ 销售产品",desc:"推广产品"},{value:"recruit",label:"🤝 招募合伙人",desc:"邀请加入"},{value:"motivate",label:"🔥 激励团队",desc:"激励团队"},{value:"brand",label:"✨ 品牌",desc:"发展影响力"}]};
+const MKT_PRODUCTS={hair:[{value:"bond_iq",label:"MONAT Bond IQ™",desc:"Stronger Hair"},{value:"ir_clinical",label:"IR Clinical™",desc:"Hair Thinning Defense"},{value:"rejuveniqe",label:"Rejuveniqe Oil™",desc:"13+ natural oils"},{value:"anti_frizz",label:"Anti-Frizz™",desc:"Deep Treatment"},{value:"curl",label:"Curl Perfection™",desc:"Curl & Wave"},{value:"rejuvabeads",label:"REJUVABEADS®",desc:"Split End Mender"},{value:"scalp_scrub",label:"Scalp Purifying Scrub",desc:"Deep cleanse"},{value:"scalp_comfort",label:"Scalp Comfort™",desc:"Rebalancing"},{value:"color_care",label:"Color Care",desc:"Color-Treated Hair"},{value:"densifying",label:"Densifying System",desc:"Volume & thickness"},{value:"ir_supp",label:"IR™ Supplement",desc:"Daily hair health"}],skin:[{value:"barrier",label:"Barrier Booster™",desc:"Glass Skin"},{value:"glowtint",label:"GlowTint™ Lip Oil",desc:"Skincare gloss"}],wellness:[{value:"wellness",label:"Wellness Supplements",desc:"Energy & mood"}],mens:[{value:"men",label:"MONAT for MEN™",desc:"Men's collection"}]};
+const MKT_PAIN=[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls"},{value:"color",label:"🎨 Color Fade"},{value:"aging_skin",label:"🪞 Aging Skin"},{value:"dull_skin",label:"🌥️ Dull Skin"},{value:"no_volume",label:"😔 No Volume"},{value:"scalp",label:"😣 Itchy Scalp"}];
+const MKT_RECRUIT=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business"},{value:"loves_beauty",label:"💄 Loves Beauty",desc:"Passion into income"},{value:"entrepreneur",label:"🚀 Own Boss",desc:"No ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn & raise family"},{value:"side_hustle",label:"⚡ Side Hustle",desc:"That actually pays"},{value:"social_media",label:"📱 Social Media",desc:"Monetize posts"},{value:"student",label:"🎓 Student",desc:"Build income"}];
+const MKT_MOTIVATE=[{value:"keep_going",label:"💪 Keep Going"},{value:"celebrate",label:"🏆 Celebrate Win"},{value:"monday_fire",label:"🔥 Monday Motivation"},{value:"consistency",label:"📅 Consistency"},{value:"belief",label:"✨ Believe in Yourself"},{value:"new_member",label:"🎉 Welcome New Member"}];
+const MKT_BRAND=[{value:"natural",label:"🌿 Natural Ingredients"},{value:"results",label:"📸 Real Results"},{value:"cruelty_free",label:"🐰 Cruelty-Free"},{value:"made_in_usa",label:"🇺🇸 Made in USA"},{value:"awards",label:"🏅 80+ Awards"},{value:"community",label:"👥 Community"},{value:"opportunity",label:"💼 Opportunity"},{value:"gratitude",label:"❤️ Gratitude Foundation"}];
+const MKT_PLATFORMS=[{value:"wa_status",label:"📱 WhatsApp Status",desc:"Post to all contacts"},{value:"wa_message",label:"💬 WhatsApp Message",desc:"Personal 1-on-1"},{value:"ig_feed",label:"📸 Instagram Feed",desc:"Post + hashtags"},{value:"ig_shop",label:"🛍️ Instagram Shop",desc:"Shop-optimized post"},{value:"ig_reel",label:"🎬 Instagram Reel",desc:"Video script"},{value:"fb_feed",label:"👍 Facebook Feed",desc:"Facebook post"},{value:"fb_shop",label:"🛒 Facebook Shop",desc:"Shop-optimized post"},{value:"tiktok_shop",label:"🎵 TikTok Shop",desc:"TikTok video script"},{value:"image",label:"🖼️ Image / Canva",desc:"AI prompts + design brief"}];
+const MKT_TONES=[{value:"friendly",label:"Friendly & Warm",desc:"Like a real friend"},{value:"professional",label:"Professional",desc:"Polished & credible"},{value:"exciting",label:"Exciting & Energetic",desc:"High energy"},{value:"inspirational",label:"Inspirational",desc:"Uplifting"},{value:"urgent",label:"Urgent",desc:"Act now"}];
+const MKT_TABS=[{id:"wa_status",label:"📱 WA Status"},{id:"wa_message",label:"💬 WA Message"},{id:"ig_feed",label:"📸 IG Feed"},{id:"ig_shop",label:"🛍️ IG Shop"},{id:"ig_reel",label:"🎬 IG Reel"},{id:"fb_feed",label:"👍 FB Feed"},{id:"fb_shop",label:"🛒 FB Shop"},{id:"tiktok_shop",label:"🎵 TikTok"},{id:"image",label:"🖼️ Image"},{id:"schedule",label:"📅 Schedule"}];
+const allMktProds=Object.values(MKT_PRODUCTS).flat();
+const togArr=(a,v)=>a.includes(v)?a.filter(x=>x!==v):[...a,v];
+const parseSched=(text)=>{const lines=text.split("\n"),days=[];let cur=null;const icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];for(const line of lines){const t=line.trim();if(!t)continue;if(/^(day\s*\d|día\s*\d|jour\s*\d|tag\s*\d|giorno\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}else if(cur){const c=t.replace(/^[-•→*✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}}if(cur)days.push(cur);return days.length>=3?days:null;};
 
-useEffect(() => {
-const s = localStorage.getItem("nt_u");
-if (s) {
-try {
-const u = JSON.parse(s);
-callAuth({ action:"check", userId:u.id }).then(d => {
-if (d.success) setUser(d.user);
-else localStorage.removeItem("nt_u");
-setChecking(false);
-}).catch(() => setChecking(false));
-} catch { setChecking(false); }
-} else setChecking(false);
-}, []);
+function MChip({label,desc,active,onClick}){return <button onClick={onClick} style={{padding:desc?"10px 13px":"8px 14px",borderRadius:10,cursor:"pointer",textAlign:"left",background:active?C.dark:C.white,border:`1.5px solid ${active?C.dark:C.gl}`,color:active?C.white:C.black,fontSize:13,transition:"all 0.15s"}}><div style={{fontWeight:active?700:400}}>{label}</div>{desc&&<div style={{fontSize:11,color:active?C.mid:C.gray,marginTop:2}}>{desc}</div>}</button>;}
+function MChips({opts,sel,toggle,single=false}){return <div style={{display:"flex",flexWrap:"wrap",gap:8}}>{opts.map(o=><MChip key={o.value} label={o.label} desc={o.desc} active={single?sel===o.value:(Array.isArray(sel)&&sel.includes(o.value))} onClick={()=>toggle(o.value)}/>)}</div>;}
+function MCard({title,content}){const[cp,setCp]=useState(false);if(!content)return null;return <div style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:12,padding:"15px 18px",marginBottom:12}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}><span style={{fontSize:11,fontWeight:700,color:C.dark,textTransform:"uppercase",letterSpacing:"0.08em"}}>{title}</span><button onClick={()=>{navigator.clipboard.writeText(content);setCp(true);setTimeout(()=>setCp(false),2000);}} style={{padding:"4px 12px",borderRadius:12,cursor:"pointer",fontSize:11,border:`1px solid ${cp?C.green:C.gl}`,background:cp?C.glight:C.gbg,color:cp?C.green:C.gray}}>{cp?"✓ Copied!":"Copy"}</button></div><pre style={{whiteSpace:"pre-wrap",wordBreak:"break-word",fontSize:13,lineHeight:1.8,color:C.black,margin:0}}>{content}</pre></div>;}
 
-const logout = () => { localStorage.removeItem("nt_u"); setUser(null); };
-
-if (checking) return (
-<div style={{ minHeight:"100vh", background:C.off, display:"flex", alignItems:"center", justifyContent:"center" }}>
-<div style={{ textAlign:"center" }}>
-<div style={{ width:44, height:44, borderRadius:11, background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, color:"#fff", margin:"0 auto 10px" }}>✦</div>
-<div style={{ fontSize:12, color:C.gray }}>Loading...</div>
+function MarketingMachine({user,lang,onBack}){
+const[step,setStep]=useState(1),[goal,setGoal]=useState(""),[products,setProducts]=useState([]),[contexts,setContexts]=useState([]),[platforms,setPlatforms]=useState([]),[tone,setTone]=useState("friendly"),[profile,setProfile]=useState({name:user.name||"",link:"",phone:""}),[result,setResult]=useState(null),[loading,setLoading]=useState(false),[lMsg,setLMsg]=useState(""),[lPct,setLPct]=useState(0),[error,setError]=useState(""),[tab,setTab]=useState("");
+const isReady=profile.name.trim()&&profile.link.trim();
+const goalOpts=MKT_GOALS[lang]||MKT_GOALS.English;
+const ctxOpts=goal==="sell"?MKT_PAIN:goal==="recruit"?MKT_RECRUIT:goal==="motivate"?MKT_MOTIVATE:MKT_BRAND;
+const selProds=allMktProds.filter(p=>products.includes(p.value));
+const langLabel=lang==="Mexican"?"Mexican Spanish (use Mexican expressions, phrases natural to Mexico — not Spain Spanish)":lang;
+const ok=()=>{if(step===1)return!!goal&&isReady;if(step===2)return contexts.length>0;if(step===3)return platforms.length>0;if(step===4)return!!tone;return false;};
+const base=()=>{const ci=contexts.map(c=>ctxOpts.find(o=>o.value===c)).filter(Boolean);const tl=MKT_TONES.find(t=>t.value===tone)?.label||tone;const pl=selProds.length>0?`\nFEATURED PRODUCTS: ${selProds.map(p=>p.label+" — "+p.desc).join(" | ")}`:"";const gc={sell:`GOAL: Sell MONAT products.${pl}\nPAIN POINTS: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Lead with deep empathy FIRST. Make reader feel understood before mentioning MONAT. ONE pain point per version, ONE product, ONE CTA.`,recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ci.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries, work from home.\nSTRATEGY: Speak to their dream. Sound like a friend sharing something life-changing.`,motivate:`GOAL: Motivate MONAT team.\nTHEMES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.`,brand:`GOAL: Build MONAT brand awareness.\nANGLES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Educate and inspire. Premium trustworthy brand.`}[goal]||"";return `You are an elite MONAT content strategist writing authentic content that converts.\n\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Paraben-free | Made in USA | 80+ awards\n\nPARTNER: ${profile.name} | LINK: ${profile.link}${profile.phone?" | WHATSAPP: "+profile.phone:""}\nTONE: ${tl}\n${gc}\n\nGOLDEN RULES: ONE message per version. SHORT is powerful. Never sound like an ad.\nCRITICAL: Write ALL content in ${langLabel}.`;};
+const PROMPTS={wa_status:(b)=>`${b}\n\nWrite TWO WhatsApp STATUS versions in ${lang}. Max 70 words each. 2-3 emojis. ONE focus per version. Link: ${profile.link}. Signed: ${profile.name}.\nVersion A: personal story angle.\nVersion B: surprising result or question hook.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]\n\nWrite ONLY the two versions:`,wa_message:(b)=>`${b}\n\nWrite TWO personal WhatsApp MESSAGES in ${lang} to send 1-on-1. 70-100 words each. ONE focus. Genuine. No pressure. Link: ${profile.link}. Signed: ${profile.name}. 2-3 emojis.\nVersion A: empathy-first — acknowledge their pain.\nVersion B: curiosity-first — intriguing question or result.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]\n\nWrite ONLY the two versions:`,ig_feed:(b)=>`${b}\n\nWrite TWO Instagram FEED captions in ${lang}. Line 1 stops scroll (max 125 chars). ONE story, ONE pain, ONE solution per version. CTA + link: ${profile.link}. Signed: ${profile.name}. Line breaks. Natural emojis. Then 25 hashtags once.\nVersion A: personal story.\nVersion B: speaking directly to the reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]\n\nWrite ONLY captions and hashtags:`,ig_shop:(b)=>`${b}\n\nWrite TWO Instagram SHOP POSTS in ${lang}. ONE benefit focus. 100-130 words each. "Shop now →" + link: ${profile.link}.\nVersion A: lead with transformation.\nVersion B: lead with problem being solved.\nThen 3 Story overlay text options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]\n\nWrite ONLY the package:`,ig_reel:(b)=>`${b}\n\nWrite TWO Instagram REEL scripts in ${lang} (30-45 sec each). ONE hook, ONE problem, ONE solution per version.\nVersion A: transformation story.\nVersion B: myth-busting or surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): [${profile.name} | ${profile.link}]\n\nThen once: Audio mood, Thumbnail text, Caption + 12 hashtags.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[audio, thumbnail, caption]\n\nWrite ONLY the scripts and shared elements:`,fb_feed:(b)=>`${b}\n\nWrite TWO Facebook FEED POSTS in ${lang}. 150-200 words each. ONE story per version. End with question. CTA + link: ${profile.link}. 2-3 emojis. Real person feel.\nVersion A: personal story.\nVersion B: conversational "Have you ever..."\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nWrite ONLY the two posts:`,fb_shop:(b)=>`${b}\n\nWrite TWO Facebook SHOP POSTS in ${lang}. ONE benefit focus. 100-130 words each. Punchy headline. 3 bullet points with ✓. "Shop Now" + link: ${profile.link}.\nVersion A: focus on result.\nVersion B: focus on solving the pain.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]\n\nWrite ONLY posts and hashtags:`,tiktok_shop:(b)=>`${b}\n\nWrite TWO TikTok SHOP scripts in ${lang} (35-45 sec). 100% native TikTok feel. ONE hook, ONE problem, ONE product, ONE result.\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): [${profile.name} — ${profile.link}]\n\nThen once: Product tag moment, Pinned comment, Caption + hashtags, Audio mood.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[extras]\n\nWrite ONLY the scripts and shared elements:`,image:(b)=>`${b}\n\nCreate a complete IMAGE CONTENT PACKAGE in ${lang}${selProds.length>0?" for "+selProds.map(p=>p.label).join(", "):""}. ONE hair problem focus only.\n\nIMAGE PROMPT 1 — HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. No product bottle. Show gorgeous hair, emotion, confidence. Include: hair texture, skin tone, expression, lighting (soft natural or studio), background (clean white or blurred), camera angle, photography style (editorial beauty, hyperrealistic, 8K). One detailed paragraph ready to paste.\n\nIMAGE PROMPT 2 — MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for a luxury beauty product photo. MONAT colors: deep navy #2e2a4a + periwinkle purple #7664d0 + white label. "MONAT" logo visible, product name on label, premium material. White marble surface, soft studio lighting, subtle shadow, small botanical sprig beside it. Luxury cosmetics advertising style, hyperrealistic, 8K. One detailed paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 — Hook (transformation photo): [exact short headline, 5-7 words, emotional]\nSlide 2 — Before/After split: LEFT: [BEFORE label, e.g. 'Dry. Broken. Lifeless.'] RIGHT: [AFTER label, e.g. 'Soft. Strong. Transformed.'] CENTER: [VS or BEFORE/AFTER]\nSlide 3 — Product Shot: [product name + ONE benefit, 6-8 words]\nSlide 4 — CTA: [CTA text + ${profile.name} + ${profile.link}]\n\nCANVA DESIGN NOTES:\n• Colors: MONAT navy #2e2a4a + purple #7664d0 + white only\n• Text: white serif headline on dark overlay bar at bottom\n• Feel: luxury beauty brand\n\nCAPTION (ready to post in ${lang}):\n[3 powerful sentences. One pain point → solution → CTA. Link: ${profile.link} — ${profile.name}]\n\nHASHTAGS: [25 hashtags]\n\nWrite ONLY the complete package:`};
+const generate=async()=>{if(!ok()||!isReady||loading)return;setError("");setLoading(true);setResult(null);setLPct(0);const b=base();const collected={};try{const pStep=Math.floor(80/(platforms.length+1));let pct=5;for(const plat of platforms){const lbl=MKT_PLATFORMS.find(p=>p.value===plat)?.label||plat;setLMsg(`Writing ${lbl}...`);pct+=pStep;setLPct(Math.min(pct,85));const fn=PROMPTS[plat];if(!fn)continue;const d=await callClaude(fn(b));if(d.error)throw new Error(d.error);collected[plat]=d.text;}setLMsg("Building 7-day schedule...");setLPct(90);const platLbls=platforms.map(p=>MKT_PLATFORMS.find(pl=>pl.value===p)?.label||p).join(", ");const sd=await callClaude(`MONAT social media strategist. Create a 7-day posting schedule in ${lang}.\nPlatforms: ${platLbls}\nGoal: ${goalOpts.find(g=>g.value===goal)?.label}\n\nDay 1 — Launch Day\n- task\n- task\n\nDay 2\n- task\n\n...7 days. Write ONLY the schedule:`);collected.schedule=parseSched(sd.text)||[{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},{day:"Day 3",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged"]},{day:"Day 4",icon:"🛍️",tasks:["Post to Instagram/Facebook Shop","Add product tags"]},{day:"Day 5",icon:"📊",tasks:["Share before/after result","Engage with community"]},{day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share product demo"]},{day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]}];setLPct(100);setResult(collected);setTab(platforms[0]||"schedule");}catch(e){setError(e.message||"Error. Please try again.");}setLoading(false);setLMsg("");setLPct(0);};
+const reset=()=>{setResult(null);setStep(1);setGoal("");setProducts([]);setContexts([]);setPlatforms([]);setError("");};
+const card={background:C.white,border:`1px solid ${C.gl}`,borderRadius:14,padding:"18px 20px",marginBottom:14};
+const btnP=(d)=>({background:d?"#e8e6f0":C.dark,color:d?C.gray:"#fff",border:"none",borderRadius:10,padding:"12px 20px",fontSize:14,fontWeight:700,cursor:d?"not-allowed":"pointer"});
+const btnS={background:C.white,color:C.dark,border:`1px solid ${C.gl}`,borderRadius:10,padding:"12px 20px",fontSize:14,cursor:"pointer"};
+const Hdr=()=><header style={{background:C.white,borderBottom:`1px solid ${C.gl}`,padding:"0 18px",height:54,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:0,zIndex:50}}><div style={{display:"flex",alignItems:"center",gap:9}}><button onClick={onBack} style={{...btnS,padding:"4px 10px",fontSize:11}}>← Home</button><div style={{width:30,height:30,borderRadius:8,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}}>📣</div><div><div style={{fontSize:13,fontWeight:"bold",letterSpacing:2,lineHeight:1.1}}>Marketing Machine</div><div style={{fontSize:8,color:C.purple,letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div></div><div style={{display:"flex",alignItems:"center",gap:7}}>{user.trialActive&&<span style={{fontSize:10,color:C.purple,background:C.light,borderRadius:10,padding:"3px 8px"}}>⏰ {user.daysLeft}d left</span>}<span style={{fontSize:10,color:C.purple,background:C.light,borderRadius:10,padding:"3px 8px"}}>{lang}</span></div></header>;
+if(result){const visTabs=MKT_TABS.filter(tb=>tb.id==="schedule"||platforms.includes(tb.id));return <div style={{minHeight:"100vh",background:C.off}}><Hdr/><div style={{maxWidth:780,margin:"0 auto",padding:"16px 12px 60px"}}><div style={{background:C.dark,borderRadius:12,padding:"11px 16px",marginBottom:14,display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}><span style={{fontSize:13,color:"#fff",fontWeight:"bold"}}>✦ Package Ready!</span><span style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginLeft:"auto"}}>{profile.name} · {lang}</span></div><div style={{display:"flex",gap:5,marginBottom:14,flexWrap:"wrap"}}>{visTabs.map(tb=><button key={tb.id} onClick={()=>setTab(tb.id)} style={{padding:"6px 11px",borderRadius:8,cursor:"pointer",fontSize:11,background:tab===tb.id?C.dark:C.white,color:tab===tb.id?"#fff":C.gray,border:`1px solid ${tab===tb.id?C.dark:C.gl}`,fontWeight:tab===tb.id?700:400}}>{tb.label}</button>)}</div>{platforms.includes(tab)&&<MCard title={MKT_TABS.find(tb=>tb.id===tab)?.label||tab} content={result[tab]}/>}{tab==="schedule"&&<div><p style={{fontSize:13,color:C.gray,marginBottom:10}}>Your 7-day posting plan.</p>{result.schedule?.map((d,i)=><div key={i} style={{...card,marginBottom:10}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}><span style={{fontSize:18}}>{d.icon}</span><span style={{fontSize:13,fontWeight:700,color:C.dark}}>{d.day}</span></div>{d.tasks?.map((t,j)=><div key={j} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:5}}><span style={{color:C.purple,fontWeight:700,flexShrink:0}}>→</span><span style={{fontSize:12,lineHeight:1.6}}>{t}</span></div>)}</div>)}</div>}<button onClick={reset} style={{...btnS,marginTop:6}}>← New Content</button></div></div>;}
+return <div style={{minHeight:"100vh",background:C.off}}><Hdr/><div style={{maxWidth:660,margin:"0 auto",padding:"20px 12px 60px"}}><div style={{display:"flex",gap:4,marginBottom:20}}>{[1,2,3,4].map(s=><div key={s} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}><div style={{width:"100%",height:3,borderRadius:2,background:step>=s?C.dark:C.gl,transition:"background 0.3s"}}/><span style={{fontSize:9,color:step>=s?C.dark:C.gray,fontWeight:step===s?700:400}}>{["🎯","💡","📣","✨"][s-1]}</span></div>)}</div>
+<div style={card}><div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:8}}>👤 Your Profile</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9}}>{[{k:"name",l:"Name *",p:"e.g. Maria"},{k:"link",l:"MONAT Link *",p:"yourname.mymonat.com"},{k:"phone",l:"WhatsApp",p:"+1 (555) 000"}].map(f=><div key={f.k}><label style={{fontSize:9,color:C.gray,display:"block",marginBottom:3}}>{f.l}</label><input value={profile[f.k]} onChange={e=>setProfile(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p} style={{width:"100%",padding:"8px 10px",borderRadius:7,boxSizing:"border-box",background:C.gbg,border:`1.5px solid ${C.gl}`,fontSize:12,outline:"none",color:C.black}} onFocus={e=>e.target.style.borderColor=C.purple} onBlur={e=>e.target.style.borderColor=C.gl}/></div>)}</div>{!isReady&&<div style={{marginTop:8,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>Fill in your name and MONAT link to continue</div>}</div>
+<div style={card}>
+{step===1&&<><div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 1</div><h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>🎯 What Is Your Goal?</h2><p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Everything will be tailored around this.</p><MChips opts={goalOpts} sel={goal} toggle={setGoal} single/></>}
+{step===2&&<><div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 2</div><h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>💡 {goal==="sell"?"Which Problem Are You Solving?":goal==="recruit"?"Who Are You Targeting?":goal==="motivate"?"What's the Theme?":"What to Highlight?"}</h2><p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Pick all that apply.</p><MChips opts={ctxOpts} sel={contexts} toggle={v=>setContexts(prev=>togArr(prev,v))}/>{contexts.length>0&&<div style={{marginTop:9,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>✦ {contexts.length} selected</div>}{goal==="sell"&&<div style={{marginTop:18,paddingTop:16,borderTop:`1px solid ${C.gl}`}}><div style={{fontSize:12,fontWeight:700,marginBottom:2}}>🛍️ Choose a Product <span style={{fontSize:11,fontWeight:400,color:C.gray}}>(optional)</span></div><p style={{fontSize:11,color:C.gray,margin:"0 0 12px"}}>Select to focus all content on a specific product.</p>{[{k:"hair",l:"💇 Hair Care"},{k:"skin",l:"🌿 Skin Care"},{k:"wellness",l:"💊 Wellness"},{k:"mens",l:"👨 Men's"}].map(cat=><div key={cat.k} style={{marginBottom:12}}><div style={{fontSize:10,fontWeight:700,color:C.gray,letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>{cat.l}</div><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{MKT_PRODUCTS[cat.k].map(p=><MChip key={p.value} label={p.label} desc={p.desc} active={products.includes(p.value)} onClick={()=>setProducts(prev=>togArr(prev,p.value))}/>)}</div></div>)}</div>}</>}
+{step===3&&<><div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 3</div><h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>📣 Where Are You Posting?</h2><p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>Select all platforms — we generate everything at once.</p><MChips opts={MKT_PLATFORMS} sel={platforms} toggle={v=>setPlatforms(prev=>togArr(prev,v))}/>{platforms.length>0&&<div style={{marginTop:9,fontSize:11,color:C.purple,background:C.light,borderRadius:6,padding:"6px 10px"}}>✦ {platforms.length} platform{platforms.length>1?"s":""} selected + 7-day schedule</div>}</>}
+{step===4&&<><div style={{fontSize:9,letterSpacing:2,color:C.purple,textTransform:"uppercase",marginBottom:3}}>Step 4</div><h2 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>✨ Tone & Style</h2><p style={{fontSize:12,color:C.gray,margin:"0 0 14px"}}>How should your content feel?</p><MChips opts={MKT_TONES} sel={tone} toggle={setTone} single/><div style={{background:C.gbg,borderRadius:9,padding:"11px 13px",marginTop:12}}><div style={{fontSize:10,color:C.gray,marginBottom:6,fontWeight:700}}>Your content summary:</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{[goalOpts.find(g=>g.value===goal)?.label,...selProds.map(p=>p.label),...contexts.slice(0,3).map(c=>ctxOpts.find(o=>o.value===c)?.label),...platforms.map(p=>MKT_PLATFORMS.find(pl=>pl.value===p)?.label),MKT_TONES.find(t=>t.value===tone)?.label,lang].filter(Boolean).map((tag,i)=><span key={i} style={{background:C.white,border:`1px solid ${C.gl}`,borderRadius:10,padding:"2px 9px",fontSize:10,color:C.dark}}>{tag}</span>)}</div></div></>}
 </div>
-</div>
-);
-
-if (!user) return <Login onLogin={setUser} />;
-return <Home user={user} onLogout={logout} />;
+{loading&&<div style={{...card,marginBottom:12}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:12,color:C.dark,fontWeight:600}}>{lMsg}</span><span style={{fontSize:11,color:C.gray}}>{lPct}%</span></div><div style={{width:"100%",height:4,background:C.gl,borderRadius:2}}><div style={{width:`${lPct}%`,height:"100%",background:`linear-gradient(90deg,${C.dark},${C.purple})`,borderRadius:2,transition:"width 0.4s ease"}}/></div><div style={{fontSize:11,color:C.gray,marginTop:6}}>Generating in {lang}. Please wait...</div></div>}
+{error&&<div style={{background:C.redLight,border:"1px solid #fecaca",borderRadius:9,padding:"10px 13px",marginBottom:12,color:C.red,fontSize:12}}>⚠️ {error}</div>}
+<div style={{display:"flex",justifyContent:"space-between",gap:9}}><button onClick={()=>step>1&&setStep(s=>s-1)} disabled={loading} style={btnS}>← Back</button>{step<4?<button onClick={()=>{if(!isReady){setError("Fill in your name and MONAT link first.");return;}if(ok()){setError("");setStep(s=>s+1);}else setError("Please complete this step.");}} style={btnP(!ok()||!isReady)}>Continue →</button>:<button onClick={()=>ok()&&isReady&&!loading&&generate()} disabled={loading||!ok()||!isReady} style={{...btnP(!ok()||!isReady||loading),minWidth:200}}>{loading?"✦ Generating...":"✦ Generate Full Package"}</button>}</div>
+<div style={{marginTop:34,textAlign:"center"}}><div style={{fontSize:8,letterSpacing:2,color:C.gl,textTransform:"uppercase"}}>Network Tools by Streamflux</div></div>
+</div></div>;
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+// ── OUTREACH MACHINE ─────────────────────────────────────────────────────────
+const OUT_CONTACT_TYPES=[{value:"potential_customer",label:"🛍️ Potential Customer",desc:"Interested in buying products"},{value:"potential_partner",label:"🤝 Potential Partner",desc:"Might want to join MONAT"},{value:"existing_customer",label:"💎 Existing Customer",desc:"Already bought products"},{value:"cold_lead",label:"❄️ Cold Lead",desc:"First outreach — no prior contact"},{value:"past_partner",label:"🔄 Past Partner",desc:"Used to be a Market Partner"},{value:"team_member",label:"🌟 Team Member",desc:"Part of your MONAT team"}];
+const OUT_REASONS=[{value:"first_outreach",label:"👋 First Outreach",desc:"Never contacted before"},{value:"follow_up_interest",label:"🔥 Follow Up — Showed Interest",desc:"They liked something"},{value:"follow_up_no_reply",label:"👻 Follow Up — No Reply",desc:"No response to first message"},{value:"product_recommendation",label:"💊 Product Recommendation",desc:"Specific product for their problem"},{value:"recruit_invite",label:"🚀 Recruit — Business Invite",desc:"Invite to join as Market Partner"},{value:"repeat_sale",label:"🔁 Repeat Sale / Reorder",desc:"Their product is running out"},{value:"special_offer",label:"🎁 Special Offer",desc:"Sharing a current deal"},{value:"check_in",label:"💬 Check In",desc:"Just keeping in touch"},{value:"handle_objection",label:"🛡️ Handle Objection",desc:"They said no or not right now"},{value:"welcome_new",label:"🎉 Welcome New Customer/Partner",desc:"They just joined or bought"},{value:"referral_request",label:"🙏 Ask for Referral",desc:"Ask to refer friends/family"},{value:"reconnect",label:"🔗 Reconnect",desc:"Haven't spoken in a long time"}];
+const OUT_HAIR=["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"];
+const OUT_PRODUCTS=["MONAT Bond IQ™","IR Clinical™","Rejuveniqe Oil Intensive™","Smoothing Anti-Frizz™","MONAT Curl Perfection™","REJUVABEADS®","Scalp Purifying Scrub","Scalp Comfort™","MONAT Color Care","MONAT Densifying System","MONAT Barrier Booster™","MONAT GlowTint™ Lip Oil","MONAT Wellness Supplements","MONAT for MEN™"];
+const OUT_PARTNER_TARGETS=["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"];
+const OUT_OBJECTIONS=[{value:"too_expensive",label:"Too Expensive",desc:"Can't afford it"},{value:"not_interested",label:"Not Interested",desc:"General rejection"},{value:"already_have_products",label:"Already Have Products",desc:"Using another brand"},{value:"mlm_skeptical",label:"Skeptical About MLM",desc:"Doesn't believe in network marketing"},{value:"no_time",label:"No Time",desc:"Too busy"},{value:"need_to_think",label:"Need to Think About It",desc:"Not ready to decide"},{value:"bad_timing",label:"Bad Timing",desc:"Life circumstances not right"},{value:"tried_before",label:"Tried It Before",desc:"Had a bad experience"}];
+const OUT_TONES=[{value:"warm",label:"Warm & Personal",desc:"Friendly, human"},{value:"professional",label:"Professional",desc:"Polished, credible"},{value:"excited",label:"Excited & Enthusiastic",desc:"High energy"},{value:"casual",label:"Casual & Relaxed",desc:"Low pressure"},{value:"urgent",label:"Urgent & Direct",desc:"Time-sensitive"}];
+const OUT_TABS=[{id:"messages",label:"💬 WhatsApp & SMS"},{id:"voice",label:"🎙️ Voice Script"},{id:"email",label:"📧 Email"},{id:"letter",label:"✉️ Formal Letter"},{id:"followups",label:"🔄 Follow-Ups"},{id:"schedule",label:"📅 Schedule"}];
+
+function OChip({label,desc,active,onClick}){return <button onClick={onClick} style={{padding:desc?"9px 13px":"7px 12px",borderRadius:7,cursor:"pointer",textAlign:"left",background:active?"#1a1a2e":"#0d1017",border:`1px solid ${active?G.purple:G.border}`,color:active?"#b8aff0":"#9ca3af",fontSize:12}}><div style={{fontWeight:active?700:400}}>{label}</div>{desc&&<div style={{fontSize:11,color:active?"#7664d0":G.muted,marginTop:2}}>{desc}</div>}</button>;}
+function OChips({label,hint,opts,sel,toggle,single=false}){return <div style={{marginBottom:16}}><label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:G.muted,textTransform:"uppercase",marginBottom:3}}>{label}</label>{hint&&<p style={{fontSize:11,color:"#4b5563",margin:"0 0 5px",fontStyle:"italic"}}>{hint}</p>}<div style={{display:"flex",flexWrap:"wrap",gap:7}}>{opts.map(o=>{const v=typeof o==="string"?o:o.value,l=typeof o==="string"?o:o.label,d=typeof o==="object"?o.desc:null,active=single?sel===v:(Array.isArray(sel)&&sel.includes(v));return <OChip key={v} label={l} desc={d} active={active} onClick={()=>toggle(v)}/>;})}</div></div>;}
+function OField({label,hint,value,onChange,placeholder,type="text",rows}){const s={width:"100%",background:"#0d1017",border:`1px solid ${G.border}`,borderRadius:8,color:G.text,fontSize:14,padding:"11px 14px",outline:"none",boxSizing:"border-box",fontFamily:"inherit"};return <div style={{marginBottom:16}}><label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:G.muted,textTransform:"uppercase",marginBottom:3}}>{label}</label>{hint&&<p style={{fontSize:11,color:"#4b5563",margin:"0 0 5px",fontStyle:"italic"}}>{hint}</p>}{rows?<textarea value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} rows={rows} style={{...s,resize:"vertical"}}/>:<input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} style={s}/>}</div>;}
+function OCard({title,content,badge}){const[cp,setCp]=useState(false);if(!content)return null;return <div style={{background:"#0d1017",border:`1px solid ${G.border}`,borderRadius:10,padding:"15px 17px",marginBottom:12}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}><div style={{display:"flex",alignItems:"center",gap:7}}><span style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:G.purple,textTransform:"uppercase"}}>{title}</span>{badge&&<span style={{fontSize:10,background:"#1a1a2e",color:"#7664d0",border:"1px solid #2e2a4a",borderRadius:4,padding:"2px 7px"}}>{badge}</span>}</div><button onClick={()=>{navigator.clipboard.writeText(content);setCp(true);setTimeout(()=>setCp(false),1800);}} style={{background:cp?"#1a2a1a":"#13161b",border:`1px solid ${cp?"#2a5a2a":G.border}`,borderRadius:6,color:cp?"#4caf50":"#9ca3af",fontSize:11,padding:"4px 12px",cursor:"pointer"}}>{cp?"✓ Copied":"Copy"}</button></div><p style={{color:"#d1d5db",fontSize:14,lineHeight:1.75,margin:0,whiteSpace:"pre-wrap"}}>{content}</p></div>;}
+
+function OutreachMachine({user,lang,onBack}){
+const[loading,setLoading]=useState(false),[loadingMsg,setLoadingMsg]=useState(""),[result,setResult]=useState(null),[error,setError]=useState(""),[tab,setTab]=useState("messages");
+const[contactType,setContactType]=useState(""),[contactReason,setContactReason]=useState(""),[tone,setTone]=useState(""),[objection,setObjection]=useState(""),[exactObjection,setExactObjection]=useState("");
+const[contactName,setContactName]=useState(""),[hairProblems,setHairProblems]=useState([]),[products,setProducts]=useState([]),[partnerTargets,setPartnerTargets]=useState([]),[priorContact,setPriorContact]=useState(""),[personalNote,setPersonalNote]=useState("");
+const[yourName,setYourName]=useState(user.name||""),[yourPhone,setYourPhone]=useState(""),[yourLink,setYourLink]=useState("");
+const isPartner=contactType==="potential_partner"||contactType==="past_partner";
+const isObjection=contactReason==="handle_objection";
+const canGenerate=contactName&&contactType&&contactReason&&tone&&yourName;
+const langLabel=lang==="Mexican"?"Mexican Spanish (use Mexican expressions, phrases natural to Mexico — not Spain Spanish)":lang;
+const langNote=lang!=="English"?`\n\nCRITICAL: Write ALL content in ${langLabel}. Every single word must be in that language.`:"";
+const ctx=`CONTACT:\n- Name: ${contactName}\n- Type: ${OUT_CONTACT_TYPES.find(t=>t.value===contactType)?.label||contactType}\n- Reason: ${OUT_REASONS.find(r=>r.value===contactReason)?.label||contactReason}\n- Tone: ${OUT_TONES.find(t=>t.value===tone)?.label||tone}\n- Prior contact: ${priorContact||"none"}\n- Personal note: ${personalNote||"none"}${isObjection?`\n- Objection category: ${OUT_OBJECTIONS.find(o=>o.value===objection)?.label||objection}${exactObjection?`\n- Their exact words: "${exactObjection}"`:""}`:""}\n${hairProblems.length>0?`- Hair/skin problems: ${hairProblems.join(", ")}`:""}${products.length>0?`\n- Products to promote: ${products.join(", ")}`:""}${isPartner&&partnerTargets.length>0?`\n- Why they'd be a good partner: ${partnerTargets.join(", ")}`:""}SENDER (Market Partner): ${yourName}${yourPhone?" | "+yourPhone:""}${yourLink?" | "+yourLink:""}\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | Top 5 haircare on TikTok Shop${isPartner?"\nPARTNER OPPORTUNITY: Earn up to 5x/month | $1.5B+ paid | Work from home | Be your own boss | Community of winners":""}`;
+const generate=async()=>{
+setError("");setLoading(true);setResult(null);
+try{
+setLoadingMsg("✦ Writing messages & voice script...");
+let p1;
+if(isObjection){p1=`You are an elite MONAT network marketing coach. Write objection-handling responses.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown):\n{\n"whatsapp": "60-80 words. ${exactObjection?`Respond directly to these exact words: ${exactObjection}.`:"Acknowledge their concern genuinely."} Reframe positively. Soft question at end. Never pushy.",\n"sms": "Max 160 chars. Warm, understanding.",\n"voice_script": "Phone script. OPENING: acknowledge their position warmly. EMPATHY: understand their concern. REFRAME: new perspective or MONAT fact. QUESTION: one soft discovery question. CLOSE: low-commitment next step. Label each section.",\n"email_subject": "Under 9 words. Doesn't feel like sales.",\n"email_body": "140-160 words. Handle objection gracefully. Acknowledge, provide value, keep relationship. Signed by ${yourName}."\n}`;}
+else{p1=`You are an elite MONAT network marketing coach. Write personalised outreach messages.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown):\n{\n"whatsapp": "60-90 words. Warm, personal, use ${contactName}'s name. Reference their specific situation. Build curiosity naturally. ONE easy question at end. Never salesy. Real friend feel.",\n"sms": "Max 160 chars. Punchy and personal. ${contactName}'s name. Soft CTA.",\n"voice_script": "Phone script. OPENING: greet ${contactName} warmly. REASON: why calling specifically for them. VALUE: what's in it for them. CLOSE: one specific low-commitment next step. Label each section. Natural spoken language.",\n"email_subject": "Personal, curiosity-driving. Under 10 words.",\n"email_body": "140-170 words. Personal opener about their situation. Value for them. CTA. Signed ${yourName}${yourLink?" | "+yourLink:""}."\n}`;}
+const part1=await callClaudeJSON(p1,1300);
+setLoadingMsg("✦ Writing letter & follow-ups...");
+const p2=`You are an elite MONAT network marketing coach.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown):\n{\n"formal_letter": "Full formal letter. Format:\\n[Date]\\n\\n${contactName}\\n[Their Address]\\n\\nDear ${contactName},\\n\\nParagraph 1: warm personal opening.\\nParagraph 2: the specific opportunity or product for their situation.\\nParagraph 3: why now.\\nParagraph 4: warm close with clear next step.\\n\\nWarm regards,\\n${yourName}${yourPhone?"\\n"+yourPhone:""}${yourLink?"\\n"+yourLink:""}. 260-300 words.",\n"followup_1": "Day 3 — no reply. 50-65 words. Friendly nudge. Different angle. Easy question.",\n"followup_2": "Week 1 — no reply. 50-65 words. New angle or MONAT fact. Light urgency.",\n"followup_3": "Week 2 — no reply. 40-55 words. Casual. Zero pressure. Keep door open.",\n"followup_4": "Month 1 — no reply. 40-50 words. Final warm touch. No pressure."\n}`;
+const part2=await callClaudeJSON(p2,1400);
+setLoadingMsg("✦ Building follow-up schedule...");
+const p3=`MONAT network marketing coach. Create a 7-day follow-up schedule.\nCONTACT: ${contactName} | TYPE: ${OUT_CONTACT_TYPES.find(t=>t.value===contactType)?.label} | REASON: ${OUT_REASONS.find(r=>r.value===contactReason)?.label}${langNote}\n\nReturn ONLY raw JSON:\n{"schedule":[{"day":"Today — First Contact","icon":"🚀","tasks":["Send the WhatsApp message","If no reply after 3 hours, send the SMS","Note the contact with today's date"]},{"day":"Day 3 — First Follow-Up","icon":"💬","tasks":["Send Follow-Up #1 if no reply","Check if they viewed your message","Note their response or silence"]},{"day":"Day 7 — Week 1 Check-In","icon":"📞","tasks":["Send Follow-Up #2 with a fresh angle","Make a phone call using your voice script","Listen first — ask questions before anything"]},{"day":"Day 14 — Two Week Touch","icon":"🔄","tasks":["Send Follow-Up #3 — casual, zero pressure","Share a relevant result or before/after","Update your records"]},{"day":"Day 30 — Monthly Touch","icon":"🌱","tasks":["Send Follow-Up #4 — final warm message","If still no reply, add to monthly check-in list","Timing is everything — stay patient"]},{"day":"Ongoing — Stay Top of Mind","icon":"📅","tasks":["Share occasional MONAT results on WhatsApp Status","Check in every 90 days","Life situations change — keep the door open"]}]}`;
+const part3=await callClaudeJSON(p3,900);
+setResult({...part1,...part2,...part3});setTab("messages");
+}catch(e){setError("Error: "+e.message);}
+setLoading(false);setLoadingMsg("");
+};
+const ocard={background:G.card,border:`1px solid ${G.border}`,borderRadius:14,padding:"22px",marginBottom:16};
+const btnOP=(d)=>({background:d?"#1a1a2e":G.purple,color:d?G.muted:"#fff",border:"none",borderRadius:10,padding:"13px 22px",fontSize:14,fontWeight:700,cursor:d?"not-allowed":"pointer"});
+const btnOS={background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:10,padding:"13px 22px",fontSize:14,cursor:"pointer"};
+const OHdr=()=><header style={{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:54,display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}><div style={{display:"flex",alignItems:"center",gap:9}}><button onClick={onBack} style={{...btnOS,padding:"4px 10px",fontSize:11}}>← Home</button><div style={{width:30,height:30,borderRadius:8,background:G.purpleDim,border:`1px solid ${G.purple}`,display:"flex",alignItems:"center",justifyContent:"center",color:"#b8aff0",fontSize:13}}>🤝</div><div><div style={{fontSize:13,fontWeight:"bold",letterSpacing:2,color:G.text}}>Outreach Machine</div><div style={{fontSize:8,color:G.purple,letterSpacing:2,textTransform:"uppercase"}}>by Streamflux</div></div></div><div style={{display:"flex",alignItems:"center",gap:7}}>{user.trialActive&&<span style={{fontSize:10,color:G.purple,background:G.purpleDim,borderRadius:10,padding:"3px 8px"}}>⏰ {user.daysLeft}d left</span>}<span style={{fontSize:10,color:G.purple,background:G.purpleDim,borderRadius:10,padding:"3px 8px"}}>{lang}</span></div></header>;
+if(result)return <div style={{minHeight:"100vh",background:G.bg,color:G.text}}><OHdr/><div style={{maxWidth:720,margin:"0 auto",padding:"20px 14px 60px"}}><div style={{background:G.purpleDim,border:`1px solid ${G.purple}`,borderRadius:12,padding:"12px 16px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontSize:13,color:"#b8aff0",fontWeight:"bold"}}>✦ Outreach Package for {contactName}</span><button onClick={()=>{setResult(null);setError("");}} style={{...btnOS,padding:"5px 12px",fontSize:11}}>← New Message</button></div><div style={{display:"flex",gap:6,marginBottom:18,flexWrap:"wrap"}}>{OUT_TABS.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{background:tab===t.id?G.purple:"#0d1017",color:tab===t.id?"#fff":G.muted,border:`1px solid ${tab===t.id?G.purple:G.border}`,borderRadius:8,padding:"7px 13px",fontSize:11,fontWeight:tab===t.id?700:400,cursor:"pointer"}}>{t.label}</button>)}</div>{tab==="messages"&&<><OCard title="WhatsApp" badge="WhatsApp" content={result.whatsapp}/><OCard title="SMS" badge="160 chars" content={result.sms}/></>}{tab==="voice"&&<><p style={{color:G.muted,fontSize:13,margin:"0 0 12px"}}>Read naturally — don't sound like you're reading a script.</p><OCard title="Phone Call Script" content={result.voice_script}/></>}{tab==="email"&&<><OCard title="Email Subject" content={result.email_subject}/><OCard title="Email Body" content={result.email_body}/></>}{tab==="letter"&&<><p style={{color:G.muted,fontSize:13,margin:"0 0 12px"}}>Replace brackets before printing.</p><OCard title="Formal Letter" content={result.formal_letter}/></>}{tab==="followups"&&<><p style={{color:G.muted,fontSize:13,margin:"0 0 12px"}}>Send in order if no reply.</p><OCard title="Follow-Up #1" badge="Day 3" content={result.followup_1}/><OCard title="Follow-Up #2" badge="Week 1" content={result.followup_2}/><OCard title="Follow-Up #3" badge="Week 2" content={result.followup_3}/><OCard title="Follow-Up #4" badge="Month 1" content={result.followup_4}/></>}{tab==="schedule"&&<><p style={{color:G.muted,fontSize:13,margin:"0 0 16px"}}>Your exact follow-up plan for {contactName}.</p>{result.schedule?.map((d,i)=><div key={i} style={{background:"#0d1017",border:`1px solid ${G.border}`,borderRadius:10,padding:"15px 17px",marginBottom:12}}><div style={{display:"flex",alignItems:"center",gap:9,marginBottom:10}}><span style={{fontSize:20}}>{d.icon}</span><span style={{fontSize:13,fontWeight:700,color:G.purple}}>{d.day}</span></div>{d.tasks?.map((t,j)=><div key={j} style={{display:"flex",gap:9,alignItems:"flex-start",marginBottom:6}}><span style={{color:G.purple,fontWeight:700,flexShrink:0}}>→</span><span style={{fontSize:13,color:"#d1d5db",lineHeight:1.6}}>{t}</span></div>)}</div>)}</>}</div></div>;
+return <div style={{minHeight:"100vh",background:G.bg,color:G.text}}><OHdr/><div style={{maxWidth:660,margin:"0 auto",padding:"22px 14px 60px"}}>
+<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>👤 Who Are You Contacting?</h2><p style={{color:G.muted,fontSize:13,margin:"0 0 18px"}}>The more detail, the more personalised the messages.</p><OField label="Their First Name" value={contactName} onChange={setContactName} placeholder="Maria"/><OChips label="Contact Type" opts={OUT_CONTACT_TYPES} sel={contactType} toggle={setContactType} single/><OChips label="Reason for Reaching Out" hint="Why are you contacting them right now?" opts={OUT_REASONS} sel={contactReason} toggle={setContactReason} single/><OChips label="Communication Tone" opts={OUT_TONES} sel={tone} toggle={setTone} single/></div>
+{isObjection&&<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>🛡️ What Objection Did They Raise?</h2><p style={{color:G.muted,fontSize:13,margin:"0 0 16px"}}>Select the category and paste their exact words for a much more powerful response.</p><OChips label="Objection Category" opts={OUT_OBJECTIONS} sel={objection} toggle={setObjection} single/><div style={{marginTop:14}}><label style={{display:"block",fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:G.muted,textTransform:"uppercase",marginBottom:4}}>Their Exact Words <span style={{fontSize:10,fontWeight:400,color:"#4b5563"}}>(optional but recommended)</span></label><p style={{fontSize:11,color:"#4b5563",margin:"0 0 6px",fontStyle:"italic"}}>Paste exactly what they said — the AI will respond to their specific words</p><textarea value={exactObjection} onChange={e=>setExactObjection(e.target.value)} placeholder='e.g. "I tried MONAT before and my hair fell out" or "I don\'t believe in MLM"' rows={3} style={{width:"100%",background:"#0d1017",border:`1px solid ${G.border}`,borderRadius:8,color:G.text,fontSize:14,padding:"11px 14px",outline:"none",boxSizing:"border-box",fontFamily:"inherit",resize:"vertical"}}/></div></div>}
+<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>💇 Their Hair & Skin Situation</h2><p style={{color:G.muted,fontSize:13,margin:"0 0 16px"}}>The AI will tailor content around their specific problems.</p><OChips label="Their Hair / Skin Problems" opts={OUT_HAIR} sel={hairProblems} toggle={v=>setHairProblems(prev=>togArr(prev,v))}/><OChips label="Products to Mention" hint="Optional" opts={OUT_PRODUCTS} sel={products} toggle={v=>setProducts(prev=>togArr(prev,v))}/></div>
+{isPartner&&<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>🚀 Why Would They Be a Great Partner?</h2><OChips label="Their Profile" opts={OUT_PARTNER_TARGETS} sel={partnerTargets} toggle={v=>setPartnerTargets(prev=>togArr(prev,v))}/></div>}
+<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>💡 Personal Context</h2><p style={{color:G.muted,fontSize:13,margin:"0 0 16px"}}>Personal details make messages feel real — not copy-paste.</p><OField label="Prior Contact History" hint="Have you spoken before? What did they say?" value={priorContact} onChange={setPriorContact} placeholder='e.g. "Met at a MONAT event 2 weeks ago. Said she was interested but wanted to think about it."' rows={2}/><OField label="Personal Note" hint="Kids, job, lifestyle — anything personal you know" value={personalNote} onChange={setPersonalNote} placeholder='e.g. "Has 2 young kids, recently went back to work, mentioned her hair has been really dry."' rows={2}/></div>
+<div style={ocard}><h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:700,color:G.text}}>🏷️ Your Details</h2><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}><OField label="Your Name" value={yourName} onChange={setYourName} placeholder="Maria Johnson"/><OField label="Your WhatsApp / Phone" value={yourPhone} onChange={setYourPhone} placeholder="+1 (555) 000-0000"/></div><OField label="Your MONAT Shop Link" value={yourLink} onChange={setYourLink} placeholder="yourname.mymonat.com"/></div>
+{error&&<div style={{background:"#1a0a0a",border:"1px solid #3a1a1a",borderRadius:8,padding:"12px 14px",color:"#f87171",fontSize:13,marginBottom:14}}>⚠ {error}</div>}
+{loading&&<div style={{background:G.card,border:`1px solid ${G.border}`,borderRadius:10,padding:"16px 20px",marginBottom:14,textAlign:"center"}}><p style={{color:G.purple,fontSize:14,margin:0,fontWeight:600}}>{loadingMsg}</p><p style={{color:G.muted,fontSize:12,margin:"6px 0 0"}}>Generating in {lang}. Takes about 20 seconds...</p></div>}
+<button onClick={()=>canGenerate&&!loading&&generate()} disabled={loading||!canGenerate} style={{...btnOP(!canGenerate||loading),width:"100%",fontSize:15}}>{loading?"Generating...":"✦ Generate Full Outreach Package"}</button>
+{!canGenerate&&<p style={{color:G.muted,fontSize:12,marginTop:8,textAlign:"center"}}>Fill in their name, contact type, reason, tone and your name to continue.</p>}
+</div></div>;
+}
+
+// ── ROOT ──────────────────────────────────────────────────────────────────────
+function Root(){
+const[user,setUser]=useState(null);
+const[checking,setChecking]=useState(true);
+const[tool,setTool]=useState(null);
+const[lang,setLang]=useState(()=>localStorage.getItem("nt_lang")||"English");
+
+useEffect(()=>{
+const s=localStorage.getItem("nt_u");
+if(s){try{const u=JSON.parse(s);callAuth({action:"check",userId:u.id}).then(d=>{if(d.success)setUser(d.user);else localStorage.removeItem("nt_u");setChecking(false);}).catch(()=>setChecking(false));}catch{setChecking(false);}}
+else setChecking(false);
+},[]);
+
+useEffect(()=>{localStorage.setItem("nt_lang",lang);},[lang]);
+
+const logout=()=>{localStorage.removeItem("nt_u");setUser(null);setTool(null);};
+
+if(checking)return<div style={{minHeight:"100vh",background:C.off,display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{textAlign:"center"}}><div style={{width:44,height:44,borderRadius:11,background:C.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,color:"#fff",margin:"0 auto 10px"}}>✦</div><div style={{fontSize:12,color:C.gray}}>Loading...</div></div></div>;
+if(!user)return<Login onLogin={setUser}/>;
+if(tool==="marketing")return<MarketingMachine user={user} lang={lang} onBack={()=>setTool(null)}/>;
+if(tool==="outreach")return<OutreachMachine user={user} lang={lang} onBack={()=>setTool(null)}/>;
+return<Home user={user} lang={lang} setLang={setLang} setTool={setTool} onLogout={logout}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Root/>);
 </script>
 </body>
 </html>
