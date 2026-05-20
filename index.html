@@ -37,8 +37,7 @@ return d.text||"";
 };
 
 var state={screen:"login",user:null};
-// Safety: if anything fails on load, show login
-window.onerror=function(){if(state.screen==="login"||!document.getElementById("root").children.length){render();}return true;};
+
 const setState=(updates)=>{state={...state,...updates};render();};
 
 const btnStyle=(disabled,bg)=>({background:disabled?"#e8e6f0":bg||G.dark,color:disabled?G.muted:"#fff",border:"none",borderRadius:"10px",padding:"13px 24px",fontSize:"14px",fontWeight:"700",cursor:disabled?"not-allowed":"pointer",fontFamily:"inherit"});
@@ -698,18 +697,18 @@ else if(state.screen==="app2")root.appendChild(renderApp2());
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
-const saved=localStorage.getItem("nt_u");
+// Always show login immediately, then check session
+render();
+var saved=localStorage.getItem("nt_u");
 if(saved){
 try{
-const u=JSON.parse(saved);
-const checkTimeout=setTimeout(()=>{localStorage.removeItem("nt_u");render();},5000);
-apiAuth({action:"check",userId:u.id}).then(res=>{
-clearTimeout(checkTimeout);
-if(res.success){state={screen:"dashboard",user:res.user};render();}
-else{localStorage.removeItem("nt_u");render();}
-}).catch(()=>{clearTimeout(checkTimeout);localStorage.removeItem("nt_u");render();});
-}catch(e){localStorage.removeItem("nt_u");render();}
-}else{render();}
+var u=JSON.parse(saved);
+apiAuth({action:"check",userId:u.id}).then(function(res){
+if(res&&res.success){state={screen:"dashboard",user:res.user};render();}
+else{localStorage.removeItem("nt_u");}
+}).catch(function(){localStorage.removeItem("nt_u");});
+}catch(e){localStorage.removeItem("nt_u");}
+}
 </script>
 </body>
 </html>
