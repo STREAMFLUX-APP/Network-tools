@@ -8,776 +8,372 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,serif;background:#f8f7ff;color:#111;min-height:100vh}
 input,textarea,button,select{font-family:inherit}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f0eeff}::-webkit-scrollbar-thumb{background:#b8aff0;border-radius:3px}
 </style>
 </head>
 <body>
 <div id="root"><div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f8f7ff"><div style="text-align:center"><div style="font-size:32px;margin-bottom:12px">✦</div><div style="color:#6b6b6b;font-size:13px">Loading...</div></div></div></div>
 <script>
-const G={bg:"#f8f7ff",card:"#ffffff",border:"#e8e6f0",purple:"#7664d0",purpleDim:"#ede9ff",purpleBorder:"rgba(118,100,208,0.3)",dark:"#2e2a4a",white:"#fff",muted:"#6b6b6b",green:"#2d9e6b",red:"#dc2626",gbg:"#f4f3f9",gl:"#e8e6f0"};
-
-var T_EN={welcome:"Welcome",choose:"Choose a tool.",lang:"Language",logout:"Log Out",trial:"d left",loginTitle:"Welcome back",loginSub:"Sign in to your account",loginEmail:"Email",loginPass:"Password",loginBtn:"Sign In",loggingIn:"Signing in...",loginErr:"Please enter your email and password.",loginHelp:"Need help? ",mktTitle:"Marketing Machine",mktDesc:"Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more.",outTitle:"Outreach Machine",outDesc:"Personalised 1-on-1 messages for any contact.",home:"Home",back:"Back",cont:"Continue",gen:"Generate Full Package",generating:"Generating...",newContent:"New Content",ready:"Package Ready!",profileTitle:"Your Profile",profileName:"Name *",profileLink:"MONAT Link *",profilePhone:"WhatsApp",profileNamePh:"e.g. Maria",profileLinkPh:"yourname.mymonat.com",profilePhonePh:"+1 (555) 000",profileWarn:"Fill in your name and MONAT link to continue",s1:"Step 1",s1t:"What Is Your Goal?",s1s:"Everything will be tailored around this.",s2:"Step 2",s3:"Step 3",s3t:"Where Are You Posting?",s3s:"Select all platforms.",s4:"Step 4",s4t:"Tone & Style",s4s:"How should your content feel?",s2sell:"Which Problem Are You Solving?",s2recruit:"Who Are You Targeting?",s2motivate:"What is the Theme?",s2brand:"What to Highlight?",s2sub:"Pick all that apply.",prodOpt:"Choose a Product (optional)",prodSub:"Select to focus on a specific product.",catHair:"Hair Care",catSkin:"Skin Care",catWell:"Wellness",catMen:"Mens",platSel:function(n){return n+" platform"+(n>1?"s":"")+" selected";},summary:"Summary:",fillFirst:"Fill in your name and MONAT link first.",completeStep:"Please complete this step.",genIn:function(l){return "Generating in "+l+"...";},schedTitle:"Your 7-day posting plan.",outWho:"Who Are You Contacting?",outWhoSub:"The more detail, the more personalised.",outCName:"Their First Name",outCNamePh:"Maria",outCType:"Contact Type",outReason:"Reason for Reaching Out",outReasonH:"Why are you contacting them?",outTone:"Communication Tone",outObjTitle:"What Objection Did They Raise?",outObjSub:"Select category and paste their exact words.",outObjCat:"Objection Category",outExact:"Their Exact Words",outExactOpt:"(optional)",outExactH:"Paste exactly what they said",outExactPh:"e.g. I tried MONAT before",outHairTitle:"Their Hair & Skin Situation",outHairSub:"AI will tailor content to their problems.",outHairProbs:"Their Hair / Skin Problems",outHairH:"Select all that apply",outProdsMention:"Products to Mention",outProdsH:"Optional",outPartTitle:"Why Would They Be a Great Partner?",outPartProf:"Their Profile",outCtxTitle:"Personal Context",outCtxSub:"Personal details make messages feel real.",outPrior:"Prior Contact History",outPriorH:"Have you spoken before?",outPriorPh:"e.g. Met at a MONAT event.",outNote:"Personal Note",outNoteH:"Kids, job, lifestyle",outNotePh:"e.g. Has 2 young kids.",outYours:"Your Details",outYourName:"Your Name",outYourPhone:"Your WhatsApp / Phone",outYourLink:"Your MONAT Shop Link",outGen:"Generate Full Outreach Package",outGening:"Generating...",outFill:"Fill in all required fields to continue.",outReady:function(n){return "Outreach Package for "+n;},outNew:"New Message",outNatural:"Read naturally.",outBrackets:"Replace brackets before printing.",outOrder:"Send in order if no reply.",outPlanFor:function(n){return "Follow-up plan for "+n+".";}};
+var C={purple:"#7664d0",dark:"#2e2a4a",light:"#ede9ff",white:"#fff",off:"#f8f7ff",gray:"#6b6b6b",gl:"#e8e6f0",gbg:"#f4f3f9",green:"#2d9e6b",red:"#dc2626"};
 var appLang=localStorage.getItem("nt_lang")||"English";
-var T={
-English:{welcome:"Welcome",choose:tt(appLang).choose,lang:"Language",logout:tt(appLang).logout,trial:"d left",loginTitle:"Welcome back",loginSub:"Sign in to your account",loginEmail:"Email",loginPass:"Password",loginBtn:"Sign In →",loggingIn:"Signing in...",loginErr:"Please enter your email and password.",loginHelp:"Need help? ",mktTitle:"Marketing Machine",mktDesc:"Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more.",outTitle:"Outreach Machine",outDesc:"Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and letters.",home:tt(appLang).home,back:tt(appLang).back,cont:tt(appLang).cont,gen:tt(appLang).gen,generating:tt(appLang).generating,newContent:tt(appLang).newContent,ready:tt(appLang).ready,profileTitle:"Your Profile",profileName:"Name *",profileLink:"MONAT Link *",profilePhone:"WhatsApp",profileNamePh:"e.g. Maria",profileLinkPh:"yourname.mymonat.com",profilePhonePh:"+1 (555) 000",profileWarn:tt(appLang).profileWarn,s1:tt(appLang).s1,s1t:tt(appLang).s1t,s1s:tt(appLang).s1s,s2:tt(appLang).s2,s3:tt(appLang).s3,s3t:tt(appLang).s3t,s3s:"Select all platforms - we generate everything at once.",s4:tt(appLang).s4,s4t:"Tone & Style",s4s:"How should your content feel?",s2sell:"Which Problem Are You Solving?",s2recruit:"Who Are You Targeting?",s2motivate:"What is the Theme?",s2brand:"What to Highlight?",s2sub:tt(appLang).s2sub,prodOpt:tt(appLang).prodOpt,prodSub:tt(appLang).prodSub,catHair:"Hair Care",catSkin:"Skin Care",catWell:"Wellness",catMen:"Mens",platSel:function(n){return "✦ "+n+" platform"+(n>1?"s":"")+" selected + 7-day schedule";},summary:"Your content summary:",fillFirst:tt(appLang).fillFirst,completeStep:tt(appLang).completeStep,genIn:function(l){return "Generating in "+l+". Please wait...";},schedTitle:tt(appLang).schedTitle,outWho:tt(appLang).outWho,outWhoSub:tt(appLang).outWhoSub,outCName:tt(appLang).outCName,outCNamePh:"Maria",outCType:tt(appLang).outCType,outReason:tt(appLang).outReason,outReasonH:tt(appLang).outReasonH,outTone:tt(appLang).outTone,outObjTitle:tt(appLang).outObjTitle,outObjSub:tt(appLang).outObjSub,outObjCat:tt(appLang).outObjCat,outExact:"Their Exact Words",outExactOpt:tt(appLang).outExactOpt,outExactH:"Paste exactly what they said",outExactPh:"e.g. I tried MONAT before and my hair fell out",outHairTitle:"Their Hair and Skin Situation",outHairSub:tt(appLang).outHairSub,outHairProbs:tt(appLang).outHairProbs,outHairH:tt(appLang).outHairH,outProdsMention:tt(appLang).outProdsMention,outProdsH:tt(appLang).outProdsH,outPartTitle:tt(appLang).outPartTitle,outPartProf:tt(appLang).outPartProf,outCtxTitle:tt(appLang).outCtxTitle,outCtxSub:"Personal details make messages feel real.",outPrior:tt(appLang).outPrior,outPriorH:tt(appLang).outPriorH,outPriorPh:"e.g. Met at a MONAT event.",outNote:tt(appLang).outNote,outNoteH:"Kids, job, lifestyle - anything personal you know",outNotePh:"e.g. Has 2 young kids, dry hair.",outYours:tt(appLang).outYours,outYourName:tt(appLang).outYourName,outYourPhone:tt(appLang).outYourPhone,outYourLink:tt(appLang).outYourLink,outGen:tt(appLang).outGen,outGening:tt(appLang).outGening,outFill:tt(appLang).outFill,outReady:function(n){return "✦ Outreach Package for "+n;},outNew:tt(appLang).outNew,outNatural:"Read naturally.",outBrackets:tt(appLang).outBrackets,outOrder:tt(appLang).outOrder,outPlanFor:function(n){return "Your exact follow-up plan for "+n+".";}},
-Spanish:{welcome:"Bienvenida",choose:"Elige una herramienta para comenzar.",lang:"Idioma",logout:"Cerrar Sesión",trial:"d restantes",loginTitle:"Bienvenida de nuevo",loginSub:"Inicia sesión en tu cuenta",loginEmail:"Correo electrónico",loginPass:"Contraseña",loginBtn:"Iniciar Sesión →",loggingIn:"Iniciando sesión...",loginErr:"Por favor ingresa tu correo y contraseña.",loginHelp:"¿Necesitas ayuda? ",mktTitle:"Máquina de Marketing",mktDesc:"Crea contenido para WhatsApp, Instagram, Facebook, TikTok Shop y más.",outTitle:"Máquina de Contacto",outDesc:"Mensajes personalizados 1-a-1 para cualquier contacto.",home:"← Inicio",back:"← Atrás",cont:"Continuar →",gen:"✦ Generar Paquete Completo",generating:"✦ Generando...",newContent:"← Nuevo Contenido",ready:"✦ ¡Paquete Listo!",profileTitle:"Tu Perfil",profileName:"Nombre *",profileLink:"Enlace MONAT *",profilePhone:"WhatsApp",profileNamePh:"ej. María",profileLinkPh:"tunombre.mymonat.com",profilePhonePh:"+34 (555) 000",profileWarn:"Completa tu nombre y enlace MONAT para continuar",s1:"Paso 1",s1t:"¿Cuál es tu objetivo?",s1s:"Todo el contenido se adaptará a esto.",s2:"Paso 2",s3:"Paso 3",s3t:"¿Dónde vas a publicar?",s3s:"Selecciona todas las plataformas - generamos todo a la vez.",s4:"Paso 4",s4t:"Tono y Estilo",s4s:"¿Cómo debe sentirse tu contenido?",s2sell:"¿Qué problema estás resolviendo?",s2recruit:"¿A quién estás dirigiendo?",s2motivate:"¿Cuál es el tema?",s2brand:"¿Qué destacar?",s2sub:"Elige todo lo que aplique.",prodOpt:"Elige un Producto (opcional)",prodSub:"Selecciona para enfocar el contenido en un producto específico.",catHair:"Cuidado Capilar",catSkin:"Cuidado de la Piel",catWell:"Bienestar",catMen:"Para Hombres",platSel:function(n){return "✦ "+n+" plataforma"+(n>1?"s":"")+" seleccionada"+(n>1?"s":"")+" + plan de 7 días";},summary:"Resumen de tu contenido:",fillFirst:"Completa tu nombre y enlace MONAT primero.",completeStep:"Por favor completa este paso para continuar.",genIn:function(l){return "Generando en "+l+". Por favor espera...";},schedTitle:"Tu plan de publicación de 7 días.",outWho:"¿A quién estás contactando?",outWhoSub:"Más detalles = mensajes más personalizados.",outCName:"Nombre de pila",outCNamePh:"María",outCType:"Tipo de contacto",outReason:"Razón para contactar",outReasonH:"¿Por qué los estás contactando ahora?",outTone:"Tono de comunicación",outObjTitle:"¿Qué objeción plantearon?",outObjSub:"Selecciona la categoría y pega sus palabras exactas.",outObjCat:"Categoría de objeción",outExact:"Sus palabras exactas",outExactOpt:"(opcional pero recomendado)",outExactH:"Pega exactamente lo que dijeron",outExactPh:"ej. Probé MONAT antes y mi cabello se cayó",outHairTitle:"Su situación de cabello y piel",outHairSub:"La IA adaptará el contenido a sus problemas específicos.",outHairProbs:"Sus problemas de cabello / piel",outHairH:"Selecciona todo lo que aplique",outProdsMention:"Productos a mencionar",outProdsH:"Opcional",outPartTitle:"¿Por qué sería una gran socia?",outPartProf:"Su perfil",outCtxTitle:"Contexto personal",outCtxSub:"Los detalles personales hacen que los mensajes se sientan reales.",outPrior:"Historial de contacto previo",outPriorH:"¿Han hablado antes? ¿Qué dijo?",outPriorPh:"ej. Nos conocimos en un evento MONAT.",outNote:"Nota personal",outNoteH:"Hijos, trabajo, estilo de vida",outNotePh:"ej. Tiene 2 hijos pequeños, cabello seco.",outYours:"Tus datos",outYourName:"Tu nombre",outYourPhone:"Tu WhatsApp / Teléfono",outYourLink:"Tu enlace de tienda MONAT",outGen:"✦ Generar Paquete Completo",outGening:"Generando...",outFill:"Completa el nombre, tipo, razón, tono y tu nombre para continuar.",outReady:function(n){return "✦ Paquete para "+n;},outNew:"← Nuevo Mensaje",outNatural:"Lee de forma natural.",outBrackets:"Reemplaza los corchetes antes de imprimir.",outOrder:"Envía en orden si no hay respuesta.",outPlanFor:function(n){return "Tu plan exacto de seguimiento para "+n+".";}},
-Mexican:{welcome:"Bienvenida",choose:"Elige una herramienta para comenzar.",lang:"Idioma",logout:"Cerrar Sesión",trial:"d restantes",loginTitle:"Bienvenida de nuevo",loginSub:"Inicia sesión en tu cuenta",loginEmail:"Correo electrónico",loginPass:"Contraseña",loginBtn:"Iniciar Sesión →",loggingIn:"Iniciando sesión...",loginErr:"Por favor ingresa tu correo y contraseña.",loginHelp:"¿Necesitas ayuda? ",mktTitle:"Máquina de Marketing",mktDesc:"Crea contenido para WhatsApp, Instagram, Facebook, TikTok Shop y más.",outTitle:"Máquina de Contacto",outDesc:"Mensajes personalizados 1-a-1 para cualquier contacto.",home:"← Inicio",back:"← Atrás",cont:"Continuar →",gen:"✦ Generar Paquete Completo",generating:"✦ Generando...",newContent:"← Nuevo Contenido",ready:"✦ ¡Paquete Listo!",profileTitle:"Tu Perfil",profileName:"Nombre *",profileLink:"Enlace MONAT *",profilePhone:"WhatsApp",profileNamePh:"ej. María",profileLinkPh:"tunombre.mymonat.com",profilePhonePh:"+52 (555) 000",profileWarn:"Llena tu nombre y enlace MONAT para continuar",s1:"Paso 1",s1t:"¿Cuál es tu objetivo?",s1s:"Todo el contenido se va a adaptar a esto.",s2:"Paso 2",s3:"Paso 3",s3t:"¿Dónde vas a publicar?",s3s:"Selecciona todas las plataformas - generamos todo a la vez.",s4:"Paso 4",s4t:"Tono y Estilo",s4s:"¿Cómo quieres que se sienta tu contenido?",s2sell:"¿Qué problema estás resolviendo?",s2recruit:"¿A quién le estás hablando?",s2motivate:"¿Cuál es el tema?",s2brand:"¿Qué quieres destacar?",s2sub:"Elige todo lo que aplique.",prodOpt:"Elige un Producto (opcional)",prodSub:"Selecciona para enfocar el contenido en un producto específico.",catHair:"Cuidado Capilar",catSkin:"Cuidado de la Piel",catWell:"Bienestar",catMen:"Para Hombres",platSel:function(n){return "✦ "+n+" plataforma"+(n>1?"s":"")+" seleccionada"+(n>1?"s":"")+" + plan de 7 días";},summary:"Resumen de tu contenido:",fillFirst:"Llena tu nombre y enlace MONAT primero.",completeStep:"Por favor completa este paso para continuar.",genIn:function(l){return "Generando en "+l+". Por favor espera...";},schedTitle:"Tu plan de publicación de 7 días.",outWho:"¿A quién le vas a escribir?",outWhoSub:"Más detalles = mensajes más personalizados.",outCName:"Nombre de pila",outCNamePh:"María",outCType:"Tipo de contacto",outReason:"Razón para contactar",outReasonH:"¿Por qué los estás contactando ahorita?",outTone:"Tono de comunicación",outObjTitle:"¿Qué objeción pusieron?",outObjSub:"Selecciona la categoría y pega sus palabras exactas.",outObjCat:"Categoría de objeción",outExact:"Sus palabras exactas",outExactOpt:"(opcional pero muy recomendado)",outExactH:"Pega exactamente lo que dijeron",outExactPh:"ej. Ya probé MONAT y se me cayó el cabello",outHairTitle:"Su situación de cabello y piel",outHairSub:"La IA va a adaptar el contenido a sus problemas específicos.",outHairProbs:"Sus problemas de cabello / piel",outHairH:"Selecciona todo lo que aplique",outProdsMention:"Productos a mencionar",outProdsH:"Opcional",outPartTitle:"¿Por qué sería una gran socia?",outPartProf:"Su perfil",outCtxTitle:"Contexto personal",outCtxSub:"Los detalles personales hacen que los mensajes se sientan reales.",outPrior:"Historial de contacto",outPriorH:"¿Ya han platicado? ¿Qué te dijo?",outPriorPh:"ej. Nos conocimos en un evento MONAT.",outNote:"Nota personal",outNoteH:"Hijos, trabajo, estilo de vida",outNotePh:"ej. Tiene 2 niños chiquitos, cabello muy seco.",outYours:"Tus datos",outYourName:"Tu nombre",outYourPhone:"Tu WhatsApp / Teléfono",outYourLink:"Tu enlace de tienda MONAT",outGen:"✦ Generar Paquete Completo",outGening:"Generando...",outFill:"Llena el nombre, tipo, razón, tono y tu nombre para continuar.",outReady:function(n){return "✦ Paquete para "+n;},outNew:"← Nuevo Mensaje",outNatural:"Lee de forma natural.",outBrackets:"Reemplaza los corchetes antes de imprimir.",outOrder:"Manda en orden si no hay respuesta.",outPlanFor:function(n){return "Tu plan exacto de seguimiento para "+n+".";}},
-Italian:{welcome:"Benvenuta",choose:"Scegli uno strumento per iniziare.",lang:"Lingua",logout:"Esci",trial:"g rimasti",loginTitle:"Bentornata",loginSub:"Accedi al tuo account",loginEmail:"Email",loginPass:"Password",loginBtn:"Accedi →",loggingIn:"Accesso in corso...",loginErr:"Inserisci email e password.",loginHelp:"Hai bisogno di aiuto? ",mktTitle:"Marketing Machine",mktDesc:"Crea contenuti per WhatsApp, Instagram, Facebook, TikTok Shop e altro.",outTitle:"Outreach Machine",outDesc:"Messaggi personalizzati 1-a-1 per qualsiasi contatto.",home:tt(appLang).home,back:"← Indietro",cont:"Continua →",gen:"✦ Genera Pacchetto Completo",generating:"✦ Generando...",newContent:"← Nuovo Contenuto",ready:"✦ Pacchetto Pronto!",profileTitle:"Il Tuo Profilo",profileName:"Nome *",profileLink:"Link MONAT *",profilePhone:"WhatsApp",profileNamePh:"es. Maria",profileLinkPh:"tuonome.mymonat.com",profilePhonePh:"+39 (555) 000",profileWarn:"Inserisci nome e link MONAT per continuare",s1:"Passo 1",s1t:"Qual è il tuo obiettivo?",s1s:"Tutto sarà personalizzato in base a questo.",s2:"Passo 2",s3:"Passo 3",s3t:"Dove pubblicherai?",s3s:"Seleziona tutte le piattaforme - generiamo tutto in una volta.",s4:"Passo 4",s4t:"Tono e Stile",s4s:"Come deve sentirsi il tuo contenuto?",s2sell:"Quale problema stai risolvendo?",s2recruit:"Chi stai prendendo di mira?",s2motivate:"Qual è il tema?",s2brand:"Cosa evidenziare?",s2sub:"Scegli tutto ciò che si applica.",prodOpt:"Scegli un Prodotto (opzionale)",prodSub:"Seleziona per focalizzare il contenuto su un prodotto specifico.",catHair:"Cura dei Capelli",catSkin:"Cura della Pelle",catWell:"Benessere",catMen:"Per Uomo",platSel:function(n){return "✦ "+n+" piattaforma"+(n>1?"e":"")+" selezionata"+(n>1?"e":"")+" + piano 7 giorni";},summary:"Riepilogo del tuo contenuto:",fillFirst:"Inserisci prima nome e link MONAT.",completeStep:"Completa questo passo per continuare.",genIn:function(l){return "Generando in "+l+". Attendi...";},schedTitle:"Il tuo piano di pubblicazione di 7 giorni.",outWho:"Chi stai contattando?",outWhoSub:"Più dettagli = messaggi più personalizzati.",outCName:"Nome di battesimo",outCNamePh:"Maria",outCType:"Tipo di contatto",outReason:"Motivo del contatto",outReasonH:"Perché li stai contattando ora?",outTone:"Tono di comunicazione",outObjTitle:"Quale obiezione hanno sollevato?",outObjSub:"Seleziona la categoria e incolla le loro parole esatte.",outObjCat:"Categoria obiezione",outExact:"Le loro parole esatte",outExactOpt:"(opzionale ma consigliato)",outExactH:"Incolla esattamente quello che hanno detto",outExactPh:"es. Ho provato MONAT prima e i miei capelli sono caduti",outHairTitle:"La loro situazione capelli e pelle",outHairSub:"L'IA adatterà il contenuto ai loro problemi specifici.",outHairProbs:"I loro problemi di capelli / pelle",outHairH:"Seleziona tutto ciò che si applica",outProdsMention:"Prodotti da menzionare",outProdsH:"Opzionale",outPartTitle:"Perché sarebbe una grande partner?",outPartProf:"Il suo profilo",outCtxTitle:"Contesto personale",outCtxSub:"I dettagli personali rendono i messaggi autentici.",outPrior:"Storico contatti",outPriorH:"Avete già parlato? Cosa ha detto?",outPriorPh:"es. Ci siamo incontrate a un evento MONAT.",outNote:"Nota personale",outNoteH:"Figli, lavoro, stile di vita",outNotePh:"es. Ha 2 bambini piccoli, capelli secchi.",outYours:"I tuoi dati",outYourName:"Il tuo nome",outYourPhone:"Il tuo WhatsApp / Telefono",outYourLink:"Il tuo link negozio MONAT",outGen:"✦ Genera Pacchetto Completo",outGening:"Generando...",outFill:"Compila nome, tipo, motivo, tono e il tuo nome per continuare.",outReady:function(n){return "✦ Pacchetto per "+n;},outNew:"← Nuovo Messaggio",outNatural:"Leggi in modo naturale.",outBrackets:"Sostituisci le parentesi prima di stampare.",outOrder:"Invia in ordine se non c'e risposta.",outPlanFor:function(n){return "Il tuo piano esatto per "+n+".";}},
-French:{welcome:"Bienvenue",choose:"Choisissez un outil pour commencer.",lang:"Langue",logout:"Déconnexion",trial:"j restants",loginTitle:"Bon retour",loginSub:"Connectez-vous à votre compte",loginEmail:"E-mail",loginPass:"Mot de passe",loginBtn:"Se connecter →",loggingIn:"Connexion...",loginErr:"Veuillez entrer votre e-mail et mot de passe.",loginHelp:"Besoin d'aide ? ",mktTitle:"Machine Marketing",mktDesc:"Créez du contenu pour WhatsApp, Instagram, Facebook, TikTok Shop et plus.",outTitle:"Machine de Prospection",outDesc:"Messages personnalisés 1-à-1 pour tout contact.",home:"← Accueil",back:"← Retour",cont:"Continuer →",gen:"✦ Générer le Package Complet",generating:"✦ Génération...",newContent:"← Nouveau Contenu",ready:"✦ Package Prêt !",profileTitle:"Votre Profil",profileName:"Nom *",profileLink:"Lien MONAT *",profilePhone:"WhatsApp",profileNamePh:"ex. Marie",profileLinkPh:"votreprenom.mymonat.com",profilePhonePh:"+33 (555) 000",profileWarn:"Remplissez votre nom et lien MONAT pour continuer",s1:"Etape 1",s1t:"Quel est votre objectif ?",s1s:"Tout le contenu sera adapté en fonction de ceci.",s2:"Etape 2",s3:"Etape 3",s3t:"Où allez-vous publier ?",s3s:"Sélectionnez toutes les plateformes - nous générons tout en une fois.",s4:"Etape 4",s4t:"Ton et Style",s4s:"Comment doit se sentir votre contenu ?",s2sell:"Quel problème résolvez-vous ?",s2recruit:"Qui ciblez-vous ?",s2motivate:"Quel est le thème ?",s2brand:"Que mettre en avant ?",s2sub:"Choisissez tout ce qui s'applique.",prodOpt:"Choisir un Produit (optionnel)",prodSub:"Sélectionnez pour focaliser le contenu sur un produit spécifique.",catHair:"Soins Capillaires",catSkin:"Soins de la Peau",catWell:"Bien-être",catMen:"Pour Hommes",platSel:function(n){return "✦ "+n+" plateforme"+(n>1?"s":"")+" sélectionnée"+(n>1?"s":"")+" + plan 7 jours";},summary:"Résumé de votre contenu :",fillFirst:"Remplissez d'abord nom et lien MONAT.",completeStep:"Veuillez compléter cette étape pour continuer.",genIn:function(l){return "Génération en "+l+". Veuillez patienter...";},schedTitle:"Votre plan de publication de 7 jours.",outWho:"Qui contactez-vous ?",outWhoSub:"Plus de détails = messages plus personnalisés.",outCName:"Prénom",outCNamePh:"Marie",outCType:"Type de contact",outReason:"Raison du contact",outReasonH:"Pourquoi les contactez-vous maintenant ?",outTone:"Ton de communication",outObjTitle:"Quelle objection ont-ils soulevée ?",outObjSub:"Sélectionnez la catégorie et collez leurs mots exacts.",outObjCat:"Catégorie d'objection",outExact:"Leurs mots exacts",outExactOpt:"(optionnel mais recommandé)",outExactH:"Collez exactement ce qu'ils ont dit",outExactPh:"ex. J'ai essayé MONAT avant et mes cheveux sont tombés",outHairTitle:"Leur situation cheveux et peau",outHairSub:"L'IA adaptera le contenu à leurs problèmes spécifiques.",outHairProbs:"Leurs problèmes de cheveux / peau",outHairH:"Sélectionnez tout ce qui s'applique",outProdsMention:"Produits à mentionner",outProdsH:"Optionnel",outPartTitle:"Pourquoi serait-elle une excellente partenaire ?",outPartProf:"Son profil",outCtxTitle:"Contexte personnel",outCtxSub:"Les détails personnels rendent les messages authentiques.",outPrior:"Historique des contacts",outPriorH:"Avez-vous déjà parlé ? Qu'a-t-elle dit ?",outPriorPh:"ex. Nous nous sommes rencontrees a un evenement MONAT.",outNote:"Note personnelle",outNoteH:"Enfants, travail, style de vie",outNotePh:"ex. A 2 jeunes enfants, cheveux secs.",outYours:"Vos coordonnées",outYourName:"Votre nom",outYourPhone:"Votre WhatsApp / Téléphone",outYourLink:"Votre lien boutique MONAT",outGen:"✦ Générer le Package Complet",outGening:"Génération...",outFill:"Remplissez le nom, type, raison, ton et votre nom pour continuer.",outReady:function(n){return "✦ Package pour "+n;},outNew:"← Nouveau Message",outNatural:"Lisez naturellement.",outBrackets:"Remplacez les crochets avant d'imprimer.",outOrder:"Envoyez dans l'ordre si pas de réponse.",outPlanFor:function(n){return "Votre plan exact pour "+n+".";}},
-Portuguese:{welcome:"Bem-vinda",choose:"Escolha uma ferramenta para começar.",lang:"Idioma",logout:"Sair",trial:"d restantes",loginTitle:"Bem-vinda de volta",loginSub:"Entre na sua conta",loginEmail:"E-mail",loginPass:"Senha",loginBtn:"Entrar →",loggingIn:"Entrando...",loginErr:"Por favor insira seu e-mail e senha.",loginHelp:"Precisa de ajuda? ",mktTitle:"Máquina de Marketing",mktDesc:"Crie conteúdo para WhatsApp, Instagram, Facebook, TikTok Shop e mais.",outTitle:"Máquina de Contato",outDesc:"Mensagens personalizadas 1-a-1 para qualquer contato.",home:"← Início",back:"← Voltar",cont:"Continuar →",gen:"✦ Gerar Pacote Completo",generating:"✦ Gerando...",newContent:"← Novo Conteúdo",ready:"✦ Pacote Pronto!",profileTitle:"Seu Perfil",profileName:"Nome *",profileLink:"Link MONAT *",profilePhone:"WhatsApp",profileNamePh:"ex. Maria",profileLinkPh:"seunome.mymonat.com",profilePhonePh:"+55 (555) 000",profileWarn:"Preencha seu nome e link MONAT para continuar",s1:"Passo 1",s1t:"Qual é o seu objetivo?",s1s:"Todo o conteúdo será personalizado com base nisso.",s2:"Passo 2",s3:"Passo 3",s3t:"Onde você vai postar?",s3s:"Selecione todas as plataformas - geramos tudo de uma vez.",s4:"Passo 4",s4t:"Tom e Estilo",s4s:"Como deve parecer seu conteúdo?",s2sell:"Qual problema você está resolvendo?",s2recruit:"Quem você está mirando?",s2motivate:"Qual é o tema?",s2brand:"O que destacar?",s2sub:"Escolha tudo que se aplica.",prodOpt:"Escolha um Produto (opcional)",prodSub:"Selecione para focar o conteúdo em um produto específico.",catHair:"Cuidado Capilar",catSkin:"Cuidado da Pele",catWell:"Bem-estar",catMen:"Para Homens",platSel:function(n){return "✦ "+n+" plataforma"+(n>1?"s":"")+" selecionada"+(n>1?"s":"")+" + plano de 7 dias";},summary:"Resumo do seu conteúdo:",fillFirst:"Preencha seu nome e link MONAT primeiro.",completeStep:"Por favor complete este passo para continuar.",genIn:function(l){return "Gerando em "+l+". Por favor aguarde...";},schedTitle:"Seu plano de publicação de 7 dias.",outWho:"Quem você está contactando?",outWhoSub:"Mais detalhes = mensagens mais personalizadas.",outCName:"Primeiro nome",outCNamePh:"Maria",outCType:"Tipo de contato",outReason:"Razão para contatar",outReasonH:"Por que você está contactando agora?",outTone:"Tom de comunicação",outObjTitle:"Qual objeção eles levantaram?",outObjSub:"Selecione a categoria e cole as palavras exatas deles.",outObjCat:"Categoria da objeção",outExact:"As palavras exatas deles",outExactOpt:"(opcional mas recomendado)",outExactH:"Cole exatamente o que disseram",outExactPh:"ex. Tentei MONAT antes e meu cabelo caiu",outHairTitle:"Situação de cabelo e pele deles",outHairSub:"A IA vai adaptar o conteúdo aos problemas específicos deles.",outHairProbs:"Problemas de cabelo / pele deles",outHairH:"Selecione tudo que se aplica",outProdsMention:"Produtos a mencionar",outProdsH:"Opcional",outPartTitle:"Por que seria uma ótima parceira?",outPartProf:"O perfil dela",outCtxTitle:"Contexto pessoal",outCtxSub:"Detalhes pessoais fazem as mensagens parecerem reais.",outPrior:"Histórico de contato",outPriorH:"Já conversaram? O que ela disse?",outPriorPh:"ex. Nos conhecemos em um evento MONAT.",outNote:"Nota pessoal",outNoteH:"Filhos, trabalho, estilo de vida",outNotePh:"ex. Tem 2 filhos pequenos, cabelo seco.",outYours:"Seus dados",outYourName:"Seu nome",outYourPhone:"Seu WhatsApp / Telefone",outYourLink:"Seu link da loja MONAT",outGen:"✦ Gerar Pacote Completo",outGening:"Gerando...",outFill:"Preencha o nome, tipo, razão, tom e seu nome para continuar.",outReady:function(n){return "✦ Pacote para "+n;},outNew:"← Nova Mensagem",outNatural:"Leia de forma natural.",outBrackets:"Substitua os colchetes antes de imprimir.",outOrder:"Envie em ordem se não houver resposta.",outPlanFor:function(n){return "Seu plano exato para "+n+".";}},
-German:{welcome:"Willkommen",choose:"Wählen Sie ein Tool, um zu beginnen.",lang:"Sprache",logout:"Abmelden",trial:"T verbleibend",loginTitle:"Willkommen zurück",loginSub:"Melden Sie sich an",loginEmail:"E-Mail",loginPass:"Passwort",loginBtn:"Anmelden →",loggingIn:"Anmeldung...",loginErr:"Bitte geben Sie E-Mail und Passwort ein.",loginHelp:"Brauchen Sie Hilfe? ",mktTitle:"Marketing-Maschine",mktDesc:"Erstellen Sie Inhalte für WhatsApp, Instagram, Facebook, TikTok Shop und mehr.",outTitle:"Outreach-Maschine",outDesc:"Personalisierte 1-zu-1-Nachrichten für jeden Kontakt.",home:"← Startseite",back:"← Zurück",cont:"Weiter →",gen:"✦ Komplettes Paket generieren",generating:"✦ Generiere...",newContent:"← Neuer Inhalt",ready:"✦ Paket fertig!",profileTitle:"Ihr Profil",profileName:"Name *",profileLink:"MONAT-Link *",profilePhone:"WhatsApp",profileNamePh:"z.B. Maria",profileLinkPh:"ihrname.mymonat.com",profilePhonePh:"+49 (555) 000",profileWarn:"Geben Sie Name und MONAT-Link ein, um fortzufahren",s1:"Schritt 1",s1t:"Was ist Ihr Ziel?",s1s:"Alle Inhalte werden darauf ausgerichtet.",s2:"Schritt 2",s3:"Schritt 3",s3t:"Wo posten Sie?",s3s:"Wählen Sie alle Plattformen - wir generieren alles auf einmal.",s4:"Schritt 4",s4t:"Ton und Stil",s4s:"Wie soll sich Ihr Inhalt anfühlen?",s2sell:"Welches Problem lösen Sie?",s2recruit:"Wen sprechen Sie an?",s2motivate:"Was ist das Thema?",s2brand:"Was hervorheben?",s2sub:"Wählen Sie alles Zutreffende.",prodOpt:"Produkt wählen (optional)",prodSub:"Wählen Sie, um den Inhalt auf ein Produkt zu fokussieren.",catHair:"Haarpflege",catSkin:"Hautpflege",catWell:"Wellness",catMen:"Für Männer",platSel:function(n){return "✦ "+n+" Plattform"+(n>1?"en":"")+" ausgewählt + 7-Tage-Plan";},summary:"Ihre Inhaltsübersicht:",fillFirst:"Geben Sie zuerst Name und MONAT-Link ein.",completeStep:"Bitte vervollständigen Sie diesen Schritt.",genIn:function(l){return "Generiere auf "+l+". Bitte warten...";},schedTitle:"Ihr 7-Tage-Veröffentlichungsplan.",outWho:"Wen kontaktieren Sie?",outWhoSub:"Mehr Details = personalisiertere Nachrichten.",outCName:"Vorname",outCNamePh:"Maria",outCType:"Kontakttyp",outReason:"Kontaktgrund",outReasonH:"Warum kontaktieren Sie sie jetzt?",outTone:"Kommunikationston",outObjTitle:"Welchen Einwand haben sie erhoben?",outObjSub:"Wählen Sie die Kategorie und fügen Sie ihre genauen Worte ein.",outObjCat:"Einwandkategorie",outExact:"Ihre genauen Worte",outExactOpt:"(optional, aber empfohlen)",outExactH:"Fügen Sie genau ein, was sie gesagt haben",outExactPh:"z.B. Ich habe MONAT ausprobiert und meine Haare sind ausgefallen",outHairTitle:"Ihre Haar- und Hautsituation",outHairSub:"Die KI passt den Inhalt an ihre spezifischen Probleme an.",outHairProbs:"Ihre Haar-/Hautprobleme",outHairH:"Wählen Sie alles Zutreffende",outProdsMention:"Zu erwähnende Produkte",outProdsH:tt(appLang).outProdsH,outPartTitle:"Warum wäre sie eine tolle Partnerin?",outPartProf:"Ihr Profil",outCtxTitle:"Persönlicher Kontext",outCtxSub:"Persönliche Details lassen Nachrichten echt wirken.",outPrior:"Kontakthistorie",outPriorH:"Haben Sie schon gesprochen? Was hat sie gesagt?",outPriorPh:"z.B. Wir haben uns bei einem MONAT-Event getroffen.",outNote:"Persönliche Notiz",outNoteH:"Kinder, Arbeit, Lebensstil",outNotePh:"z.B. Hat 2 kleine Kinder, trockenes Haar.",outYours:"Ihre Daten",outYourName:"Ihr Name",outYourPhone:"Ihr WhatsApp / Telefon",outYourLink:"Ihr MONAT-Shop-Link",outGen:"✦ Komplettes Outreach-Paket generieren",outGening:"Generiere...",outFill:"Füllen Sie Name, Typ, Grund, Ton und Ihren Namen aus.",outReady:function(n){return "✦ Paket für "+n;},outNew:"← Neue Nachricht",outNatural:"Lesen Sie natürlich.",outBrackets:"Ersetzen Sie Klammern vor dem Drucken.",outOrder:"Senden Sie in Reihenfolge, wenn keine Antwort.",outPlanFor:function(n){return "Ihr genauer Plan für "+n+".";}},
+var TX={
+English:{loginTitle:"Welcome back",loginSub:"Sign in to your account",loginEmail:"Email",loginPass:"Password",loginBtn:"Sign In",loggingIn:"Signing in...",loginErr:"Please enter your email and password.",loginHelp:"Need help? ",welcome:"Welcome",choose:"Choose a tool to get started.",lang:"Language",logout:"Log Out",trial:"d left",mktTitle:"Marketing Machine",mktDesc:"Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more.",outTitle:"Outreach Machine",outDesc:"Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and letters.",home:"Home",back:"Back",cont:"Continue",gen:"Generate Full Package",generating:"Generating...",newContent:"New Content",ready:"Package Ready!",profileTitle:"YOUR PROFILE",profileName:"Name *",profileLink:"MONAT Link *",profilePhone:"WhatsApp",profileNamePh:"e.g. Maria",profileLinkPh:"yourname.mymonat.com",profilePhonePh:"+1 (555) 000",profileWarn:"Fill in your name and MONAT link to continue",s1:"STEP 1",s1t:"What Is Your Goal?",s1s:"Everything will be tailored around this.",s2:"STEP 2",s3:"STEP 3",s3t:"Where Are You Posting?",s3s:"Select all platforms — we generate everything at once.",s4:"STEP 4",s4t:"Tone & Style",s4s:"How should your content feel?",s2sell:"Which Problem Are You Solving?",s2recruit:"Who Are You Targeting?",s2motivate:"What is the Theme?",s2brand:"What to Highlight?",s2sub:"Pick all that apply.",prodOpt:"Choose a Product (optional)",prodSub:"Select to focus all content on a specific product.",catHair:"Hair Care",catSkin:"Skin Care",catWell:"Wellness",catMen:"Mens",platSel:function(n){return n+" platform"+(n>1?"s":"")+" selected + 7-day schedule";},summary:"Your content summary:",fillFirst:"Fill in your name and MONAT link first.",completeStep:"Please complete this step to continue.",genIn:function(l){return "Generating in "+l+". Please wait...";},schedTitle:"Your 7-day posting plan.",outWho:"Who Are You Contacting?",outWhoSub:"The more detail, the more personalised the messages.",outCName:"Their First Name",outCNamePh:"Maria",outCType:"Contact Type",outReason:"Reason for Reaching Out",outReasonH:"Why are you contacting them right now?",outTone:"Communication Tone",outObjTitle:"What Objection Did They Raise?",outObjSub:"Select the category and paste their exact words.",outObjCat:"Objection Category",outExact:"Their Exact Words",outExactOpt:"(optional but recommended)",outExactH:"Paste exactly what they said",outExactPh:"e.g. I tried MONAT before and my hair fell out",outHairTitle:"Their Hair & Skin Situation",outHairSub:"The AI will tailor content around their specific problems.",outHairProbs:"Their Hair / Skin Problems",outHairH:"Select all that apply",outProdsMention:"Products to Mention",outProdsH:"Optional",outPartTitle:"Why Would They Be a Great Partner?",outPartProf:"Their Profile",outCtxTitle:"Personal Context",outCtxSub:"Personal details make messages feel real.",outPrior:"Prior Contact History",outPriorH:"Have you spoken before? What did they say?",outPriorPh:"e.g. Met at a MONAT event. She was interested but wanted to think about it.",outNote:"Personal Note",outNoteH:"Kids, job, lifestyle — anything personal you know",outNotePh:"e.g. Has 2 young kids, dry hair since having kids.",outYours:"Your Details",outYourName:"Your Name",outYourPhone:"Your WhatsApp / Phone",outYourLink:"Your MONAT Shop Link",outGen:"Generate Full Outreach Package",outGening:"Generating...",outFill:"Fill in their name, contact type, reason, tone and your name to continue.",outReady:function(n){return "Outreach Package for "+n;},outNew:"New Message",outNatural:"Read naturally.",outBrackets:"Replace brackets before printing.",outOrder:"Send in order if no reply.",outPlanFor:function(n){return "Follow-up plan for "+n+".";}},
+Spanish:{loginTitle:"Bienvenida de nuevo",loginSub:"Inicia sesion en tu cuenta",loginEmail:"Correo electronico",loginPass:"Contrasena",loginBtn:"Iniciar Sesion",loggingIn:"Iniciando sesion...",loginErr:"Por favor ingresa tu correo y contrasena.",loginHelp:"Necesitas ayuda? ",welcome:"Bienvenida",choose:"Elige una herramienta para comenzar.",lang:"Idioma",logout:"Cerrar Sesion",trial:"d restantes",mktTitle:"Maquina de Marketing",mktDesc:"Crea contenido para WhatsApp, Instagram, Facebook, TikTok Shop y mas.",outTitle:"Maquina de Contacto",outDesc:"Mensajes personalizados 1-a-1 para cualquier contacto. Seguimientos, objeciones, scripts y cartas.",home:"Inicio",back:"Atras",cont:"Continuar",gen:"Generar Paquete Completo",generating:"Generando...",newContent:"Nuevo Contenido",ready:"Paquete Listo!",profileTitle:"TU PERFIL",profileName:"Nombre *",profileLink:"Enlace MONAT *",profilePhone:"WhatsApp",profileNamePh:"ej. Maria",profileLinkPh:"tunombre.mymonat.com",profilePhonePh:"+1 (555) 000",profileWarn:"Completa tu nombre y enlace MONAT para continuar",s1:"PASO 1",s1t:"Cual es tu objetivo?",s1s:"Todo el contenido se adaptara a esto.",s2:"PASO 2",s3:"PASO 3",s3t:"Donde vas a publicar?",s3s:"Selecciona todas las plataformas, generamos todo a la vez.",s4:"PASO 4",s4t:"Tono y Estilo",s4s:"Como debe sentirse tu contenido?",s2sell:"Que problema estas resolviendo?",s2recruit:"A quien estas dirigiendo?",s2motivate:"Cual es el tema?",s2brand:"Que destacar?",s2sub:"Elige todo lo que aplique.",prodOpt:"Elige un Producto (opcional)",prodSub:"Selecciona para enfocar el contenido en un producto especifico.",catHair:"Cuidado Capilar",catSkin:"Cuidado de la Piel",catWell:"Bienestar",catMen:"Para Hombres",platSel:function(n){return n+" plataforma"+(n>1?"s":"")+" seleccionada"+(n>1?"s":"")+" + plan de 7 dias";},summary:"Resumen de tu contenido:",fillFirst:"Completa tu nombre y enlace MONAT primero.",completeStep:"Por favor completa este paso para continuar.",genIn:function(l){return "Generando en "+l+". Por favor espera...";},schedTitle:"Tu plan de publicacion de 7 dias.",outWho:"A quien estas contactando?",outWhoSub:"Mas detalles, mensajes mas personalizados.",outCName:"Nombre de pila",outCNamePh:"Maria",outCType:"Tipo de contacto",outReason:"Razon para contactar",outReasonH:"Por que los estas contactando ahora?",outTone:"Tono de comunicacion",outObjTitle:"Que objecion plantearon?",outObjSub:"Selecciona la categoria y pega sus palabras exactas.",outObjCat:"Categoria de objecion",outExact:"Sus palabras exactas",outExactOpt:"(opcional pero recomendado)",outExactH:"Pega exactamente lo que dijeron",outExactPh:"ej. Probe MONAT antes y mi cabello se cayo",outHairTitle:"Su situacion de cabello y piel",outHairSub:"La IA adaptara el contenido a sus problemas especificos.",outHairProbs:"Sus problemas de cabello / piel",outHairH:"Selecciona todo lo que aplique",outProdsMention:"Productos a mencionar",outProdsH:"Opcional",outPartTitle:"Por que seria una gran socia?",outPartProf:"Su perfil",outCtxTitle:"Contexto personal",outCtxSub:"Los detalles personales hacen que los mensajes se sientan reales.",outPrior:"Historial de contacto previo",outPriorH:"Han hablado antes? Que dijo?",outPriorPh:"ej. Nos conocimos en un evento MONAT. Dijo que estaba interesada pero queria pensarlo.",outNote:"Nota personal",outNoteH:"Hijos, trabajo, estilo de vida",outNotePh:"ej. Tiene 2 hijos pequenos, cabello seco desde que tuvo hijos.",outYours:"Tus datos",outYourName:"Tu nombre",outYourPhone:"Tu WhatsApp / Telefono",outYourLink:"Tu enlace de tienda MONAT",outGen:"Generar Paquete Completo",outGening:"Generando...",outFill:"Completa el nombre, tipo, razon, tono y tu nombre para continuar.",outReady:function(n){return "Paquete para "+n;},outNew:"Nuevo Mensaje",outNatural:"Lee de forma natural.",outBrackets:"Reemplaza los corchetes antes de imprimir.",outOrder:"Envia en orden si no hay respuesta.",outPlanFor:function(n){return "Plan de seguimiento para "+n+".";}},
 };
-function tt(lang){
-try{
-var l=lang||appLang||localStorage.getItem("nt_lang")||"English";
-if(typeof T==="undefined")return T_EN;
-return T[l]||T.English||T_EN;
-}catch(e){return T_EN;}
-}
+function T(){return TX[appLang]||TX.English;}
 
-const apiAuth=async(body)=>{try{const r=await fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.json();}catch(e){return{error:e.message};}};
-const apiClaude=async(prompt,maxTokens=1000)=>{
-const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens})});
-const d=await r.json();
-if(d.error)throw new Error(d.error);
-return d.text||"";
-};
+function GOALS(){var d={English:[{v:"sell",l:"Sell Products",d:"Promote MONAT products"},{v:"recruit",l:"Recruit Partners",d:"Invite people to join"},{v:"motivate",l:"Motivate My Team",d:"Inspire your MONAT team"},{v:"brand",l:"Brand Awareness",d:"Grow your MONAT presence"}],Spanish:[{v:"sell",l:"Vender Productos",d:"Promover productos MONAT"},{v:"recruit",l:"Reclutar Socias",d:"Invitar personas a unirse"},{v:"motivate",l:"Motivar mi Equipo",d:"Inspirar tu equipo MONAT"},{v:"brand",l:"Crear Marca",d:"Crecer tu presencia MONAT"}]};return d[appLang]||d.English;}
+function PAIN(){var d={English:[{v:"thinning",l:"Hair Thinning & Loss"},{v:"dry",l:"Dry & Brittle Hair"},{v:"frizzy",l:"Frizzy Hair"},{v:"oily",l:"Oily Hair & Scalp"},{v:"damaged",l:"Damaged Hair"},{v:"splitends",l:"Split Ends"},{v:"curls",l:"Undefined Curls"},{v:"color",l:"Color Fade"},{v:"aging_skin",l:"Aging Skin"},{v:"dull_skin",l:"Dull Skin"},{v:"no_volume",l:"No Volume"},{v:"scalp",l:"Itchy Scalp"}],Spanish:[{v:"thinning",l:"Caida del Cabello"},{v:"dry",l:"Cabello Seco y Quebradizo"},{v:"frizzy",l:"Cabello Frizzy"},{v:"oily",l:"Cabello Grasoso"},{v:"damaged",l:"Cabello Danado"},{v:"splitends",l:"Puntas Abiertas"},{v:"curls",l:"Rizos Sin Definicion"},{v:"color",l:"Color Desvaneciendose"},{v:"aging_skin",l:"Piel con Edad"},{v:"dull_skin",l:"Piel Opaca"},{v:"no_volume",l:"Sin Volumen"},{v:"scalp",l:"Cuero Cabelludo con Picazon"}]};return d[appLang]||d.English;}
+function RECRUIT(){var d={English:[{v:"extra_income",l:"Wants Extra Income",d:"Earn on the side"},{v:"work_from_home",l:"Work From Home",d:"Flexible business"},{v:"loves_beauty",l:"Loves Beauty",d:"Passion into income"},{v:"entrepreneur",l:"Own Boss",d:"No ceiling"},{v:"stay_home_mom",l:"Stay-at-Home Mom",d:"Earn and raise family"},{v:"side_hustle",l:"Side Hustle",d:"That actually pays"},{v:"social_media",l:"Social Media",d:"Monetize posts"},{v:"student",l:"Student",d:"Build income"}],Spanish:[{v:"extra_income",l:"Quiere Ingresos Extra",d:"Ganar desde casa"},{v:"work_from_home",l:"Trabajar desde Casa",d:"Negocio flexible"},{v:"loves_beauty",l:"Ama la Belleza",d:"Pasion en ingresos"},{v:"entrepreneur",l:"Su Propio Negocio",d:"Sin limite"},{v:"stay_home_mom",l:"Mama en Casa",d:"Ganar y criar familia"},{v:"side_hustle",l:"Negocio Extra",d:"Que realmente paga"},{v:"social_media",l:"Redes Sociales",d:"Monetizar publicaciones"},{v:"student",l:"Estudiante",d:"Construir ingresos"}]};return d[appLang]||d.English;}
+function MOTIVATE(){var d={English:[{v:"keep_going",l:"Keep Going"},{v:"celebrate",l:"Celebrate Win"},{v:"monday_fire",l:"Monday Motivation"},{v:"consistency",l:"Consistency"},{v:"belief",l:"Believe in Yourself"},{v:"new_member",l:"Welcome New Member"}],Spanish:[{v:"keep_going",l:"Sigue Adelante"},{v:"celebrate",l:"Celebrar Logro"},{v:"monday_fire",l:"Motivacion del Lunes"},{v:"consistency",l:"Consistencia"},{v:"belief",l:"Creer en Ti Misma"},{v:"new_member",l:"Bienvenida Nueva Miembro"}]};return d[appLang]||d.English;}
+function BRAND(){var d={English:[{v:"natural",l:"Natural Ingredients"},{v:"results",l:"Real Results"},{v:"cruelty_free",l:"Cruelty-Free"},{v:"made_in_usa",l:"Made in USA"},{v:"awards",l:"80+ Awards"},{v:"community",l:"Community"},{v:"opportunity",l:"Opportunity"},{v:"gratitude",l:"Gratitude Foundation"}],Spanish:[{v:"natural",l:"Ingredientes Naturales"},{v:"results",l:"Resultados Reales"},{v:"cruelty_free",l:"Sin Crueldad Animal"},{v:"made_in_usa",l:"Hecho en USA"},{v:"awards",l:"80+ Premios"},{v:"community",l:"Comunidad"},{v:"opportunity",l:"Oportunidad"},{v:"gratitude",l:"Fundacion Gratitud"}]};return d[appLang]||d.English;}
+function PLATFORMS(){var d={English:[{v:"wa_status",l:"WhatsApp Status",d:"Post to all contacts"},{v:"wa_message",l:"WhatsApp Message",d:"Personal 1-on-1"},{v:"ig_feed",l:"Instagram Feed",d:"Post + hashtags"},{v:"ig_shop",l:"Instagram Shop",d:"Shop-optimized post"},{v:"ig_reel",l:"Instagram Reel",d:"Video script"},{v:"fb_feed",l:"Facebook Feed",d:"Facebook post"},{v:"fb_shop",l:"Facebook Shop",d:"Shop-optimized post"},{v:"tiktok_shop",l:"TikTok Shop",d:"TikTok video script"},{v:"image",l:"Image / Canva",d:"AI prompts + design brief"}],Spanish:[{v:"wa_status",l:"Estado de WhatsApp",d:"Publicar a todos los contactos"},{v:"wa_message",l:"Mensaje de WhatsApp",d:"Mensaje personal 1-a-1"},{v:"ig_feed",l:"Feed de Instagram",d:"Publicacion + hashtags"},{v:"ig_shop",l:"Tienda de Instagram",d:"Publicacion para tienda"},{v:"ig_reel",l:"Reel de Instagram",d:"Guion de video"},{v:"fb_feed",l:"Feed de Facebook",d:"Publicacion en Facebook"},{v:"fb_shop",l:"Tienda de Facebook",d:"Publicacion para tienda"},{v:"tiktok_shop",l:"TikTok Shop",d:"Guion de video TikTok"},{v:"image",l:"Imagen / Canva",d:"Prompts IA + brief de diseno"}]};return d[appLang]||d.English;}
+function TONES(){var d={English:[{v:"friendly",l:"Friendly & Warm",d:"Like a real friend"},{v:"professional",l:"Professional",d:"Polished & credible"},{v:"exciting",l:"Exciting & Energetic",d:"High energy"},{v:"inspirational",l:"Inspirational",d:"Uplifting"},{v:"urgent",l:"Urgent",d:"Act now"}],Spanish:[{v:"friendly",l:"Amigable y Calido",d:"Como un amigo real"},{v:"professional",l:"Profesional",d:"Pulido y creible"},{v:"exciting",l:"Emocionante y Energetico",d:"Alta energia"},{v:"inspirational",l:"Inspiracional",d:"Motivador"},{v:"urgent",l:"Urgente",d:"Actua ahora"}]};return d[appLang]||d.English;}
+function CONTACT_TYPES(){var d={English:[{v:"potential_customer",l:"Potential Customer",d:"Interested in buying products"},{v:"potential_partner",l:"Potential Partner",d:"Might want to join MONAT"},{v:"existing_customer",l:"Existing Customer",d:"Already bought products"},{v:"cold_lead",l:"Cold Lead",d:"First outreach"},{v:"past_partner",l:"Past Partner",d:"Used to be a Market Partner"},{v:"team_member",l:"Team Member",d:"Part of your MONAT team"}],Spanish:[{v:"potential_customer",l:"Cliente Potencial",d:"Interesada en comprar productos"},{v:"potential_partner",l:"Socia Potencial",d:"Podria querer unirse a MONAT"},{v:"existing_customer",l:"Cliente Existente",d:"Ya compro productos"},{v:"cold_lead",l:"Contacto Frio",d:"Sin contacto previo"},{v:"past_partner",l:"Socia Anterior",d:"Fue Market Partner"},{v:"team_member",l:"Miembro del Equipo",d:"Parte de tu equipo MONAT"}]};return d[appLang]||d.English;}
+function REASONS(){var d={English:[{v:"first_outreach",l:"First Outreach",d:"Never contacted before"},{v:"follow_up_interest",l:"Follow Up - Showed Interest",d:"They liked something"},{v:"follow_up_no_reply",l:"Follow Up - No Reply",d:"No response"},{v:"product_recommendation",l:"Product Recommendation",d:"Specific product for their problem"},{v:"recruit_invite",l:"Recruit - Business Invite",d:"Invite to join as Market Partner"},{v:"repeat_sale",l:"Repeat Sale / Reorder",d:"Product running out"},{v:"special_offer",l:"Special Offer",d:"Sharing a current deal"},{v:"check_in",l:"Check In",d:"Just keeping in touch"},{v:"handle_objection",l:"Handle Objection",d:"They said no or not right now"},{v:"welcome_new",l:"Welcome New Customer",d:"They just joined or bought"},{v:"referral_request",l:"Ask for Referral",d:"Ask to refer friends/family"},{v:"reconnect",l:"Reconnect",d:"Haven't spoken in a long time"}],Spanish:[{v:"first_outreach",l:"Primer Contacto",d:"Nunca contactada antes"},{v:"follow_up_interest",l:"Seguimiento - Mostro Interes",d:"Le gusto algo"},{v:"follow_up_no_reply",l:"Seguimiento - Sin Respuesta",d:"No respondio"},{v:"product_recommendation",l:"Recomendacion de Producto",d:"Producto para su problema"},{v:"recruit_invite",l:"Invitacion al Negocio",d:"Invitar a unirse como Market Partner"},{v:"repeat_sale",l:"Recompra / Pedido Nuevo",d:"Se le acaba el producto"},{v:"special_offer",l:"Oferta Especial",d:"Compartir una oferta actual"},{v:"check_in",l:"Check In",d:"Solo mantener el contacto"},{v:"handle_objection",l:"Manejar Objecion",d:"Dijo que no o ahorita no"},{v:"welcome_new",l:"Bienvenida Nueva Cliente",d:"Acaba de unirse o comprar"},{v:"referral_request",l:"Pedir Referido",d:"Pedir que refiera amigas"},{v:"reconnect",l:"Reconectar",d:"No han hablado en mucho tiempo"}]};return d[appLang]||d.English;}
+function OBJECTIONS(){var d={English:[{v:"too_expensive",l:"Too Expensive",d:"Can't afford it"},{v:"not_interested",l:"Not Interested",d:"General rejection"},{v:"already_have_products",l:"Already Have Products",d:"Using another brand"},{v:"mlm_skeptical",l:"Skeptical About MLM",d:"Doesn't believe in network marketing"},{v:"no_time",l:"No Time",d:"Too busy"},{v:"need_to_think",l:"Need to Think",d:"Not ready to decide"},{v:"bad_timing",l:"Bad Timing",d:"Life circumstances"},{v:"tried_before",l:"Tried It Before",d:"Had a bad experience"}],Spanish:[{v:"too_expensive",l:"Muy Caro",d:"No puede pagarlo"},{v:"not_interested",l:"No Esta Interesada",d:"Rechazo general"},{v:"already_have_products",l:"Ya Tiene Productos",d:"Usa otra marca"},{v:"mlm_skeptical",l:"Esceptica sobre MLM",d:"No cree en el marketing de red"},{v:"no_time",l:"No Tiene Tiempo",d:"Muy ocupada"},{v:"need_to_think",l:"Necesita Pensarlo",d:"No esta lista"},{v:"bad_timing",l:"Mal Momento",d:"Circunstancias de vida"},{v:"tried_before",l:"Lo Intento Antes",d:"Tuvo mala experiencia"}]};return d[appLang]||d.English;}
+function HAIR_PROBS(){var d={English:["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"],Spanish:["Caida del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy","Cabello Grasoso","Cabello Danado","Puntas Abiertas","Rizos Sin Definicion","Color Desvaneciendose","Cabello Plano Sin Volumen","Cuero Cabelludo con Picazon","Piel con Signos de Edad","Piel Opaca"]};return d[appLang]||d.English;}
+function PARTNER_T(){var d={English:["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"],Spanish:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mama en Casa","Trabajar desde Casa","Busca un Negocio Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdio su Trabajo Recientemente","Apasionada por Productos Naturales"]};return d[appLang]||d.English;}
+
+var PRODUCTS={hair:[{v:"bond_iq",l:"MONAT Bond IQ",d:"Stronger Hair"},{v:"ir_clinical",l:"IR Clinical",d:"Hair Thinning Defense"},{v:"rejuveniqe",l:"Rejuveniqe Oil",d:"13+ natural oils"},{v:"anti_frizz",l:"Anti-Frizz",d:"Deep Treatment"},{v:"curl",l:"Curl Perfection",d:"Curl & Wave"},{v:"rejuvabeads",l:"REJUVABEADS",d:"Split End Mender"},{v:"scalp_scrub",l:"Scalp Purifying Scrub",d:"Deep cleanse"},{v:"scalp_comfort",l:"Scalp Comfort",d:"Rebalancing"},{v:"color_care",l:"Color Care",d:"Color-Treated Hair"},{v:"densifying",l:"Densifying System",d:"Volume & thickness"}],skin:[{v:"barrier",l:"Barrier Booster",d:"Glass Skin"},{v:"glowtint",l:"GlowTint Lip Oil",d:"Skincare gloss"}],wellness:[{v:"wellness",l:"Wellness Supplements",d:"Energy & mood"}],mens:[{v:"men",l:"MONAT for MEN",d:"Men's collection"}]};
+var OUT_PRODUCTS=["MONAT Bond IQ","IR Clinical","Rejuveniqe Oil","Anti-Frizz","Curl Perfection","REJUVABEADS","Scalp Purifying Scrub","Scalp Comfort","Color Care","Densifying System","Barrier Booster","GlowTint Lip Oil","Wellness Supplements","MONAT for MEN"];
 
 var state={screen:"login",user:null};
+function setState(u){state=Object.assign({},state,u);render();}
+function apiAuth(body){return fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).catch(function(){return{error:"Network error"};});}
+function apiClaude(prompt,maxTokens){return fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens||900})}).then(function(r){return r.json();}).then(function(d){if(d.error)throw new Error(d.error);return d.text||"";});}
 
-const setState=(updates)=>{state={...state,...updates};render();};
+function el(tag,attrs){
+var e=document.createElement(tag);
+if(attrs)Object.keys(attrs).forEach(function(k){if(k==="style"&&typeof attrs[k]==="object")Object.assign(e.style,attrs[k]);else if(k.startsWith("on"))e.addEventListener(k.slice(2).toLowerCase(),attrs[k]);else e.setAttribute(k,attrs[k]);});
+for(var i=2;i<arguments.length;i++){var c=arguments[i];if(c==null||c===false)continue;if(Array.isArray(c))c.forEach(function(x){if(x!=null&&x!==false)e.appendChild(typeof x==="string"?document.createTextNode(x):x);});else e.appendChild(typeof c==="string"?document.createTextNode(c):c);}
+return e;}
+function tog(arr,val){return arr.indexOf(val)>=0?arr.filter(function(x){return x!==val;}).slice():[].concat(arr,[val]);}
+function allProds(){return [].concat(PRODUCTS.hair,PRODUCTS.skin,PRODUCTS.wellness,PRODUCTS.mens);}
 
-const btnStyle=(disabled,bg)=>({background:disabled?"#e8e6f0":bg||G.dark,color:disabled?G.muted:"#fff",border:"none",borderRadius:"10px",padding:"13px 24px",fontSize:"14px",fontWeight:"700",cursor:disabled?"not-allowed":"pointer",fontFamily:"inherit"});
-const inputStyle={width:"100%",background:G.gbg,border:`1.5px solid ${G.gl}`,borderRadius:"9px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
-const cardStyle={background:G.card,border:`1px solid ${G.border}`,borderRadius:"14px",padding:"22px",marginBottom:"16px"};
-const labelStyle={display:"block",fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:G.muted,textTransform:"uppercase",marginBottom:"4px"};
+var IS={width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
+var CS={background:"#fff",border:"1px solid #e8e6f0",borderRadius:"14px",padding:"18px 20px",marginBottom:"14px"};
+var LS={display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.08em",color:"#6b6b6b",textTransform:"uppercase",marginBottom:"4px"};
+var btnD={background:"#2e2a4a",color:"#fff",border:"none",borderRadius:"10px",padding:"12px 20px",fontSize:"14px",fontWeight:"700",cursor:"pointer"};
+var btnS={background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"12px 20px",fontSize:"14px",cursor:"pointer"};
+var btnG={background:"#e8e6f0",color:"#6b6b6b",border:"none",borderRadius:"10px",padding:"12px 20px",fontSize:"14px",fontWeight:"700",cursor:"not-allowed"};
 
-function el(tag,attrs,...children){
-const e=document.createElement(tag);
-if(attrs)Object.entries(attrs).forEach(([k,v])=>{
-if(k==="style"&&typeof v==="object")Object.assign(e.style,v);
-else if(k.startsWith("on"))e.addEventListener(k.slice(2).toLowerCase(),v);
-else if(k==="class")e.className=v;
-else e.setAttribute(k,v);
-});
-children.flat().forEach(c=>{if(c==null||c===false)return;e.appendChild(typeof c==="string"?document.createTextNode(c):c);});
-return e;
-}
+function mkInp(lbl,val,onCh,ph,type){var w=el("div",{style:{marginBottom:"13px"}});if(lbl)w.appendChild(el("label",{style:LS},lbl));var i=el("input",{type:type||"text",placeholder:ph||"",style:IS});i.value=val||"";i.addEventListener("input",function(){onCh(i.value);});w.appendChild(i);return w;}
+function mkTA(lbl,val,onCh,ph,rows,hint){var w=el("div",{style:{marginBottom:"13px"}});if(lbl)w.appendChild(el("label",{style:LS},lbl));if(hint)w.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));var ta=el("textarea",{placeholder:ph||"",rows:rows||3,style:Object.assign({},IS,{resize:"vertical"})});ta.value=val||"";ta.addEventListener("input",function(){onCh(ta.value);});w.appendChild(ta);return w;}
+function mkChips(lbl,hint,opts,sel,onT,single){
+var w=el("div",{style:{marginBottom:"16px"}});
+if(lbl)w.appendChild(el("label",{style:LS},lbl));
+if(hint)w.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},hint));
+var g=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"7px"}});
+opts.forEach(function(o){
+var v=typeof o==="string"?o:(o.v||o.value);
+var l=typeof o==="string"?o:(o.l||o.label);
+var d=typeof o==="object"?(o.d||o.desc):null;
+var active=single?sel===v:(sel&&sel.indexOf(v)>=0);
+var btn=el("button",{style:{background:active?"#2e2a4a":"#f4f3f9",border:"1.5px solid "+(active?"#2e2a4a":"#e8e6f0"),borderRadius:"9px",color:active?"#fff":"#555",fontSize:"12px",padding:d?"9px 13px":"7px 12px",cursor:"pointer",textAlign:"left",fontFamily:"inherit"}},
+el("div",{style:{fontWeight:active?"700":"400"}},l));
+if(d)btn.appendChild(el("div",{style:{fontSize:"11px",color:active?"#b8aff0":"#6b6b6b",marginTop:"2px"}},d));
+btn.addEventListener("click",function(){onT(v);});
+g.appendChild(btn);});
+w.appendChild(g);return w;}
 
-function field(label,type,value,onChange,placeholder,hint){
-const wrap=el("div",{style:{marginBottom:"14px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));
-const inp=el("input",{type:type||"text",placeholder:placeholder||"",style:inputStyle});
-inp.value=value||"";
-inp.addEventListener("input",e=>onChange(e.target.value));
-wrap.appendChild(inp);
-return wrap;
-}
-
-function textarea(label,value,onChange,placeholder,rows,hint){
-const wrap=el("div",{style:{marginBottom:"14px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));
-const ta=el("textarea",{placeholder:placeholder||"",rows:rows||3,style:{...inputStyle,resize:"vertical"}});
-ta.value=value||"";
-ta.addEventListener("input",e=>onChange(e.target.value));
-wrap.appendChild(ta);
-return wrap;
-}
-
-function chips(label,hint,options,selected,onToggle,single){
-const wrap=el("div",{style:{marginBottom:"18px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},hint));
-const grid=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"7px"}});
-options.forEach(opt=>{
-const val=typeof opt==="string"?opt:opt.value;
-const lbl=typeof opt==="string"?opt:opt.label;
-const sub=typeof opt==="object"?opt.desc:null;
-const active=single?selected===val:(selected||[]).includes(val);
-const btn=el("button",{style:{background:active?G.dark:G.gbg,border:`1.5px solid ${active?G.dark:G.gl}`,borderRadius:"9px",color:active?"#fff":"#555",fontSize:"12px",padding:sub?"9px 13px":"7px 12px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",transition:"all 0.15s"}},
-el("div",{style:{fontWeight:active?"700":"400"}},lbl),
-...(sub?[el("div",{style:{fontSize:"11px",color:active?"#b8aff0":G.muted,marginTop:"2px"}},sub)]:[])
-);
-btn.addEventListener("click",()=>onToggle(val));
-grid.appendChild(btn);
-});
-wrap.appendChild(grid);
-return wrap;
-}
-
-function copyCard(title,content){
-const card=el("div",{style:{background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"12px",padding:"14px 16px",marginBottom:"11px"}});
-const copyBtn=el("button",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"6px",color:G.muted,fontSize:"11px",padding:"4px 11px",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},"Copy");
-copyBtn.addEventListener("click",()=>{
-navigator.clipboard.writeText(content||"");
-copyBtn.textContent="✓ Copied";copyBtn.style.color=G.green;copyBtn.style.borderColor=G.green;
-setTimeout(()=>{copyBtn.textContent="Copy";copyBtn.style.color=G.muted;copyBtn.style.borderColor=G.gl;},1800);
-});
-card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"9px"}},
-el("span",{style:{fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:G.dark,textTransform:"uppercase"}},title),
-copyBtn
-));
+function mkCopyCard(title,content){
+var card=el("div",{style:{background:"#f4f3f9",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"11px"}});
+var copyBtn=el("button",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"6px",color:"#6b6b6b",fontSize:"11px",padding:"4px 11px",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},"Copy");
+copyBtn.addEventListener("click",function(){navigator.clipboard.writeText(content||"");copyBtn.textContent="Copied!";copyBtn.style.color="#2d9e6b";copyBtn.style.borderColor="#2d9e6b";setTimeout(function(){copyBtn.textContent="Copy";copyBtn.style.color="#6b6b6b";copyBtn.style.borderColor="#e8e6f0";},1800);});
+card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"9px"}},el("span",{style:{fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:"#2e2a4a",textTransform:"uppercase"}},title),copyBtn));
 card.appendChild(el("p",{style:{color:"#111",fontSize:"13px",lineHeight:"1.8",margin:"0",whiteSpace:"pre-wrap"}},content||""));
-return card;
-}
+return card;}
 
-// ── LOGIN ──────────────────────────────────────────────────────────────────
-function renderLogin(){
-let email="",password="",loading=false;
-const wrap=el("div",{style:{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"24px",background:G.bg}});
-const inner=el("div",{style:{width:"100%",maxWidth:"400px"}});
-inner.appendChild(el("div",{style:{textAlign:"center",marginBottom:"28px"}},
-el("div",{style:{width:"52px",height:"52px",borderRadius:"13px",background:G.dark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",color:"#fff",margin:"0 auto 12px"}},"✦"),
-el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Network Tools"),
-el("div",{style:{fontSize:"12px",color:G.muted,marginTop:"2px"}},"by Streamflux")
-));
-const card=el("div",{style:cardStyle});
-card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},tt(appLang).loginTitle));
-card.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"20px"}},tt(appLang).loginSub));
-const emailInp=el("input",{type:"email",placeholder:"your@email.com",style:{...inputStyle,marginBottom:"12px"}});
-const passInp=el("input",{type:"password",placeholder:"••••••••",style:{...inputStyle,marginBottom:"16px"}});
-emailInp.addEventListener("input",e=>email=e.target.value);
-passInp.addEventListener("input",e=>password=e.target.value);
-const errDiv=el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"9px 12px",color:G.red,fontSize:"13px",marginBottom:"12px",display:"none"}});
-const loginBtn=el("button",{style:{...btnStyle(false),width:"100%",fontSize:"15px"}},tt(appLang).loginBtn);
-const doLogin=async()=>{
-if(!email||!password){errDiv.textContent=tt(appLang).loginErr;errDiv.style.display="block";return;}
-loginBtn.textContent=tt(appLang).loggingIn;loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color=G.muted;
-errDiv.style.display="none";
-const res=await apiAuth({action:"login",email,password});
-if(res.success){localStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}
-else{errDiv.textContent="⚠ "+(res.error||"Login failed.");errDiv.style.display="block";loginBtn.textContent=tt(appLang).loginBtn;loginBtn.disabled=false;loginBtn.style.background=G.dark;loginBtn.style.color="#fff";}
-};
-loginBtn.addEventListener("click",doLogin);
-passInp.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
-card.appendChild(el("label",{style:labelStyle},tt(appLang).loginEmail));
-card.appendChild(emailInp);
-card.appendChild(el("label",{style:labelStyle},tt(appLang).loginPass));
-card.appendChild(passInp);
-card.appendChild(errDiv);
-card.appendChild(loginBtn);
-card.appendChild(el("p",{style:{textAlign:"center",color:G.muted,fontSize:"11px",marginTop:"14px"}},tt(appLang).loginHelp,el("span",{style:{color:G.purple}},"support@streamflux.app")));
-inner.appendChild(card);
-wrap.appendChild(inner);
-return wrap;
-}
-
-// ── DASHBOARD ──────────────────────────────────────────────────────────────
-function renderDashboard(){
-const user=state.user;
-const wrap=el("div",{style:{minHeight:"100vh",background:G.bg}});
-const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 22px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
-const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"10px"}});
-navLeft.appendChild(el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:G.dark,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"));
-navLeft.appendChild(el("div",{},
-el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
-el("div",{style:{fontSize:"8px",color:G.purple,letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
-));
-nav.appendChild(navLeft);
-const navRight=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
-if(user.trialActive){const badge=el("span",{style:{fontSize:"10px",color:G.purple,background:G.purpleDim,borderRadius:"10px",padding:"3px 8px"}},`⏰ ${user.daysLeft}d left`);navRight.appendChild(badge);}
-navRight.appendChild(el("span",{style:{fontSize:"12px",color:G.muted}},user.name));
-const logoutBtn=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},tt(appLang).logout);
-logoutBtn.addEventListener("click",()=>{localStorage.removeItem("nt_u");setState({screen:"login",user:null});});
-navRight.appendChild(logoutBtn);
-nav.appendChild(navRight);
-wrap.appendChild(nav);
-
-const content=el("div",{style:{maxWidth:"700px",margin:"0 auto",padding:"40px 18px 60px"}});
-const savedLang=appLang;
-content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"36px"}},
-el("div",{style:{fontSize:"28px",marginBottom:"8px"}},"✦"),
-el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},tt(appLang).welcome+", "+user.name.split(" ")[0]+"!"),
-el("p",{style:{fontSize:"14px",color:G.muted,marginBottom:"16px"}},tt(appLang).choose),
-el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
-el("span",{style:{fontSize:"12px",color:G.muted}},"Language:"),
-(()=>{
-const sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:`1px solid ${G.gl}`,background:G.card,fontSize:"13px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===savedLang)o.selected=true;sel.appendChild(o);});
-sel.addEventListener("change",function(){
-appLang=sel.value;
-localStorage.setItem("nt_lang",sel.value);
-render();
-});
-return sel;
-})()
-)
-));
-
-const grid=el("div",{style:{display:"flex",flexDirection:"column",gap:"16px"}});
-
-// Marketing Machine card
-const mktCard=el("div",{style:{background:G.dark,borderRadius:"16px",padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(46,42,74,0.15)"}});
-mktCard.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"10px"}},
-el("span",{style:{fontSize:"28px"}},"📣"),
-el("div",{},el("div",{style:{fontSize:"18px",fontWeight:"700",color:"#fff"}},tt(appLang).mktTitle),el("div",{style:{fontSize:"8px",color:"rgba(255,255,255,0.5)",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")),
-el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px"}},"→")
-));
-mktCard.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6",marginBottom:"14px"}},tt(appLang).mktDesc));
-const mktTags=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"6px"}});
-["WhatsApp Status","Instagram Feed","Instagram Shop","Instagram Reel","Facebook Feed","Facebook Shop","TikTok Shop","Image / Canva","7-Day Schedule"].forEach(t=>mktTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
-mktCard.appendChild(mktTags);
-mktCard.addEventListener("click",()=>setState({screen:"app1"}));
-grid.appendChild(mktCard);
-
-// Outreach Machine card
-const outCard=el("div",{style:{background:"#1a1a3a",borderRadius:"16px",padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(26,26,58,0.15)"}});
-outCard.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"10px"}},
-el("span",{style:{fontSize:"28px"}},"🤝"),
-el("div",{},el("div",{style:{fontSize:"18px",fontWeight:"700",color:"#fff"}},tt(appLang).outTitle),el("div",{style:{fontSize:"8px",color:"rgba(255,255,255,0.5)",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")),
-el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px"}},"→")
-));
-outCard.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6",marginBottom:"14px"}},"Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters."));
-const outTags=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"6px"}});
-["WhatsApp Message","SMS","Phone Script",tt(appLang).loginEmail,"Formal Letter","4 Follow-Ups","Schedule"].forEach(t=>outTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
-outCard.appendChild(outTags);
-outCard.addEventListener("click",()=>setState({screen:"app2"}));
-grid.appendChild(outCard);
-
-content.appendChild(grid);
-content.appendChild(el("div",{style:{marginTop:"40px",textAlign:"center",fontSize:"9px",color:G.gl,letterSpacing:"2px",textTransform:"uppercase"}},"Network Tools by Streamflux · Powered by Claude AI"));
-wrap.appendChild(content);
-return wrap;
-}
-
-// ── APP 1 - MARKETING MACHINE ──────────────────────────────────────────────
-function renderApp1(){
-const LANGS=[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"}];
-const GOALS={
-English:[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products to customers"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join as Market Partners"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire and energize your MONAT team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your MONAT presence & following"}],
-Spanish:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas a unirse"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo MONAT"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia MONAT"}],
-Mexican:[{value:"sell",label:"🛍️ Vender Productos",desc:"Promover productos MONAT"},{value:"recruit",label:"🤝 Reclutar Socias",desc:"Invitar personas a unirse"},{value:"motivate",label:"🔥 Motivar mi Equipo",desc:"Inspirar tu equipo MONAT"},{value:"brand",label:"✨ Crear Marca",desc:"Crecer tu presencia MONAT"}],
-Italian:[{value:"sell",label:"🛍️ Vendere Prodotti",desc:"Promuovi prodotti MONAT"},{value:"recruit",label:"🤝 Reclutare Partner",desc:"Invita persone come Partner"},{value:"motivate",label:"🔥 Motivare il Team",desc:"Ispira il tuo team"},{value:"brand",label:"✨ Brand Awareness",desc:"Cresci la presenza"}],
-French:[{value:"sell",label:"🛍️ Vendre Produits",desc:"Promouvoir les produits MONAT"},{value:"recruit",label:"🤝 Recruter Partenaires",desc:"Inviter des gens"},{value:"motivate",label:"🔥 Motiver l'Equipe",desc:"Inspirer votre equipe"},{value:"brand",label:"✨ Notoriete",desc:"Developper votre presence"}],
-Portuguese:[{value:"sell",label:"🛍️ Vender Produtos",desc:"Promover produtos MONAT"},{value:"recruit",label:"🤝 Recrutar Parceiras",desc:"Convidar pessoas"},{value:"motivate",label:"🔥 Motivar Time",desc:"Inspirar sua equipe"},{value:"brand",label:"✨ Marca",desc:"Crescer presenca MONAT"}],
-German:[{value:"sell",label:"🛍️ Produkte verkaufen",desc:"MONAT Produkte vermarkten"},{value:"recruit",label:"🤝 Partner gewinnen",desc:"Menschen einladen"},{value:"motivate",label:"🔥 Team motivieren",desc:"Team inspirieren"},{value:"brand",label:"✨ Marke",desc:"Prasenz aufbauen"}],
-};
-function PAIN_POINTS(){
-var lng=appLang;
-var d={
-English:[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls"},{value:"color",label:"🎨 Color Fade"},{value:"aging_skin",label:"🪞 Aging Skin"},{value:"dull_skin",label:"🌥️ Dull Skin"},{value:"no_volume",label:"😔 No Volume"},{value:"scalp",label:"😣 Itchy Scalp"}],
-Spanish:[{value:"thinning",label:"😟 Caída y Adelgazamiento del Cabello"},{value:"dry",label:"🏜️ Cabello Seco y Quebradizo"},{value:"frizzy",label:"😤 Cabello Frizzy"},{value:"oily",label:"💧 Cabello y Cuero Cabelludo Grasoso"},{value:"damaged",label:"💔 Cabello Dañado"},{value:"splitends",label:"✂️ Puntas Abiertas"},{value:"curls",label:"🌀 Rizos Sin Definición"},{value:"color",label:"🎨 Color Desvaneciéndose"},{value:"aging_skin",label:"🪞 Piel con Edad"},{value:"dull_skin",label:"🌥️ Piel Opaca"},{value:"no_volume",label:"😔 Sin Volumen"},{value:"scalp",label:"😣 Cuero Cabelludo con Picazón"}],
-Mexican:[{value:"thinning",label:"😟 Caída y Adelgazamiento del Cabello"},{value:"dry",label:"🏜️ Cabello Seco y Quebradizo"},{value:"frizzy",label:"😤 Cabello Frizzy"},{value:"oily",label:"💧 Cabello y Cuero Cabelludo Grasoso"},{value:"damaged",label:"💔 Cabello Dañado"},{value:"splitends",label:"✂️ Puntas Abiertas"},{value:"curls",label:"🌀 Rizos Sin Definición"},{value:"color",label:"🎨 Color Desvaneciéndose"},{value:"aging_skin",label:"🪞 Piel con Edad"},{value:"dull_skin",label:"🌥️ Piel Opaca"},{value:"no_volume",label:"😔 Sin Volumen"},{value:"scalp",label:"😣 Cuero Cabelludo con Comezón"}],
-Italian:[{value:"thinning",label:"😟 Diradamento e Caduta Capelli"},{value:"dry",label:"🏜️ Capelli Secchi e Fragili"},{value:"frizzy",label:"😤 Capelli Crespi"},{value:"oily",label:"💧 Capelli e Cuoio Capelluto Grassi"},{value:"damaged",label:"💔 Capelli Danneggiati"},{value:"splitends",label:"✂️ Punte Aperte"},{value:"curls",label:"🌀 Ricci Non Definiti"},{value:"color",label:"🎨 Colore che Sbiadisce"},{value:"aging_skin",label:"🪞 Pelle che Invecchia"},{value:"dull_skin",label:"🌥️ Pelle Opaca"},{value:"no_volume",label:"😔 Senza Volume"},{value:"scalp",label:"😣 Cuoio Capelluto che Prude"}],
-French:[{value:"thinning",label:"😟 Chute et Amincissement des Cheveux"},{value:"dry",label:"🏜️ Cheveux Secs et Cassants"},{value:"frizzy",label:"😤 Cheveux Frisottants"},{value:"oily",label:"💧 Cheveux et Cuir Chevelu Gras"},{value:"damaged",label:"💔 Cheveux Abîmés"},{value:"splitends",label:"✂️ Pointes Abîmées"},{value:"curls",label:"🌀 Boucles Non Définies"},{value:"color",label:"🎨 Couleur qui Ternit"},{value:"aging_skin",label:"🪞 Peau Vieillissante"},{value:"dull_skin",label:"🌥️ Peau Terne"},{value:"no_volume",label:"😔 Sans Volume"},{value:"scalp",label:"😣 Cuir Chevelu qui Démange"}],
-Portuguese:[{value:"thinning",label:"😟 Queda e Enfraquecimento do Cabelo"},{value:"dry",label:"🏜️ Cabelo Seco e Quebradiço"},{value:"frizzy",label:"😤 Cabelo Frizz"},{value:"oily",label:"💧 Cabelo e Couro Cabeludo Oleoso"},{value:"damaged",label:"💔 Cabelo Danificado"},{value:"splitends",label:"✂️ Pontas Duplas"},{value:"curls",label:"🌀 Cachos Sem Definição"},{value:"color",label:"🎨 Cor Desbotando"},{value:"aging_skin",label:"🪞 Pele com Sinais de Idade"},{value:"dull_skin",label:"🌥️ Pele Opaca"},{value:"no_volume",label:"😔 Sem Volume"},{value:"scalp",label:"😣 Couro Cabeludo com Coceira"}],
-German:[{value:"thinning",label:"😟 Haarausfall und -verdünnung"},{value:"dry",label:"🏜️ Trockenes und Sprödes Haar"},{value:"frizzy",label:"😤 Frizzy Haar"},{value:"oily",label:"💧 Fettiges Haar und Kopfhaut"},{value:"damaged",label:"💔 Beschädigtes Haar"},{value:"splitends",label:"✂️ Spliss"},{value:"curls",label:"🌀 Undefinierte Locken"},{value:"color",label:"🎨 Verblassende Farbe"},{value:"aging_skin",label:"🪞 Alternde Haut"},{value:"dull_skin",label:"🌥️ Matte Haut"},{value:"no_volume",label:"😔 Kein Volumen"},{value:"scalp",label:"😣 Juckende Kopfhaut"}],
-};
-return d[lng]||d.English;
-}
-const RECRUIT=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business"},{value:"loves_beauty",label:"💄 Loves Beauty",desc:"Passion into income"},{value:"entrepreneur",label:"🚀 Own Boss",desc:"No ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn & raise family"},{value:"side_hustle",label:"⚡ Side Hustle",desc:"That actually pays"},{value:"social_media",label:"📱 Social Media",desc:"Monetize posts"},{value:"student",label:"🎓 Student",desc:"Build income"}];
-const MOTIVATE=[{value:"keep_going",label:"💪 Keep Going"},{value:"celebrate",label:"🏆 Celebrate Win"},{value:"monday_fire",label:"🔥 Monday Motivation"},{value:"consistency",label:"📅 Consistency"},{value:"belief",label:"✨ Believe in Yourself"},{value:"new_member",label:"🎉 Welcome New Member"}];
-const BRAND=[{value:"natural",label:"🌿 Natural Ingredients"},{value:"results",label:"📸 Real Results"},{value:"cruelty_free",label:"🐰 Cruelty-Free"},{value:"made_in_usa",label:"🇺🇸 Made in USA"},{value:"awards",label:"🏅 80+ Awards"},{value:"community",label:"👥 Community"},{value:"opportunity",label:"💼 Opportunity"},{value:"gratitude",label:"❤️ Gratitude Foundation"}];
-const PRODUCTS={hair:[{value:"bond_iq",label:"MONAT Bond IQ™",desc:"Stronger Hair"},{value:"ir_clinical",label:"IR Clinical™",desc:"Hair Thinning Defense"},{value:"rejuveniqe",label:"Rejuveniqe Oil™",desc:"13+ natural oils"},{value:"anti_frizz",label:"Anti-Frizz™",desc:"Deep Treatment"},{value:"curl",label:"Curl Perfection™",desc:"Curl & Wave"},{value:"rejuvabeads",label:"REJUVABEADS®",desc:"Split End Mender"},{value:"scalp_scrub",label:"Scalp Purifying Scrub",desc:"Deep cleanse"},{value:"scalp_comfort",label:"Scalp Comfort™",desc:"Rebalancing"},{value:"color_care",label:"Color Care",desc:"Color-Treated Hair"},{value:"densifying",label:"Densifying System",desc:"Volume & thickness"},{value:"ir_supp",label:"IR™ Supplement",desc:"Daily hair health"}],skin:[{value:"barrier",label:"Barrier Booster™",desc:"Glass Skin"},{value:"glowtint",label:"GlowTint™ Lip Oil",desc:"Skincare gloss"}],wellness:[{value:"wellness",label:"Wellness Supplements",desc:"Energy & mood"}],mens:[{value:"men",label:"MONAT for MEN™",desc:"Men's collection"}]};
-const PLATFORMS=[{value:"wa_status",label:"📱 WhatsApp Status",desc:"Post to all contacts"},{value:"wa_message",label:"💬 WhatsApp Message",desc:"Personal 1-on-1"},{value:"ig_feed",label:"📸 Instagram Feed",desc:"Post + hashtags"},{value:"ig_shop",label:"🛍️ Instagram Shop",desc:"Shop-optimized post"},{value:"ig_reel",label:"🎬 Instagram Reel",desc:"Video script"},{value:"fb_feed",label:"👍 Facebook Feed",desc:"Facebook post"},{value:"fb_shop",label:"🛒 Facebook Shop",desc:"Shop-optimized post"},{value:"tiktok_shop",label:"🎵 TikTok Shop",desc:"TikTok video script"},{value:"image",label:"🖼️ Image / Canva",desc:"AI prompts + design brief"}];
-const TONES=[{value:"friendly",label:"Friendly & Warm",desc:"Like a real friend"},{value:"professional",label:"Professional",desc:"Polished & credible"},{value:"exciting",label:"Exciting & Energetic",desc:"High energy"},{value:"inspirational",label:"Inspirational",desc:"Uplifting"},{value:"urgent",label:"Urgent",desc:"Act now"}];
-const TABS=[{id:"wa_status",label:"📱 WA Status"},{id:"wa_message",label:"💬 WA Message"},{id:"ig_feed",label:"📸 IG Feed"},{id:"ig_shop",label:"🛍️ IG Shop"},{id:"ig_reel",label:"🎬 IG Reel"},{id:"fb_feed",label:"👍 FB Feed"},{id:"fb_shop",label:"🛒 FB Shop"},{id:"tiktok_shop",label:"🎵 TikTok"},{id:"image",label:"🖼️ Image"},{id:"schedule",label:"📅 Schedule"}];
-const allProds=Object.values(PRODUCTS).flat();
-function tog(arr,val){return arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];}
-
-let s={step:1,language:appLang,goal:"",products:[],contexts:[],platforms:[],tone:"friendly",name:"",link:"",phone:"",loading:false,loadingMsg:"",loadingPct:0,result:{},activeTab:"wa_status",error:""};
-
-const wrap=el("div",{style:{minHeight:"100vh",background:G.bg}});
-
-function canProceed(){
-if(s.step===1)return!!s.goal&&!!s.name&&!!s.link;
-if(s.step===2)return s.contexts.length>0;
-if(s.step===3)return s.platforms.length>0;
-if(s.step===4)return!!s.tone;
-return false;
-}
-
-function ctxOpts(){return s.goal==="sell"?PAIN_POINTS():s.goal==="recruit"?RECRUIT:s.goal==="motivate"?MOTIVATE:BRAND;}
-
-function buildBase(){
-const ci=s.contexts.map(c=>ctxOpts().find(o=>o.value===c)).filter(Boolean);
-const selProds=allProds.filter(p=>s.products.includes(p.value));
-const tl=TONES().find(t=>t.value===s.tone)?.label||s.tone;
-const pl=selProds.length>0?`\nFEATURED PRODUCTS: ${selProds.map(p=>p.label+" — "+p.desc).join(" | ")}`:"";
-const langLabel=s.language==="Mexican"?"Mexican Spanish (use Mexican expressions and phrases natural to Mexico — not Spain Spanish)":s.language;
-const gc={
-sell:`GOAL: Sell MONAT products.${pl}\nPAIN POINTS: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Lead with deep empathy FIRST. ONE pain point per version, ONE product, ONE CTA.`,
-recruit:`GOAL: Recruit MONAT Market Partners.\nTARGETS: ${ci.map(c=>c.label+(c.desc?" — "+c.desc:"")).join(" | ")}\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.`,
-motivate:`GOAL: Motivate MONAT team.\nTHEMES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.`,
-brand:`GOAL: Build MONAT brand awareness.\nANGLES: ${ci.map(c=>c.label).join(", ")}\nSTRATEGY: Educate and inspire. Premium trustworthy brand.`
-}[s.goal]||"";
-return `You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Paraben-free | Made in USA | 80+ awards\nPARTNER: ${s.name} | LINK: ${s.link}${s.phone?" | WHATSAPP: "+s.phone:""}\nTONE: ${tl}\n${gc}\nGOLDEN RULES: ONE message per version. SHORT is powerful. Never sound like an ad.\nCRITICAL: Write ALL content in ${langLabel}.`;
-}
-
-function platPrompt(plat,base){
-const selProds=allProds.filter(p=>s.products.includes(p.value));
-const prodStr=selProds.length>0?" for "+selProds.map(p=>p.label).join(", "):"";
-const p={
-wa_status:`${base}\n\nWrite TWO WhatsApp STATUS versions in ${s.language}. Max 70 words each. 2-3 emojis. ONE focus per version. Link: ${s.link}. Signed: ${s.name}.\nVersion A: personal story angle.\nVersion B: surprising result or question hook.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]`,
-wa_message:`${base}\n\nWrite TWO personal WhatsApp MESSAGES in ${s.language} to send 1-on-1. 70-100 words each. ONE focus. Genuine. No pressure. Link: ${s.link}. Signed: ${s.name}. 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]`,
-ig_feed:`${base}\n\nWrite TWO Instagram FEED captions in ${s.language}. Line 1 stops scroll (max 125 chars). ONE story per version. CTA + link: ${s.link}. Signed: ${s.name}. Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]`,
-ig_shop:`${base}\n\nWrite TWO Instagram SHOP POSTS in ${s.language}. ONE benefit focus. 100-130 words each. Shop now → + link: ${s.link}.\nVersion A: lead with transformation.\nVersion B: lead with problem.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]`,
-ig_reel:`${base}\n\nWrite TWO Instagram REEL scripts in ${s.language} (30-45 sec). ONE hook, ONE problem, ONE solution per version.\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): [${s.name} | ${s.link}]\n\nThen once: Audio mood, Thumbnail text, Caption + 12 hashtags.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[audio, thumbnail, caption]`,
-fb_feed:`${base}\n\nWrite TWO Facebook FEED POSTS in ${s.language}. 150-200 words each. ONE story per version. End with question. CTA + link: ${s.link}. 2-3 emojis.\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]`,
-fb_shop:`${base}\n\nWrite TWO Facebook SHOP POSTS in ${s.language}. ONE benefit focus. 100-130 words each. 3 bullet points with ✓. Shop Now + link: ${s.link}.\nVersion A: focus on result.\nVersion B: focus on solving pain.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]`,
-tiktok_shop:`${base}\n\nWrite TWO TikTok SHOP scripts in ${s.language} (35-45 sec). Native TikTok feel. ONE hook, ONE problem, ONE product, ONE result.\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): [${s.name} — ${s.link}]\n\nThen once: Product tag moment, Pinned comment, Caption + hashtags, Audio mood.\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\n[extras]`,
-image:`${base}\n\nCreate a complete IMAGE CONTENT PACKAGE in ${s.language}${prodStr}. ONE hair problem focus only.\n\nIMAGE PROMPT 1 — HAIR TRANSFORMATION (paste into ChatGPT/Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. No product bottle. Show gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean white background, editorial beauty photography, hyperrealistic, 8K. One detailed paragraph ready to paste.\n\nIMAGE PROMPT 2 — MONAT PRODUCT SHOT (paste into ChatGPT/Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy #2e2a4a + periwinkle purple #7664d0 + white label. MONAT logo visible, product name on label, premium material. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 — Hook (transformation photo): [exact short headline, 5-7 words]\nSlide 2 — Before/After split: LEFT: [BEFORE label] RIGHT: [AFTER label] CENTER: [VS]\nSlide 3 — Product Shot: [product name + ONE benefit]\nSlide 4 — CTA: [CTA text + ${s.name} + ${s.link}]\n\nCANVA DESIGN NOTES:\n• Colors: navy #2e2a4a + purple #7664d0 + white\n• White serif headline on dark overlay bar\n• Luxury beauty brand feel\n\nCAPTION (ready to post in ${s.language}):\n[3 powerful sentences. One pain → solution → CTA. Link: ${s.link} — ${s.name}]\n\nHASHTAGS: [25 hashtags]`
-};
-return p[plat]||"";
-}
-
-async function generate(){
-// Always read current language from DOM selector before generating
-const langEl=document.querySelector("#app1LangSel");
-if(langEl)s.language=langEl.value;
-s.loading=true;s.error="";s.result={};s.loadingPct=0;renderApp1Content();
-const base=buildBase();
-try{
-const pStep=Math.floor(80/(s.platforms.length+1));let pct=5;
-for(const plat of s.platforms){
-const lbl=PLATFORMS.find(p=>p.value===plat)?.label||plat;
-s.loadingMsg=`Writing ${lbl}...`;pct+=pStep;s.loadingPct=Math.min(pct,85);renderApp1Content();
-const prompt=platPrompt(plat,base);
-if(!prompt)continue;
-const text=await apiClaude(prompt,1000);
-s.result[plat]=text;
-}
-s.loadingMsg="Building 7-day schedule...";s.loadingPct=90;renderApp1Content();
-const platLbls=s.platforms.map(p=>PLATFORMS.find(pl=>pl.value===p)?.label||p).join(", ");
-const schedText=await apiClaude(`MONAT social media strategist. Create a 7-day posting schedule in ${s.language}.\nPlatforms: ${platLbls}\nGoal: ${GOALS.find(g=>g.value===s.goal)?.label}\n\nFormat:\nDay 1 — Launch Day\n- specific task\n- specific task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule.`,700);
-s.result.scheduleRaw=schedText;
-s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";
-}catch(err){s.error=err.message||"Error. Please try again.";}
-s.loading=false;renderApp1Content();
-}
+function mkNav(title,onBack,user){
+var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
+var left=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
+if(onBack){var bb=el("button",{style:{background:"#f4f3f9",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit"}},"← "+T().home);bb.addEventListener("click",onBack);left.appendChild(bb);}
+left.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px"}},title));
+nav.appendChild(left);
+var right=el("div",{style:{display:"flex",alignItems:"center",gap:"7px"}});
+if(user&&user.trialActive)right.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},"⏰ "+user.daysLeft+" "+T().trial));
+right.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},appLang));
+nav.appendChild(right);return nav;}
 
 function parseSched(text){
-const lines=text.split("\n"),days=[];let cur=null;
-const icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
-for(const line of lines){const t=line.trim();if(!t)continue;
-if(/^(day\s*\d|día\s*\d|jour\s*\d|tag\s*\d|giorno\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}
-else if(cur){const c=t.replace(/^[-•→*✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}}
+var lines=text.split("\n"),days=[],cur=null;
+var icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
+lines.forEach(function(line){var t=line.trim();if(!t)return;if(/^(day\s*\d|paso\s*\d|dia\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}else if(cur){var c=t.replace(/^[-*•→✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}});
 if(cur)days.push(cur);
-return days.length>=3?days:[{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},{day:"Day 3",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged"]},{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},{day:"Day 5",icon:"📊",tasks:["Share before/after result","Engage with community"]},{day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share product demo"]},{day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]}];
-}
+return days.length>=3?days:[{day:"Day 1",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},{day:"Day 3",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged"]},{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},{day:"Day 5",icon:"📊",tasks:["Share before/after result","Engage with community"]},{day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share product demo"]},{day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]}];}
 
-function renderApp1Content(){
+// ── LOGIN ──
+function renderLogin(){
+var email="",password="";
+var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}});
+var inner=el("div",{style:{width:"100%",maxWidth:"400px"}});
+inner.appendChild(el("div",{style:{textAlign:"center",marginBottom:"24px"}},el("div",{style:{width:"52px",height:"52px",borderRadius:"13px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",color:"#fff",margin:"0 auto 12px"}},"✦"),el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Network Tools"),el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginTop:"2px"}},"by Streamflux")));
+var card=el("div",{style:CS});
+card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},T().loginTitle));
+card.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"20px"}},T().loginSub));
+var emailInp=el("input",{type:"email",placeholder:"your@email.com",style:Object.assign({},IS,{marginBottom:"12px"})});emailInp.addEventListener("input",function(){email=emailInp.value;});
+var passInp=el("input",{type:"password",placeholder:"••••••••",style:Object.assign({},IS,{marginBottom:"16px"})});passInp.addEventListener("input",function(){password=passInp.value;});
+var errDiv=el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"9px 12px",marginBottom:"12px",color:"#dc2626",fontSize:"13px",display:"none"}});
+var loginBtn=el("button",{style:Object.assign({},btnD,{width:"100%",fontSize:"15px"})},T().loginBtn);
+function doLogin(){if(!email||!password){errDiv.textContent=T().loginErr;errDiv.style.display="block";return;}loginBtn.textContent=T().loggingIn;loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color="#6b6b6b";errDiv.style.display="none";apiAuth({action:"login",email:email,password:password}).then(function(res){if(res.success){localStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}else{errDiv.textContent="⚠️ "+(res.error||"Invalid credentials.");errDiv.style.display="block";loginBtn.textContent=T().loginBtn;loginBtn.disabled=false;loginBtn.style.background="#2e2a4a";loginBtn.style.color="#fff";}});}
+loginBtn.addEventListener("click",doLogin);passInp.addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
+card.appendChild(el("label",{style:LS},T().loginEmail));card.appendChild(emailInp);
+card.appendChild(el("label",{style:LS},T().loginPass));card.appendChild(passInp);
+card.appendChild(errDiv);card.appendChild(loginBtn);
+card.appendChild(el("p",{style:{textAlign:"center",color:"#6b6b6b",fontSize:"11px",marginTop:"14px"}},T().loginHelp,el("span",{style:{color:"#7664d0"}},"support@streamflux.app")));
+inner.appendChild(card);wrap.appendChild(inner);return wrap;}
+
+// ── DASHBOARD ──
+function renderDashboard(){
+var user=state.user;
+var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
+var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 20px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
+nav.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"10px"}},el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"),el("div",{},el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),el("div",{style:{fontSize:"8px",color:"#7664d0",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux"))));
+var navR=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
+if(user.trialActive)navR.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},"⏰ "+user.daysLeft+" "+T().trial));
+navR.appendChild(el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},user.name));
+var lb=el("button",{style:{background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit"}},T().logout);
+lb.addEventListener("click",function(){localStorage.removeItem("nt_u");setState({screen:"login",user:null});});
+navR.appendChild(lb);nav.appendChild(navR);wrap.appendChild(nav);
+var content=el("div",{style:{maxWidth:"680px",margin:"0 auto",padding:"36px 16px 60px"}});
+content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"32px"}},
+el("div",{style:{fontSize:"28px",marginBottom:"8px"}},"✦"),
+el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},T().welcome+", "+user.name.split(" ")[0]+"!"),
+el("p",{style:{fontSize:"14px",color:"#6b6b6b",marginBottom:"16px"}},T().choose),
+el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
+el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},T().lang+":"),
+(function(){var sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:"1px solid #e8e6f0",background:"#fff",fontSize:"13px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});[{v:"English",l:"English"},{v:"Spanish",l:"Espanol"}].forEach(function(lang){var o=el("option",{value:lang.v},lang.l);if(lang.v===appLang)o.selected=true;sel.appendChild(o);});sel.addEventListener("change",function(){appLang=sel.value;localStorage.setItem("nt_lang",sel.value);render();});return sel;})())));
+[{s:"app1",icon:"📣",title:T().mktTitle,desc:T().mktDesc,color:"#2e2a4a"},{s:"app2",icon:"🤝",title:T().outTitle,desc:T().outDesc,color:"#1a1a3a"}].forEach(function(tool){
+var card=el("div",{style:{background:tool.color,borderRadius:"16px",padding:"26px 24px",cursor:"pointer",boxShadow:"0 4px 20px rgba(46,42,74,0.15)",marginBottom:"16px"}});
+card.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"12px",marginBottom:"10px"}},el("span",{style:{fontSize:"28px"}},tool.icon),el("div",{},el("div",{style:{fontSize:"18px",fontWeight:"700",color:"#fff"}},tool.title),el("div",{style:{fontSize:"8px",color:"rgba(255,255,255,0.5)",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")),el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px"}},"→")));
+card.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6"}},tool.desc));
+card.addEventListener("click",function(){setState({screen:tool.s});});
+content.appendChild(card);});
+content.appendChild(el("div",{style:{marginTop:"30px",textAlign:"center",fontSize:"9px",color:"#e8e6f0",letterSpacing:"2px",textTransform:"uppercase"}},"Network Tools by Streamflux · Powered by Claude AI"));
+wrap.appendChild(content);return wrap;}
+
+// ── MARKETING MACHINE ──
+function renderApp1(){
+var user=state.user;
+var s={step:1,goal:"",products:[],contexts:[],platforms:[],tone:"friendly",name:"",link:"",phone:"",loading:false,loadingMsg:"",loadingPct:0,result:{},activeTab:"",error:""};
+var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
+var MKT_TABS=[{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Message"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}];
+function ctxOpts(){return s.goal==="sell"?PAIN():s.goal==="recruit"?RECRUIT():s.goal==="motivate"?MOTIVATE():BRAND();}
+function isReady(){return!!(s.name.trim()&&s.link.trim());}
+function canProceed(){if(s.step===1)return!!(s.goal&&isReady());if(s.step===2)return s.contexts.length>0;if(s.step===3)return s.platforms.length>0;if(s.step===4)return!!s.tone;return false;}
+function buildBase(){
+var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
+var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
+var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
+var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" — "+p.d;}).join(" | "):"";
+var lang=appLang==="Spanish"?"Spanish":"English";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" — "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".";}
+function platPrompt(plat,base){
+var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
+var ps=sp.length>0?" for "+sp.map(function(p){return p.l;}).join(", "):"";
+var p={
+wa_status:base+"\n\nWrite TWO WhatsApp STATUS versions. Max 70 words each. 2-3 emojis. Link: "+s.link+". Signed: "+s.name+".\nVersion A: personal story.\nVersion B: surprising result or question.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
+wa_message:base+"\n\nWrite TWO personal WhatsApp MESSAGES 1-on-1. 70-100 words each. Genuine. No pressure. Link: "+s.link+". Signed: "+s.name+". 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
+ig_feed:base+"\n\nWrite TWO Instagram FEED captions. Line 1 stops scroll (max 125 chars). CTA + link: "+s.link+". Signed: "+s.name+". Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]",
+ig_shop:base+"\n\nWrite TWO Instagram SHOP POSTS. 100-130 words each. Shop now link: "+s.link+".\nVersion A: transformation.\nVersion B: problem solved.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]",
+ig_reel:base+"\n\nWrite TWO Instagram REEL scripts (30-45 sec).\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): ["+s.name+" | "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nAudio mood:\nThumbnail text:\nCaption + 12 hashtags:",
+fb_feed:base+"\n\nWrite TWO Facebook FEED POSTS. 150-200 words each. End with question. CTA + link: "+s.link+".\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]",
+fb_shop:base+"\n\nWrite TWO Facebook SHOP POSTS. 100-130 words each. 3 bullet points with check mark. Shop Now + link: "+s.link+".\nVersion A: result focus.\nVersion B: problem solved.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]",
+tiktok_shop:base+"\n\nWrite TWO TikTok SHOP scripts (35-45 sec).\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): ["+s.name+" - "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nPinned comment:\nCaption + hashtags:\nAudio mood:",
+image:base+"\n\nCreate a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
+};return p[plat]||"";}
+function generate(){
+s.loading=true;s.error="";s.result={};s.loadingPct=0;draw();
+var base=buildBase();var platList=s.platforms.slice();var pStep=Math.floor(80/(platList.length+1));var pct=5;
+function next(){
+if(platList.length===0){s.loadingMsg="Building schedule...";s.loadingPct=90;draw();
+var platLbls=s.platforms.map(function(p){return(PLATFORMS().find(function(pl){return pl.v===p;})||{l:p}).l;}).join(", ");
+apiClaude("Create a 7-day social media posting schedule in "+(appLang==="Spanish"?"Spanish":"English")+".\nPlatforms: "+platLbls+"\nGoal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\nFormat exactly like this:\nDay 1 - Launch\n- task\n- task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule.",700).then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;draw();}).catch(function(e){s.error=e.message;s.loading=false;draw();});return;}
+var plat=platList.shift();var lbl=(PLATFORMS().find(function(p){return p.v===plat;})||{l:plat}).l;
+s.loadingMsg="Writing "+lbl+"...";pct+=pStep;s.loadingPct=Math.min(pct,85);draw();
+var prompt=platPrompt(plat,base);if(!prompt){next();return;}
+apiClaude(prompt,1000).then(function(t){s.result[plat]=t;next();}).catch(function(e){s.error=e.message;s.loading=false;draw();});}
+next();}
+function draw(){
 wrap.innerHTML="";
-const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
-const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
-const backBtn=el("button",{style:{background:G.gbg,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},tt(appLang).home);
-backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
-navLeft.appendChild(backBtn);
-navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px"}},"📣 Marketing Machine"));
-nav.appendChild(navLeft);
-const langSel1=el("select",{id:"app1LangSel",style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel1.appendChild(o);});
-langSel1.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp1Content();});
-nav.appendChild(langSel1);
-wrap.appendChild(nav);
-
+wrap.appendChild(mkNav("📣 "+T().mktTitle,function(){setState({screen:"dashboard"});},user));
 if(Object.keys(s.result).length>0&&!s.loading){
-const content=el("div",{style:{maxWidth:"780px",margin:"0 auto",padding:"16px 12px 60px"}});
-content.appendChild(el("div",{style:{background:G.dark,borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},tt(appLang).ready),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},`${s.name} · ${s.language}`)));
-const visTabs=TABS.filter(tb=>tb.id==="schedule"||s.platforms.includes(tb.id));
-const tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
-visTabs.forEach(tb=>{
-const btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:s.activeTab===tb.id?G.dark:G.card,color:s.activeTab===tb.id?"#fff":G.muted,border:`1px solid ${s.activeTab===tb.id?G.dark:G.gl}`,fontWeight:s.activeTab===tb.id?"700":"400"}},tb.label);
-btn.addEventListener("click",()=>{s.activeTab=tb.id;renderApp1Content();});
-tabBar.appendChild(btn);
-});
+var content=el("div",{style:{maxWidth:"780px",margin:"0 auto",padding:"16px 12px 60px"}});
+content.appendChild(el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},"✦ "+T().ready),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},s.name+" · "+appLang)));
+var visTabs=MKT_TABS.filter(function(tb){return tb.id==="schedule"||s.platforms.indexOf(tb.id)>=0;});
+var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
+visTabs.forEach(function(tb){var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:s.activeTab===tb.id?"#2e2a4a":"#fff",color:s.activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(s.activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:s.activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);btn.addEventListener("click",function(){s.activeTab=tb.id;draw();});tabBar.appendChild(btn);});
 content.appendChild(tabBar);
-if(s.platforms.includes(s.activeTab)&&s.result[s.activeTab]){content.appendChild(copyCard(TABS.find(tb=>tb.id===s.activeTab)?.label||s.activeTab,s.result[s.activeTab]));}
+if(s.platforms.indexOf(s.activeTab)>=0&&s.result[s.activeTab])content.appendChild(mkCopyCard((MKT_TABS.find(function(tb){return tb.id===s.activeTab;})||{l:s.activeTab}).l,s.result[s.activeTab]));
 if(s.activeTab==="schedule"){
-content.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"10px"}},tt(appLang).schedTitle));
-const days=parseSched(s.result.scheduleRaw||"");
-days.forEach(d=>{
-const dc=el("div",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
-dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:G.dark}},d.day)));
-d.tasks.forEach(t=>{const row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:G.purple,fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
-content.appendChild(dc);
-});
-}
-const newBtn=el("button",{style:{...btnStyle(false),marginTop:"8px"}},tt(appLang).newContent);
-newBtn.addEventListener("click",()=>{s.result={};s.step=1;s.goal="";s.products=[];s.contexts=[];s.platforms=[];s.error="";renderApp1Content();});
-content.appendChild(newBtn);
-wrap.appendChild(content);
-return;
-}
-
-const content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
-const prog=el("div",{style:{display:"flex",gap:"4px",marginBottom:"20px"}});
-for(let i=0;i<4;i++){prog.appendChild(el("div",{style:{flex:"1",height:"3px",background:s.step>i+1?G.dark:s.step===i+1?G.purple:G.gl,borderRadius:"2px"}}));}
+content.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
+var days=parseSched(s.result.scheduleRaw||"");
+days.forEach(function(d){var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});content.appendChild(dc);});}
+var newBtn=el("button",{style:Object.assign({},btnS,{marginTop:"8px"})},T().newContent);
+newBtn.addEventListener("click",function(){s.result={};s.step=1;s.goal="";s.products=[];s.contexts=[];s.platforms=[];s.error="";draw();});
+content.appendChild(newBtn);wrap.appendChild(content);return;}
+var content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
+var prog=el("div",{style:{display:"flex",gap:"4px",marginBottom:"20px"}});
+for(var i=0;i<4;i++){prog.appendChild(el("div",{style:{flex:"1",height:"3px",background:s.step>i+1?"#2e2a4a":s.step===i+1?"#7664d0":"#e8e6f0",borderRadius:"2px"}}));}
 content.appendChild(prog);
-
-// Profile card
-const profCard=el("div",{style:cardStyle});
-profCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"8px"}},"👤 Your Profile"));
-const profGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px"}});
-[{k:"name",l:tt(appLang).profileName,p:tt(appLang).profileNamePh},{k:"link",l:tt(appLang).profileLink,p:tt(appLang).profileLinkPh},{k:"phone",l:tt(appLang).profilePhone,p:tt(appLang).profilePhonePh}].forEach(f=>{
-const d=el("div",{});
-d.appendChild(el("label",{style:{fontSize:"9px",color:G.muted,display:"block",marginBottom:"3px"}},f.l));
-const inp=el("input",{type:"text",placeholder:f.p,style:{...inputStyle,padding:"8px 10px",fontSize:"12px",borderRadius:"7px"}});
-inp.value=s[f.k]||"";
-inp.addEventListener("input",e=>s[f.k]=e.target.value);
-d.appendChild(inp);
-profGrid.appendChild(d);
-});
+var profCard=el("div",{style:CS});
+profCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"8px"}},T().profileTitle));
+var profGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px"}});
+[{k:"name",lbl:T().profileName,ph:T().profileNamePh},{k:"link",lbl:T().profileLink,ph:T().profileLinkPh},{k:"phone",lbl:T().profilePhone,ph:T().profilePhonePh}].forEach(function(f){
+var d=el("div",{});d.appendChild(el("label",{style:{fontSize:"9px",color:"#6b6b6b",display:"block",marginBottom:"3px"}},f.lbl));
+var inp=el("input",{type:"text",placeholder:f.ph,style:{width:"100%",padding:"8px 10px",borderRadius:"7px",boxSizing:"border-box",background:"#f4f3f9",border:"1.5px solid #e8e6f0",fontSize:"12px",outline:"none",color:"#111",fontFamily:"inherit"}});
+inp.value=s[f.k]||"";(function(key,input){input.addEventListener("input",function(){s[key]=input.value;});})(f.k,inp);d.appendChild(inp);profGrid.appendChild(d);});
 profCard.appendChild(profGrid);
-if(!s.name||!s.link)profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},tt(appLang).profileWarn));
+if(!isReady())profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},T().profileWarn));
 content.appendChild(profCard);
-
-const stepCard=el("div",{style:cardStyle});
+var stepCard=el("div",{style:CS});
 if(s.step===1){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s1));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"🎯 What Is Your Goal?"));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s1s));
-stepCard.appendChild(chips(null,null,GOALS[s.language]||GOALS.English,s.goal,v=>{s.goal=v;renderApp1Content();},true));
-}
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s1));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"🎯 "+T().s1t));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s1s));
+stepCard.appendChild(mkChips(null,null,GOALS(),s.goal,function(v){s.goal=v;draw();},true));}
 if(s.step===2){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s2));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},`💡 ${s.goal==="sell"?tt(appLang).s2sell:s.goal==="recruit"?tt(appLang).s2recruit:s.goal==="motivate"?tt(appLang).s2motivate:tt(appLang).s2brand}`));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s2sub));
-stepCard.appendChild(chips(null,null,ctxOpts(),s.contexts,v=>{s.contexts=tog(s.contexts,v);renderApp1Content();}));
-if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.contexts.length} selected`));
+var s2t={sell:T().s2sell,recruit:T().s2recruit,motivate:T().s2motivate,brand:T().s2brand}[s.goal]||T().s2sell;
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s2));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"💡 "+s2t));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s2sub));
+stepCard.appendChild(mkChips(null,null,ctxOpts(),s.contexts,function(v){s.contexts=tog(s.contexts,v);draw();}));
+if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},"✦ "+s.contexts.length+" selected"));
 if(s.goal==="sell"){
-stepCard.appendChild(el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:`1px solid ${G.gl}`}},el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},"🛍️ Choose a Product (optional)"),el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 12px"}},tt(appLang).prodSub)));
-[{k:"hair",l:tt(appLang).catHair},{k:"skin",l:tt(appLang).catSkin},{k:"wellness",l:tt(appLang).catWell},{k:"mens",l:tt(appLang).catMen}].forEach(cat=>{
-stepCard.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:G.muted,letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.l));
-stepCard.appendChild(chips(null,null,PRODUCTS[cat.k],s.products,v=>{s.products=tog(s.products,v);renderApp1Content();}));
-});
-}
-}
+var ps=el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:"1px solid #e8e6f0"}});
+ps.appendChild(el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},T().prodOpt));
+ps.appendChild(el("p",{style:{fontSize:"11px",color:"#6b6b6b",margin:"0 0 12px"}},T().prodSub));
+[{k:"hair",lbl:T().catHair},{k:"skin",lbl:T().catSkin},{k:"wellness",lbl:T().catWell},{k:"mens",lbl:T().catMen}].forEach(function(cat){ps.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:"#6b6b6b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.lbl));ps.appendChild(mkChips(null,null,PRODUCTS[cat.k],s.products,function(v){s.products=tog(s.products,v);draw();}));});
+stepCard.appendChild(ps);}}
 if(s.step===3){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s3));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"📣 Where Are You Posting?"));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s3s));
-stepCard.appendChild(chips(null,null,PLATFORMS,s.platforms,v=>{s.platforms=tog(s.platforms,v);renderApp1Content();}));
-if(s.platforms.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.platforms.length} platform${s.platforms.length>1?"s":""} selected + 7-day schedule`));
-}
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s3));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"📣 "+T().s3t));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s3s));
+stepCard.appendChild(mkChips(null,null,PLATFORMS(),s.platforms,function(v){s.platforms=tog(s.platforms,v);draw();}));
+if(s.platforms.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},"✦ "+T().platSel(s.platforms.length)));}
 if(s.step===4){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s4));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"✨ Tone & Style"));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"How should your content feel?"));
-stepCard.appendChild(chips(null,null,TONES(),s.tone,v=>{s.tone=v;renderApp1Content();},true));
-}
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s4));
+stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"✨ "+T().s4t));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s4s));
+stepCard.appendChild(mkChips(null,null,TONES(),s.tone,function(v){s.tone=v;draw();},true));
+var sumDiv=el("div",{style:{background:"#f4f3f9",borderRadius:"9px",padding:"11px 13px",marginTop:"12px"}});
+sumDiv.appendChild(el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginBottom:"6px",fontWeight:"700"}},T().summary));
+var tagWrap=el("div",{style:{display:"flex",gap:"5px",flexWrap:"wrap"}});
+var items=[(GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l].concat(allProds().filter(function(p){return s.products.indexOf(p.v)>=0;}).map(function(p){return p.l;}),s.contexts.slice(0,3).map(function(c){return(ctxOpts().find(function(o){return(o.v||o.value)===c;})||{l:c}).l;}),s.platforms.map(function(p){return(PLATFORMS().find(function(pl){return pl.v===p;})||{l:p}).l;}),[(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l,appLang]);
+items.filter(Boolean).forEach(function(tag){tagWrap.appendChild(el("span",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"2px 9px",fontSize:"10px",color:"#2e2a4a"}},tag));});
+sumDiv.appendChild(tagWrap);stepCard.appendChild(sumDiv);}
 content.appendChild(stepCard);
+if(s.loading){var lc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 18px",marginBottom:"12px"}});lc.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"6px"}},el("span",{style:{fontSize:"12px",color:"#2e2a4a",fontWeight:"600"}},s.loadingMsg),el("span",{style:{fontSize:"11px",color:"#6b6b6b"}},s.loadingPct+"%")));var bar=el("div",{style:{width:"100%",height:"4px",background:"#e8e6f0",borderRadius:"2px"}});var bf=el("div",{style:{width:s.loadingPct+"%",height:"100%",background:"linear-gradient(90deg,#2e2a4a,#7664d0)",borderRadius:"2px",transition:"width 0.4s ease"}});bar.appendChild(bf);lc.appendChild(bar);lc.appendChild(el("div",{style:{fontSize:"11px",color:"#6b6b6b",marginTop:"6px"}},T().genIn(appLang)));content.appendChild(lc);}
+if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"9px",padding:"10px 13px",marginBottom:"12px",color:"#dc2626",fontSize:"12px"}},"⚠️ "+s.error));
+var btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9px"}});
+var backBtn=el("button",{style:btnS},T().back);
+backBtn.addEventListener("click",function(){s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});draw();});
+btnRow.appendChild(backBtn);
+if(s.step<4){var nextBtn=el("button",{style:canProceed()&&isReady()?btnD:btnG},T().cont);nextBtn.addEventListener("click",function(){if(!isReady()){s.error=T().fillFirst;draw();}else if(canProceed()){s.error="";s.step++;draw();}else{s.error=T().completeStep;draw();}});btnRow.appendChild(nextBtn);}
+else{var genBtn=el("button",{style:canProceed()&&isReady()&&!s.loading?Object.assign({},btnD,{minWidth:"200px"}):Object.assign({},btnG,{minWidth:"200px"})},s.loading?T().generating:"✦ "+T().gen);genBtn.addEventListener("click",function(){if(canProceed()&&isReady()&&!s.loading)generate();});btnRow.appendChild(genBtn);}
+content.appendChild(btnRow);wrap.appendChild(content);}
+draw();return wrap;}
 
-if(s.loading){
-const lc=el("div",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"14px 18px",marginBottom:"12px"}});
-lc.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"6px"}},el("span",{style:{fontSize:"12px",color:G.dark,fontWeight:"600"}},s.loadingMsg),el("span",{style:{fontSize:"11px",color:G.muted}},`${s.loadingPct}%`)));
-const bar=el("div",{style:{width:"100%",height:"4px",background:G.gl,borderRadius:"2px"}});
-bar.appendChild(el("div",{style:{width:`${s.loadingPct}%`,height:"100%",background:`linear-gradient(90deg,${G.dark},${G.purple})`,borderRadius:"2px",transition:"width 0.4s ease"}}));
-lc.appendChild(bar);
-lc.appendChild(el("div",{style:{fontSize:"11px",color:G.muted,marginTop:"6px"}},tt(appLang).genIn(appLang)));
-content.appendChild(lc);
-}
-if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"9px",padding:"10px 13px",marginBottom:"12px",color:G.red,fontSize:"12px"}},`⚠️ ${s.error}`));
-
-const btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9px"}});
-const backB=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"12px 20px",fontSize:"14px",cursor:"pointer"}},tt(appLang).back);
-backB.addEventListener("click",()=>{s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});renderApp1Content();});
-btnRow.appendChild(backB);
-if(s.step<4){
-const nextB=el("button",{style:btnStyle(!canProceed()||!s.name||!s.link)},tt(appLang).cont);
-nextB.addEventListener("click",()=>{if(!s.name||!s.link){s.error=tt(appLang).fillFirst;renderApp1Content();}else if(canProceed()){s.error="";s.step++;renderApp1Content();}else{s.error=tt(appLang).completeStep;renderApp1Content();}});
-btnRow.appendChild(nextB);
-}else{
-const genB=el("button",{style:{...btnStyle(!canProceed()||s.loading||!s.name||!s.link),minWidth:"200px"}},s.loading?tt(appLang).generating:tt(appLang).gen);
-genB.addEventListener("click",()=>{if(canProceed()&&!s.loading&&s.name&&s.link)generate();});
-btnRow.appendChild(genB);
-}
-content.appendChild(btnRow);
-wrap.appendChild(content);
-}
-
-renderApp1Content();
-return wrap;
-}
-
-// ── APP 2 - OUTREACH MACHINE ────────────────────────────────────────────────
+// ── OUTREACH MACHINE ──
 function renderApp2(){
-const DK={bg:"#0a0c0f",card:G.card,border:G.gl,purple:G.purple,text:"#111",muted:"#6b7280",green:"#2d9e6b"};
-function CONTACT_TYPES(){
-var lng=appLang;
-var d={
-English:[{value:"potential_customer",label:"🛍️ Potential Customer",desc:"Interested in buying products"},{value:"potential_partner",label:"🤝 Potential Partner",desc:"Might want to join MONAT"},{value:"existing_customer",label:"💎 Existing Customer",desc:"Already bought products"},{value:"cold_lead",label:"❄️ Cold Lead",desc:"First outreach"},{value:"past_partner",label:"🔄 Past Partner",desc:"Used to be a Market Partner"},{value:"team_member",label:"🌟 Team Member",desc:"Part of your MONAT team"}],
-Spanish:[{value:"potential_customer",label:"🛍️ Cliente Potencial",desc:"Interesada en comprar productos"},{value:"potential_partner",label:"🤝 Socia Potencial",desc:"Podría querer unirse a MONAT"},{value:"existing_customer",label:"💎 Cliente Existente",desc:"Ya compró productos"},{value:"cold_lead",label:"❄️ Contacto Frío",desc:"Sin contacto previo"},{value:"past_partner",label:"🔄 Socia Anterior",desc:"Fue Market Partner"},{value:"team_member",label:"🌟 Miembro del Equipo",desc:"Parte de tu equipo MONAT"}],
-Mexican:[{value:"potential_customer",label:"🛍️ Cliente Potencial",desc:"Interesada en comprar productos"},{value:"potential_partner",label:"🤝 Socia Potencial",desc:"Podría querer unirse a MONAT"},{value:"existing_customer",label:"💎 Cliente Existente",desc:"Ya compró productos"},{value:"cold_lead",label:"❄️ Contacto Frío",desc:"Sin contacto previo"},{value:"past_partner",label:"🔄 Socia Anterior",desc:"Fue Market Partner"},{value:"team_member",label:"🌟 Miembro del Equipo",desc:"Parte de tu equipo MONAT"}],
-Italian:[{value:"potential_customer",label:"🛍️ Cliente Potenziale",desc:"Interessata all'acquisto"},{value:"potential_partner",label:"🤝 Partner Potenziale",desc:"Potrebbe voler unirsi a MONAT"},{value:"existing_customer",label:"💎 Cliente Esistente",desc:"Ha già acquistato"},{value:"cold_lead",label:"❄️ Contatto Freddo",desc:"Nessun contatto precedente"},{value:"past_partner",label:"🔄 Ex Partner",desc:"Era una Market Partner"},{value:"team_member",label:"🌟 Membro del Team",desc:"Parte del tuo team MONAT"}],
-French:[{value:"potential_customer",label:"🛍️ Cliente Potentielle",desc:"Intéressée par les produits"},{value:"potential_partner",label:"🤝 Partenaire Potentielle",desc:"Pourrait rejoindre MONAT"},{value:"existing_customer",label:"💎 Cliente Existante",desc:"A déjà acheté"},{value:"cold_lead",label:"❄️ Contact Froid",desc:"Aucun contact préalable"},{value:"past_partner",label:"🔄 Ancienne Partenaire",desc:"Était une Market Partner"},{value:"team_member",label:"🌟 Membre de l'Équipe",desc:"Fait partie de votre équipe"}],
-Portuguese:[{value:"potential_customer",label:"🛍️ Cliente Potencial",desc:"Interessada em comprar"},{value:"potential_partner",label:"🤝 Parceira Potencial",desc:"Pode querer entrar no MONAT"},{value:"existing_customer",label:"💎 Cliente Existente",desc:"Já comprou produtos"},{value:"cold_lead",label:"❄️ Contato Frio",desc:"Sem contato prévio"},{value:"past_partner",label:"🔄 Ex-Parceira",desc:"Foi uma Market Partner"},{value:"team_member",label:"🌟 Membro da Equipe",desc:"Faz parte da sua equipe"}],
-German:[{value:"potential_customer",label:"🛍️ Potenzielle Kundin",desc:"Interessiert an Produkten"},{value:"potential_partner",label:"🤝 Potenzielle Partnerin",desc:"Könnte MONAT beitreten"},{value:"existing_customer",label:"💎 Bestehende Kundin",desc:"Hat bereits gekauft"},{value:"cold_lead",label:"❄️ Kalter Kontakt",desc:"Kein vorheriger Kontakt"},{value:"past_partner",label:"🔄 Ehemalige Partnerin",desc:"War eine Market Partnerin"},{value:"team_member",label:"🌟 Teammitglied",desc:"Teil deines MONAT-Teams"}],
-};
-return d[lng]||d.English;
-}
-function REASONS(){
-var lng=appLang;
-var d={
-English:[{value:"first_outreach",label:"👋 First Outreach",desc:"Never contacted before"},{value:"follow_up_interest",label:"🔥 Follow Up — Showed Interest",desc:"They liked something"},{value:"follow_up_no_reply",label:"👻 Follow Up — No Reply",desc:"No response to first message"},{value:"product_recommendation",label:"💊 Product Recommendation",desc:"Specific product for their problem"},{value:"recruit_invite",label:"🚀 Recruit — Business Invite",desc:"Invite to join as Market Partner"},{value:"repeat_sale",label:"🔁 Repeat Sale / Reorder",desc:"Product running out"},{value:"special_offer",label:"🎁 Special Offer",desc:"Sharing a current deal"},{value:"check_in",label:"💬 Check In",desc:"Just keeping in touch"},{value:"handle_objection",label:"🛡️ Handle Objection",desc:"They said no or not right now"},{value:"welcome_new",label:"🎉 Welcome New Customer/Partner",desc:"They just joined or bought"},{value:"referral_request",label:"🙏 Ask for Referral",desc:"Ask to refer friends/family"},{value:"reconnect",label:"🔗 Reconnect",desc:"Haven't spoken in a long time"}],
-Spanish:[{value:"first_outreach",label:"👋 Primer Contacto",desc:"Nunca contactada antes"},{value:"follow_up_interest",label:"🔥 Seguimiento — Mostró Interés",desc:"Le gustó algo"},{value:"follow_up_no_reply",label:"👻 Seguimiento — Sin Respuesta",desc:"No respondió"},{value:"product_recommendation",label:"💊 Recomendación de Producto",desc:"Producto específico para su problema"},{value:"recruit_invite",label:"🚀 Invitación al Negocio",desc:"Invitar a unirse como Market Partner"},{value:"repeat_sale",label:"🔁 Recompra / Pedido Nuevo",desc:"Se le está acabando el producto"},{value:"special_offer",label:"🎁 Oferta Especial",desc:"Compartir una oferta actual"},{value:"check_in",label:"💬 Check In",desc:"Solo mantener el contacto"},{value:"handle_objection",label:"🛡️ Manejar Objeción",desc:"Dijo que no o ahorita no"},{value:"welcome_new",label:"🎉 Bienvenida Nueva Cliente/Socia",desc:"Acaba de unirse o comprar"},{value:"referral_request",label:"🙏 Pedir Referido",desc:"Pedir que refiera amigos o familia"},{value:"reconnect",label:"🔗 Reconectar",desc:"No han hablado en mucho tiempo"}],
-Mexican:[{value:"first_outreach",label:"👋 Primer Contacto",desc:"Nunca contactada antes"},{value:"follow_up_interest",label:"🔥 Seguimiento — Mostró Interés",desc:"Le gustó algo"},{value:"follow_up_no_reply",label:"👻 Seguimiento — Sin Respuesta",desc:"No respondió"},{value:"product_recommendation",label:"💊 Recomendación de Producto",desc:"Producto específico para su problema"},{value:"recruit_invite",label:"🚀 Invitación al Negocio",desc:"Invitar a unirse como Market Partner"},{value:"repeat_sale",label:"🔁 Recompra / Pedido Nuevo",desc:"Se le está acabando el producto"},{value:"special_offer",label:"🎁 Oferta Especial",desc:"Compartir una oferta actual"},{value:"check_in",label:"💬 Check In",desc:"Solo mantener el contacto"},{value:"handle_objection",label:"🛡️ Manejar Objeción",desc:"Dijo que no o ahorita no"},{value:"welcome_new",label:"🎉 Bienvenida Nueva Cliente/Socia",desc:"Acaba de unirse o comprar"},{value:"referral_request",label:"🙏 Pedir Referido",desc:"Pedir que refiera amigos o familia"},{value:"reconnect",label:"🔗 Reconectar",desc:"No han hablado en mucho tiempo"}],
-Italian:[{value:"first_outreach",label:"👋 Primo Contatto",desc:"Mai contattata prima"},{value:"follow_up_interest",label:"🔥 Follow Up — Ha mostrato interesse",desc:"Le è piaciuto qualcosa"},{value:"follow_up_no_reply",label:"👻 Follow Up — Nessuna risposta",desc:"Non ha risposto"},{value:"product_recommendation",label:"💊 Raccomandazione Prodotto",desc:"Prodotto specifico per il suo problema"},{value:"recruit_invite",label:"🚀 Invito al Business",desc:"Invitare come Market Partner"},{value:"repeat_sale",label:"🔁 Riacquisto",desc:"Il prodotto sta finendo"},{value:"special_offer",label:"🎁 Offerta Speciale",desc:"Condividere un'offerta"},{value:"check_in",label:"💬 Check In",desc:"Mantenersi in contatto"},{value:"handle_objection",label:"🛡️ Gestire Obiezione",desc:"Ha detto no"},{value:"welcome_new",label:"🎉 Benvenuta Nuova Cliente",desc:"Si è appena unita"},{value:"referral_request",label:"🙏 Richiesta Referral",desc:"Chiedere referenze"},{value:"reconnect",label:"🔗 Riconnettersi",desc:"Non parlano da molto"}],
-French:[{value:"first_outreach",label:"👋 Premier Contact",desc:"Jamais contactée avant"},{value:"follow_up_interest",label:"🔥 Suivi — A montré de l'intérêt",desc:"Quelque chose lui a plu"},{value:"follow_up_no_reply",label:"👻 Suivi — Pas de réponse",desc:"N'a pas répondu"},{value:"product_recommendation",label:"💊 Recommandation Produit",desc:"Produit spécifique pour son problème"},{value:"recruit_invite",label:"🚀 Invitation Business",desc:"Inviter comme Market Partner"},{value:"repeat_sale",label:"🔁 Rachat / Récommande",desc:"Le produit est presque épuisé"},{value:"special_offer",label:"🎁 Offre Spéciale",desc:"Partager une offre"},{value:"check_in",label:"💬 Check In",desc:"Garder le contact"},{value:"handle_objection",label:"🛡️ Gérer Objection",desc:"A dit non"},{value:"welcome_new",label:"🎉 Bienvenue Nouvelle Cliente",desc:"Vient de rejoindre"},{value:"referral_request",label:"🙏 Demande de Référence",desc:"Demander des références"},{value:"reconnect",label:"🔗 Reconnecter",desc:"N'ont pas parlé depuis longtemps"}],
-Portuguese:[{value:"first_outreach",label:"👋 Primeiro Contato",desc:"Nunca contatada antes"},{value:"follow_up_interest",label:"🔥 Seguimento — Mostrou Interesse",desc:"Gostou de algo"},{value:"follow_up_no_reply",label:"👻 Seguimento — Sem Resposta",desc:"Não respondeu"},{value:"product_recommendation",label:"💊 Recomendação de Produto",desc:"Produto específico para o problema dela"},{value:"recruit_invite",label:"🚀 Convite ao Negócio",desc:"Convidar como Market Partner"},{value:"repeat_sale",label:"🔁 Recompra / Novo Pedido",desc:"O produto está acabando"},{value:"special_offer",label:"🎁 Oferta Especial",desc:"Compartilhar uma oferta"},{value:"check_in",label:"💬 Check In",desc:"Manter contato"},{value:"handle_objection",label:"🛡️ Lidar com Objeção",desc:"Disse não"},{value:"welcome_new",label:"🎉 Boas-vindas Nova Cliente",desc:"Acabou de entrar"},{value:"referral_request",label:"🙏 Pedir Indicação",desc:"Pedir indicações"},{value:"reconnect",label:"🔗 Reconectar",desc:"Não falam há muito tempo"}],
-German:[{value:"first_outreach",label:"👋 Erster Kontakt",desc:"Noch nie kontaktiert"},{value:"follow_up_interest",label:"🔥 Follow Up — Hat Interesse gezeigt",desc:"Etwas hat ihr gefallen"},{value:"follow_up_no_reply",label:"👻 Follow Up — Keine Antwort",desc:"Hat nicht geantwortet"},{value:"product_recommendation",label:"💊 Produktempfehlung",desc:"Spezifisches Produkt für ihr Problem"},{value:"recruit_invite",label:"🚀 Business-Einladung",desc:"Als Market Partnerin einladen"},{value:"repeat_sale",label:"🔁 Nachkauf",desc:"Produkt geht zu Ende"},{value:"special_offer",label:"🎁 Sonderangebot",desc:"Angebot teilen"},{value:"check_in",label:"💬 Check In",desc:"In Kontakt bleiben"},{value:"handle_objection",label:"🛡️ Einwand behandeln",desc:"Hat nein gesagt"},{value:"welcome_new",label:"🎉 Willkommen Neue Kundin",desc:"Gerade beigetreten"},{value:"referral_request",label:"🙏 Empfehlung bitten",desc:"Um Empfehlungen bitten"},{value:"reconnect",label:"🔗 Reconnect",desc:"Lange nicht gesprochen"}],
-};
-return d[lng]||d.English;
-}
-function HAIR(){
-var d={
-English:["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"],
-Spanish:["Caída y Adelgazamiento del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy e Inmanejable","Cabello y Cuero Cabelludo Grasoso","Cabello Dañado y con Rotura","Puntas Abiertas","Rizos y Ondas Sin Definición","Decoloración del Color Tratado","Cabello Plano Sin Volumen","Cuero Cabelludo con Picazón","Piel con Signos de Edad","Piel Opaca y Desigual"],
-Mexican:["Caída y Adelgazamiento del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy e Inmanejable","Cabello y Cuero Cabelludo Grasoso","Cabello Dañado y con Rotura","Puntas Abiertas","Rizos y Ondas Sin Definición","Decoloración del Color Tratado","Cabello Plano Sin Volumen","Cuero Cabelludo con Comezón","Piel con Signos de Edad","Piel Opaca y Pareja"],
-Italian:["Diradamento e Caduta Capelli","Capelli Secchi e Fragili","Capelli Crespi e Ingestibili","Capelli e Cuoio Capelluto Grassi","Capelli Danneggiati e Spezzati","Punte Aperte","Ricci e Onde Non Definiti","Sbiadimento del Colore","Capelli Piatti Senza Volume","Cuoio Capelluto che Prude","Pelle che Invecchia","Pelle Spenta e Non Uniforme"],
-French:["Chute et Amincissement des Cheveux","Cheveux Secs et Cassants","Cheveux Frisottants et Ingérables","Cheveux et Cuir Chevelu Gras","Cheveux Abîmés et Cassés","Pointes Abîmées","Boucles et Ondulations Non Définies","Décoloration du Cheveu Coloré","Cheveux Plats Sans Volume","Cuir Chevelu qui Démange","Peau Vieillissante","Peau Terne et Inégale"],
-Portuguese:["Queda e Enfraquecimento do Cabelo","Cabelo Seco e Quebradiço","Cabelo Frizz e Difícil de Controlar","Cabelo e Couro Cabeludo Oleoso","Cabelo Danificado e com Quebra","Pontas Duplas","Cachos e Ondas Sem Definição","Desbotamento da Cor","Cabelo Liso Sem Volume","Couro Cabeludo com Coceira","Pele com Sinais de Idade","Pele Opaca e Irregular"],
-German:["Haarausfall und -verdünnung","Trockenes und Sprödes Haar","Frizzy und Unkontrollierbares Haar","Fettiges Haar und Kopfhaut","Beschädigtes Haar mit Bruch","Spliss","Undefinierte Locken und Wellen","Verfärbung von gefärbtem Haar","Flaches Haar ohne Volumen","Juckende Kopfhaut","Alternde Haut","Matte und ungleichmäßige Haut"],
-};
-return d[appLang]||d.English;
-}
-const OUT_PRODUCTS=["MONAT Bond IQ™","IR Clinical™","Rejuveniqe Oil Intensive™","Smoothing Anti-Frizz™","MONAT Curl Perfection™","REJUVABEADS®","Scalp Purifying Scrub","Scalp Comfort™","MONAT Color Care","MONAT Densifying System","MONAT Barrier Booster™","MONAT GlowTint™ Lip Oil","MONAT Wellness Supplements","MONAT for MEN™"];
-function PARTNER_TARGETS(){
-var d={
-English:["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"],
-Spanish:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mamá en Casa","Trabajar desde Casa","Busca un Negocio Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdió su Trabajo Recientemente","Apasionada por Productos Naturales"],
-Mexican:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mamá en Casa","Trabajar desde Casa","Busca un Chambita Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdió su Trabajo Recientemente","Apasionada por Productos Naturales"],
-Italian:["Vuole Reddito Extra","Ama la Bellezza e i Capelli","Mamma a Casa","Lavorare da Casa","Cerca un Lavoro Extra","Attiva sui Social Media","Mentalità Imprenditoriale","Studentessa / Giovane Professionista","Ha Perso il Lavoro di Recente","Appassionata di Prodotti Naturali"],
-French:["Veut des Revenus Supplémentaires","Aime la Beauté et les Cheveux","Maman au Foyer","Travailler de Chez Soi","Cherche une Activité Complémentaire","Active sur les Réseaux Sociaux","Mentalité Entrepreneuriale","Étudiante / Jeune Professionnelle","A Récemment Perdu son Emploi","Passionnée par les Produits Naturels"],
-Portuguese:["Quer Renda Extra","Ama Beleza e Cabelo","Mãe em Casa","Trabalhar de Casa","Procura uma Renda Extra","Ativa nas Redes Sociais","Mentalidade Empreendedora","Estudante / Jovem Profissional","Perdeu o Emprego Recentemente","Apaixonada por Produtos Naturais"],
-German:["Will Zusatzeinkommen","Liebt Schönheit und Haare","Hausfrau und Mutter","Von zu Hause aus Arbeiten","Sucht einen Nebenverdienst","Aktiv in Sozialen Medien","Unternehmerische Denkweise","Studentin / Junge Berufstätige","Hat Kürzlich Arbeit Verloren","Leidenschaft für Naturprodukte"],
-};
-return d[appLang]||d.English;
-}
-function OBJECTIONS(){
-var lng=appLang;
-var d={
-English:[{value:"too_expensive",label:"Too Expensive",desc:"Can't afford it"},{value:"not_interested",label:"Not Interested",desc:"General rejection"},{value:"already_have_products",label:"Already Have Products",desc:"Using another brand"},{value:"mlm_skeptical",label:"Skeptical About MLM",desc:"Doesn't believe in network marketing"},{value:"no_time",label:"No Time",desc:"Too busy"},{value:"need_to_think",label:"Need to Think",desc:"Not ready to decide"},{value:"bad_timing",label:"Bad Timing",desc:"Life circumstances"},{value:"tried_before",label:"Tried It Before",desc:"Had a bad experience"}],
-Spanish:[{value:"too_expensive",label:"Muy Caro",desc:"No puede pagarlo"},{value:"not_interested",label:"No Está Interesada",desc:"Rechazo general"},{value:"already_have_products",label:"Ya Tiene Productos",desc:"Usa otra marca"},{value:"mlm_skeptical",label:"Escéptica sobre MLM",desc:"No cree en el marketing de red"},{value:"no_time",label:"No Tiene Tiempo",desc:"Muy ocupada"},{value:"need_to_think",label:"Necesita Pensarlo",desc:"No está lista para decidir"},{value:"bad_timing",label:"Mal Momento",desc:"Circunstancias de vida"},{value:"tried_before",label:"Lo Intentó Antes",desc:"Tuvo una mala experiencia"}],
-Mexican:[{value:"too_expensive",label:"Está Muy Caro",desc:"No le alcanza"},{value:"not_interested",label:"No Le Interesa",desc:"Rechazo general"},{value:"already_have_products",label:"Ya Tiene Productos",desc:"Usa otra marca"},{value:"mlm_skeptical",label:"No Cree en el MLM",desc:"Desconfía del marketing de red"},{value:"no_time",label:"No Tiene Tiempo",desc:"Muy ocupada"},{value:"need_to_think",label:"Necesita Pensarlo",desc:"No está lista para decidir"},{value:"bad_timing",label:"Mal Momento",desc:"Circunstancias de vida"},{value:"tried_before",label:"Ya Lo Intentó",desc:"Tuvo una mala experiencia"}],
-Italian:[{value:"too_expensive",label:"Troppo Costoso",desc:"Non se lo può permettere"},{value:"not_interested",label:"Non Interessata",desc:"Rifiuto generale"},{value:"already_have_products",label:"Ha già Prodotti",desc:"Usa un altro marchio"},{value:"mlm_skeptical",label:"Scettica sul MLM",desc:"Non crede nel network marketing"},{value:"no_time",label:"Non ha Tempo",desc:"Troppo occupata"},{value:"need_to_think",label:"Deve Pensarci",desc:"Non è pronta a decidere"},{value:"bad_timing",label:"Momento Sbagliato",desc:"Circostanze di vita"},{value:"tried_before",label:"L'ha già Provato",desc:"Ha avuto una brutta esperienza"}],
-French:[{value:"too_expensive",label:"Trop Cher",desc:"Ne peut pas se le permettre"},{value:"not_interested",label:"Pas Intéressée",desc:"Rejet général"},{value:"already_have_products",label:"A déjà des Produits",desc:"Utilise une autre marque"},{value:"mlm_skeptical",label:"Sceptique envers le MLM",desc:"Ne croit pas au marketing de réseau"},{value:"no_time",label:"Pas le Temps",desc:"Trop occupée"},{value:"need_to_think",label:"Besoin de Réfléchir",desc:"Pas prête à décider"},{value:"bad_timing",label:"Mauvais Moment",desc:"Circonstances de vie"},{value:"tried_before",label:"A déjà Essayé",desc:"A eu une mauvaise expérience"}],
-Portuguese:[{value:"too_expensive",label:"Muito Caro",desc:"Não pode pagar"},{value:"not_interested",label:"Não Está Interessada",desc:"Rejeição geral"},{value:"already_have_products",label:"Já Tem Produtos",desc:"Usa outra marca"},{value:"mlm_skeptical",label:"Cética sobre MLM",desc:"Não acredita em marketing de rede"},{value:"no_time",label:"Sem Tempo",desc:"Muito ocupada"},{value:"need_to_think",label:"Precisa Pensar",desc:"Não está pronta para decidir"},{value:"bad_timing",label:"Momento Ruim",desc:"Circunstâncias de vida"},{value:"tried_before",label:"Já Tentou Antes",desc:"Teve uma experiência ruim"}],
-German:[{value:"too_expensive",label:"Zu Teuer",desc:"Kann es sich nicht leisten"},{value:"not_interested",label:"Nicht Interessiert",desc:"Allgemeine Ablehnung"},{value:"already_have_products",label:"Hat schon Produkte",desc:"Nutzt eine andere Marke"},{value:"mlm_skeptical",label:"Skeptisch gegenüber MLM",desc:"Glaubt nicht an Network Marketing"},{value:"no_time",label:"Keine Zeit",desc:"Zu beschäftigt"},{value:"need_to_think",label:"Muss Nachdenken",desc:"Noch nicht bereit zu entscheiden"},{value:"bad_timing",label:"Schlechter Zeitpunkt",desc:"Lebensumstände"},{value:"tried_before",label:"Schon Ausprobiert",desc:"Hatte eine schlechte Erfahrung"}],
-};
-return d[lng]||d.English;
-}
-function TONES(){
-var lng=appLang;
-var d={
-English:[{value:"warm",label:"Warm & Personal",desc:"Friendly, human"},{value:"professional",label:"Professional",desc:"Polished, credible"},{value:"excited",label:"Excited & Enthusiastic",desc:"High energy"},{value:"casual",label:"Casual & Relaxed",desc:"Low pressure"},{value:"urgent",label:"Urgent & Direct",desc:"Time-sensitive"}],
-Spanish:[{value:"warm",label:"Cálido y Personal",desc:"Amigable, humano"},{value:"professional",label:"Profesional",desc:"Pulido, creíble"},{value:"excited",label:"Emocionado y Entusiasta",desc:"Alta energía"},{value:"casual",label:"Casual y Relajado",desc:"Sin presión"},{value:"urgent",label:"Urgente y Directo",desc:"Sensible al tiempo"}],
-Mexican:[{value:"warm",label:"Cálido y Personal",desc:"Amigable, humano"},{value:"professional",label:"Profesional",desc:"Pulido, creíble"},{value:"excited",label:"Emocionado y Entusiasta",desc:"Alta energía"},{value:"casual",label:"Casual y Relajado",desc:"Sin presión"},{value:"urgent",label:"Urgente y Directo",desc:"Sensible al tiempo"}],
-Italian:[{value:"warm",label:"Caldo e Personale",desc:"Amichevole, umano"},{value:"professional",label:"Professionale",desc:"Raffinato, credibile"},{value:"excited",label:"Entusiasta",desc:"Alta energia"},{value:"casual",label:"Casual e Rilassato",desc:"Senza pressione"},{value:"urgent",label:"Urgente e Diretto",desc:"Sensibile al tempo"}],
-French:[{value:"warm",label:"Chaleureux et Personnel",desc:"Amical, humain"},{value:"professional",label:"Professionnel",desc:"Soigné, crédible"},{value:"excited",label:"Enthousiaste",desc:"Haute énergie"},{value:"casual",label:"Décontracté",desc:"Sans pression"},{value:"urgent",label:"Urgent et Direct",desc:"Sensible au temps"}],
-Portuguese:[{value:"warm",label:"Caloroso e Pessoal",desc:"Amigável, humano"},{value:"professional",label:"Profissional",desc:"Polido, credível"},{value:"excited",label:"Entusiasmado",desc:"Alta energia"},{value:"casual",label:"Casual e Descontraído",desc:"Sem pressão"},{value:"urgent",label:"Urgente e Direto",desc:"Sensível ao tempo"}],
-German:[{value:"warm",label:"Warm und Persönlich",desc:"Freundlich, menschlich"},{value:"professional",label:"Professionell",desc:"Poliert, glaubwürdig"},{value:"excited",label:"Begeistert",desc:"Hohe Energie"},{value:"casual",label:"Locker und Entspannt",desc:"Kein Druck"},{value:"urgent",label:"Dringend und Direkt",desc:"Zeitkritisch"}],
-};
-return d[lng]||d.English;
-}
-const TABS=[{id:"messages",label:"💬 WhatsApp & SMS"},{id:"voice",label:"🎙️ Voice Script"},{id:"email",label:"📧 Email"},{id:"letter",label:"✉️ Formal Letter"},{id:"followups",label:"🔄 Follow-Ups"},{id:"schedule",label:"📅 Schedule"}];
-function tog(arr,val){return arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];}
-
-const dkInput_unused={width:"100%",background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"8px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
-const dkCard={background:G.card,border:`1px solid ${G.border}`,borderRadius:"14px",padding:"22px",marginBottom:"16px"};
-const dkLabel={display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.1em",color:G.muted,textTransform:"uppercase",marginBottom:"3px"};
-
-let s={language:appLang,contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user?.name||"",yourPhone:"",yourLink:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
-
-const wrap=el("div",{style:{minHeight:"100vh",background:G.bg,color:"#111"}});
-
-const isPartner=()=>s.contactType==="potential_partner"||s.contactType==="past_partner";
-const isObjection=()=>s.contactReason==="handle_objection";
-const canGenerate=()=>s.contactName&&s.contactType&&s.contactReason&&s.tone&&s.yourName;
-
+var user=state.user;
+var s={contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user&&state.user.name?state.user.name:"",yourPhone:"",yourLink:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
+var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
+var OUT_TABS=[{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice Script"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
+function isPartner(){return s.contactType==="potential_partner"||s.contactType==="past_partner";}
+function isObjection(){return s.contactReason==="handle_objection";}
+function canGen(){return!!(s.contactName&&s.contactType&&s.contactReason&&s.tone&&s.yourName);}
 function buildCtx(){
-const langLabel=s.language==="Mexican"?"Mexican Spanish (use Mexican expressions, phrases natural to Mexico — not Spain Spanish)":s.language;
-return {ctx:`CONTACT:\n- Name: ${s.contactName}\n- Type: ${CONTACT_TYPES().find(t=>t.value===s.contactType)?.label||s.contactType}\n- Reason: ${REASONS().find(r=>r.value===s.contactReason)?.label||s.contactReason}\n- Tone: ${TONES().find(t=>t.value===s.tone)?.label||s.tone}\n- Prior contact: ${s.priorContact||"none"}\n- Personal note: ${s.personalNote||"none"}${isObjection()?`\n- Objection: ${OBJECTIONS().find(o=>o.value===s.objection)?.label||s.objection}${s.exactObjection?`\n- Their exact words: "${s.exactObjection}"`:""}`:""}\n${s.hairProblems.length>0?`- Hair/skin problems: ${s.hairProblems.join(", ")}`:""}${s.products.length>0?`\n- Products: ${s.products.join(", ")}`:""}${isPartner()&&s.partnerTargets.length>0?`\n- Partner profile: ${s.partnerTargets.join(", ")}`:""}SENDER: ${s.yourName}${s.yourPhone?" | "+s.yourPhone:""}${s.yourLink?" | "+s.yourLink:""}\nMONAT: "We Are Modern Nature" | #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | Top 5 haircare on TikTok Shop${isPartner()?"\nPARTNER OPPORTUNITY: Earn up to 5x/month | $1.5B+ paid | Work from home | Be your own boss":""}`,langNote:s.language!=="English"?`\n\nCRITICAL: Write ALL content in ${langLabel}. Every single word must be in that language.`:""};
+var lang=appLang==="Spanish"?"Spanish":"English";
+return{ctx:"CONTACT:\n- Name: "+s.contactName+"\n- Type: "+((CONTACT_TYPES().find(function(t){return t.v===s.contactType;})||{l:s.contactType}).l)+"\n- Reason: "+((REASONS().find(function(r){return r.v===s.contactReason;})||{l:s.contactReason}).l)+"\n- Tone: "+((TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l)+"\n- Prior contact: "+(s.priorContact||"none")+"\n- Personal note: "+(s.personalNote||"none")+(isObjection()?"\n- Objection: "+((OBJECTIONS().find(function(o){return o.v===s.objection;})||{l:s.objection}).l)+(s.exactObjection?"\n- Their exact words: "+s.exactObjection:""):"")+(s.hairProblems.length>0?"\n- Hair/skin problems: "+s.hairProblems.join(", "):"")+(s.products.length>0?"\n- Products: "+s.products.join(", "):"")+(isPartner()&&s.partnerTargets.length>0?"\n- Partner profile: "+s.partnerTargets.join(", "):"")+"\nSENDER: "+s.yourName+(s.yourPhone?" | "+s.yourPhone:"")+(s.yourLink?" | "+s.yourLink:"")+"\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA"+(isPartner()?"\nPARTNER OPPORTUNITY: Earn up to 5x/month | $1.5B+ paid | Work from home | Be your own boss":""),
+langNote:"\n\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+"."};
 }
-
-async function generate(){
-const langEl2=document.querySelector("#app2LangSel");
-if(langEl2)s.language=langEl2.value;
-s.loading=true;s.error="";s.result=null;renderApp2Content();
-const {ctx,langNote}=buildCtx();
-try{
-s.loadingMsg="✦ Writing messages & voice script...";renderApp2Content();
-let p1;
-if(isObjection()){p1=`You are an elite MONAT network marketing coach. Write objection-handling responses.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"whatsapp": "60-80 words. ${s.exactObjection?`Respond directly to: "${s.exactObjection}".`:"Acknowledge their concern genuinely."} Reframe positively. Soft question at end. Never pushy.",\n"sms": "Max 160 chars. Warm, understanding.",\n"voice_script": "Phone script. OPENING: acknowledge warmly. EMPATHY: understand concern. REFRAME: new perspective. QUESTION: one soft discovery question. CLOSE: low-commitment next step. Label each section.",\n"email_subject": "Under 9 words. Doesn't feel like sales.",\n"email_body": "140-160 words. Handle objection gracefully. Signed by ${s.yourName}."\n}`;}
-else{p1=`You are an elite MONAT network marketing coach. Write personalised outreach messages.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"whatsapp": "60-90 words. Warm, personal, use ${s.contactName}'s name. Reference their specific situation. Build curiosity. ONE easy question at end. Never salesy. Real friend feel.",\n"sms": "Max 160 chars. Punchy and personal. Their name. Soft CTA.",\n"voice_script": "Phone script. OPENING: greet ${s.contactName} warmly. REASON: why calling specifically for them. VALUE: what's in it for them. CLOSE: one specific low-commitment next step. Label each section. Natural spoken language.",\n"email_subject": "Personal, curiosity-driving. Under 10 words.",\n"email_body": "140-170 words. Personal opener about their situation. Value. CTA. Signed ${s.yourName}${s.yourLink?" | "+s.yourLink:""}."\n}`;}
-const text1=await apiClaude(p1,1300);
-let part1={};try{part1=JSON.parse(text1);}catch{const cm=text1.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part1=JSON.parse(cm[1].trim());}catch{}}const jm=text1.match(/\{[\s\S]*\}/);if(jm){try{part1=JSON.parse(jm[0]);}catch{}}}
-
-s.loadingMsg="✦ Writing letter & follow-ups...";renderApp2Content();
-const p2=`You are an elite MONAT network marketing coach.\n\n${ctx}${langNote}\n\nReturn ONLY raw JSON (no markdown, no backticks):\n{\n"formal_letter": "Full formal letter 260-300 words. Format:\\n[Date]\\n\\n${s.contactName}\\n[Their Address]\\n\\nDear ${s.contactName},\\n\\n4 paragraphs.\\n\\nWarm regards,\\n${s.yourName}${s.yourPhone?"\\n"+s.yourPhone:""}${s.yourLink?"\\n"+s.yourLink:""}",\n"followup_1": "Day 3 no reply. 50-65 words. Friendly nudge. Different angle. Easy question.",\n"followup_2": "Week 1 no reply. 50-65 words. New angle. Light urgency.",\n"followup_3": "Week 2 no reply. 40-55 words. Casual. Zero pressure.",\n"followup_4": "Month 1 no reply. 40-50 words. Final warm touch."\n}`;
-const text2=await apiClaude(p2,1400);
-let part2={};try{part2=JSON.parse(text2);}catch{const cm=text2.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part2=JSON.parse(cm[1].trim());}catch{}}const jm=text2.match(/\{[\s\S]*\}/);if(jm){try{part2=JSON.parse(jm[0]);}catch{}}}
-
-s.loadingMsg="✦ Building follow-up schedule...";renderApp2Content();
-const p3=`MONAT coach. Create a 7-day follow-up schedule for ${s.contactName}.${langNote}\n\nReturn ONLY raw JSON:\n{"schedule":[{"day":"Today — First Contact","icon":"🚀","tasks":["Send the WhatsApp message","If no reply after 3 hours, send the SMS","Note the contact with today's date"]},{"day":"Day 3 — First Follow-Up","icon":"💬","tasks":["Send Follow-Up #1 if no reply","Check if they viewed your message","Note their response or silence"]},{"day":"Day 7 — Week 1","icon":"📞","tasks":["Send Follow-Up #2 with a fresh angle","Make a phone call using your voice script","Listen first before sharing anything"]},{"day":"Day 14 — Two Week Touch","icon":"🔄","tasks":["Send Follow-Up #3 — casual, zero pressure","Share a relevant result or before/after","Update your records"]},{"day":"Day 30 — Monthly Touch","icon":"🌱","tasks":["Send Follow-Up #4 — final warm message","If still no reply add to monthly check-in","Timing is everything — stay patient"]},{"day":"Ongoing","icon":"📅","tasks":["Share MONAT results on WhatsApp Status","Check in every 90 days","Life situations change — keep door open"]}]}`;
-const text3=await apiClaude(p3,900);
-let part3={schedule:[]};try{part3=JSON.parse(text3);}catch{const cm=text3.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{part3=JSON.parse(cm[1].trim());}catch{}}const jm=text3.match(/\{[\s\S]*\}/);if(jm){try{part3=JSON.parse(jm[0]);}catch{}}}
-
-s.result={...part1,...part2,...part3};s.activeTab="messages";
-}catch(e){s.error="Error: "+e.message;}
-s.loading=false;renderApp2Content();
+function parseJSON(text){try{return JSON.parse(text);}catch(e){var cm=text.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{return JSON.parse(cm[1].trim());}catch(e2){}}var jm=text.match(/\{[\s\S]*\}/);if(jm){try{return JSON.parse(jm[0]);}catch(e3){}}return{};}
 }
-
-function dkCopyCard(title,content,badge){
-const card=el("div",{style:{background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});
-const copyBtn=el("button",{style:{background:G.card,border:`1px solid ${G.border}`,borderRadius:"6px",color:G.muted,fontSize:"11px",padding:"4px 11px",cursor:"pointer",flexShrink:"0"}},"Copy");
-copyBtn.addEventListener("click",()=>{navigator.clipboard.writeText(content||"");copyBtn.textContent="✓ Copied";copyBtn.style.color="#4caf50";copyBtn.style.borderColor="#2a5a2a";setTimeout(()=>{copyBtn.textContent="Copy";copyBtn.style.color=G.muted;copyBtn.style.borderColor=G.border;},1800);});
-card.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"9px"}},
-el("div",{style:{display:"flex",alignItems:"center",gap:"7px"}},el("span",{style:{fontSize:"10px",fontWeight:"700",letterSpacing:"0.1em",color:G.purple,textTransform:"uppercase"}},title),badge?el("span",{style:{fontSize:"10px",background:G.gbg,color:G.purple,border:"1px solid #2e2a4a",borderRadius:"4px",padding:"2px 7px"}},badge):null),
-copyBtn
-));
-card.appendChild(el("p",{style:{color:"#333",fontSize:"13px",lineHeight:"1.75",margin:"0",whiteSpace:"pre-wrap"}},content||""));
-return card;
-}
-
-function dkChips(label,hint,opts,sel,toggle,single){
-const wrap=el("div",{style:{marginBottom:"16px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 5px",fontStyle:"italic"}},hint));
-const grid=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"7px"}});
-opts.forEach(opt=>{
-const val=typeof opt==="string"?opt:opt.value,lbl=typeof opt==="string"?opt:opt.label,sub=typeof opt==="object"?opt.desc:null;
-const active=single?sel===val:(Array.isArray(sel)&&sel.includes(val));
-const btn=el("button",{style:{background:active?G.gbg:G.gbg,border:`1px solid ${active?G.purple:G.border}`,borderRadius:"7px",color:active?G.purple:G.muted,fontSize:"12px",padding:sub?"9px 13px":"7px 12px",cursor:"pointer",textAlign:"left"}},el("div",{style:{fontWeight:active?"700":"400"}},lbl),...(sub?[el("div",{style:{fontSize:"11px",color:active?G.purple:G.muted,marginTop:"2px"}},sub)]:[]));
-btn.addEventListener("click",()=>toggle(val));
-grid.appendChild(btn);
-});
-wrap.appendChild(grid);
-return wrap;
-}
-
-function dkField(label,type,value,onChange,placeholder,hint){
-const wrap=el("div",{style:{marginBottom:"14px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 4px",fontStyle:"italic"}},hint));
-const inp=el("input",{type:type||"text",placeholder:placeholder||"",style:inputStyle});
-inp.value=value||"";
-inp.addEventListener("input",e=>onChange(e.target.value));
-wrap.appendChild(inp);
-return wrap;
-}
-
-function dkTextarea(label,value,onChange,placeholder,rows,hint){
-const wrap=el("div",{style:{marginBottom:"14px"}});
-if(label)wrap.appendChild(el("label",{style:labelStyle},label));
-if(hint)wrap.appendChild(el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 4px",fontStyle:"italic"}},hint));
-const ta=el("textarea",{placeholder:placeholder||"",rows:rows||3,style:{...inputStyle,resize:"vertical"}});
-ta.value=value||"";
-ta.addEventListener("input",e=>onChange(e.target.value));
-wrap.appendChild(ta);
-return wrap;
-}
-
-function renderApp2Content(){
+function generate(){
+s.loading=true;s.error="";s.result=null;draw();
+var o=buildCtx(),ctx=o.ctx,langNote=o.langNote;
+var p1=isObjection()?
+"You are an elite MONAT network marketing coach.\n\n"+ctx+langNote+"\n\nReturn ONLY raw JSON:\n{\"whatsapp\":\"60-80 words. "+(s.exactObjection?"Respond directly to what they said: "+s.exactObjection+".":"Acknowledge their concern genuinely.")+" Reframe positively. Soft question at end. Never pushy.\",\"sms\":\"Max 160 chars. Warm.\",\"voice_script\":\"OPENING: acknowledge warmly. EMPATHY: understand concern. REFRAME: new perspective. QUESTION: one soft discovery question. CLOSE: low-commitment next step. Label each section.\",\"email_subject\":\"Under 9 words.\",\"email_body\":\"140-160 words. Handle objection gracefully. Signed "+s.yourName+".\"}":
+"You are an elite MONAT network marketing coach.\n\n"+ctx+langNote+"\n\nReturn ONLY raw JSON:\n{\"whatsapp\":\"60-90 words. Warm, personal, use "+s.contactName+"'s name. Reference their situation. Build curiosity. ONE easy question at end. Never salesy.\",\"sms\":\"Max 160 chars. Personal. Soft CTA.\",\"voice_script\":\"OPENING: greet warmly. REASON: why calling. VALUE: what is in it for them. CLOSE: one low-commitment next step. Label each section.\",\"email_subject\":\"Personal, curiosity-driving. Under 10 words.\",\"email_body\":\"140-170 words. Personal opener. Value. CTA. Signed "+s.yourName+(s.yourLink?" | "+s.yourLink:"")+".\"}"
+;
+s.loadingMsg="Writing messages...";draw();
+apiClaude(p1,1300).then(function(t){
+var part1=parseJSON(t);
+s.loadingMsg="Writing letter and follow-ups...";draw();
+var p2="You are an elite MONAT network marketing coach.\n\n"+ctx+langNote+"\n\nReturn ONLY raw JSON:\n{\"formal_letter\":\"Full formal letter 260-300 words. Start with date, then contact name, address, Dear "+s.contactName+", then 4 paragraphs, then Warm regards, "+s.yourName+(s.yourPhone?"\\n"+s.yourPhone:"")+(s.yourLink?"\\n"+s.yourLink:"")+"\",\"followup_1\":\"Day 3 no reply. 50-65 words. Friendly nudge. Different angle.\",\"followup_2\":\"Week 1 no reply. 50-65 words. New angle. Light urgency.\",\"followup_3\":\"Week 2 no reply. 40-55 words. Casual. Zero pressure.\",\"followup_4\":\"Month 1 no reply. 40-50 words. Final warm touch.\"}";
+return apiClaude(p2,1400).then(function(t2){
+var part2=parseJSON(t2);
+s.loadingMsg="Building schedule...";draw();
+var p3="Create a 6-step follow-up schedule for "+s.contactName+" in "+(appLang==="Spanish"?"Spanish":"English")+".\n\nReturn ONLY raw JSON:\n{\"schedule\":[{\"day\":\"Today\",\"icon\":\"🚀\",\"tasks\":[\"Send the WhatsApp message\",\"If no reply after 3 hours send the SMS\",\"Note the contact with today's date\"]},{\"day\":\"Day 3\",\"icon\":\"💬\",\"tasks\":[\"Send Follow-Up 1 if no reply\",\"Check if they viewed your message\",\"Note their response\"]},{\"day\":\"Day 7\",\"icon\":\"📞\",\"tasks\":[\"Send Follow-Up 2 with a fresh angle\",\"Make a phone call using your voice script\",\"Listen first\"]},{\"day\":\"Day 14\",\"icon\":\"🔄\",\"tasks\":[\"Send Follow-Up 3 casual zero pressure\",\"Share a relevant result\",\"Update your records\"]},{\"day\":\"Day 30\",\"icon\":\"🌱\",\"tasks\":[\"Send Follow-Up 4 final warm message\",\"If still no reply add to monthly check-in\",\"Stay patient timing is everything\"]},{\"day\":\"Ongoing\",\"icon\":\"📅\",\"tasks\":[\"Share MONAT results on WhatsApp Status\",\"Check in every 90 days\",\"Life situations change keep door open\"]}]}";
+return apiClaude(p3,900).then(function(t3){
+var part3=parseJSON(t3);
+s.result=Object.assign({},part1,part2,part3);
+s.activeTab="messages";s.loading=false;draw();
+});});
+}).catch(function(e){s.error="Error: "+e.message;s.loading=false;draw();});}
+function draw(){
 wrap.innerHTML="";
-const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:"0",zIndex:"50"}});
-const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
-const backBtn=el("button",{style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},tt(appLang).home);
-backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
-navLeft.appendChild(backBtn);
-navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",color:"#111"}},"🤝 Outreach Machine"));
-nav.appendChild(navLeft);
-const langSel2=el("select",{id:"app2LangSel",style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel2.appendChild(o);});
-langSel2.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp2Content();});
-nav.appendChild(langSel2);
-wrap.appendChild(nav);
-
+wrap.appendChild(mkNav("🤝 "+T().outTitle,function(){setState({screen:"dashboard"});},user));
 if(s.result){
-const content=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
-content.appendChild(el("div",{style:{background:G.dark,border:"1px solid #7664d0",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",justifyContent:"space-between",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:G.purple,fontWeight:"bold"}},tt(appLang).outReady(s.contactName)),el("button",{onclick:()=>{s.result=null;s.error="";renderApp2Content();},style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},tt(appLang).outNew)));
-const tabBar=el("div",{style:{display:"flex",gap:"6px",marginBottom:"16px",flexWrap:"wrap"}});
-TABS.forEach(tb=>{const btn=el("button",{style:{background:s.activeTab===tb.id?G.purple:G.gbg,color:s.activeTab===tb.id?"#fff":G.muted,border:`1px solid ${s.activeTab===tb.id?G.purple:G.border}`,borderRadius:"8px",padding:"7px 12px",fontSize:"11px",fontWeight:s.activeTab===tb.id?"700":"400",cursor:"pointer"}},tb.label);btn.addEventListener("click",()=>{s.activeTab=tb.id;renderApp2Content();});tabBar.appendChild(btn);});
+var content=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
+content.appendChild(el("div",{style:{background:"#ede9ff",border:"1px solid #7664d0",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",justifyContent:"space-between",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#7664d0",fontWeight:"bold"}},"✦ "+T().outReady(s.contactName)),(function(){var b=el("button",{style:Object.assign({},btnS,{fontSize:"11px",padding:"5px 12px"})},T().outNew);b.addEventListener("click",function(){s.result=null;s.error="";draw();});return b;})()));
+var tabBar=el("div",{style:{display:"flex",gap:"6px",marginBottom:"16px",flexWrap:"wrap"}});
+OUT_TABS.forEach(function(tb){var btn=el("button",{style:{background:s.activeTab===tb.id?"#2e2a4a":"#fff",color:s.activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(s.activeTab===tb.id?"#2e2a4a":"#e8e6f0"),borderRadius:"8px",padding:"7px 12px",fontSize:"11px",fontWeight:s.activeTab===tb.id?"700":"400",cursor:"pointer",fontFamily:"inherit"}},tb.l);btn.addEventListener("click",function(){s.activeTab=tb.id;draw();});tabBar.appendChild(btn);});
 content.appendChild(tabBar);
-if(s.activeTab==="messages"){content.appendChild(dkCopyCard("WhatsApp",s.result.whatsapp,"WhatsApp"));content.appendChild(dkCopyCard("SMS",s.result.sms,"160 chars"));}
-if(s.activeTab==="voice"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outNatural));content.appendChild(dkCopyCard("Phone Call Script",s.result.voice_script));}
-if(s.activeTab==="email"){content.appendChild(dkCopyCard("Email Subject Line",s.result.email_subject));content.appendChild(dkCopyCard("Email Body",s.result.email_body));}
-if(s.activeTab==="letter"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outBrackets));content.appendChild(dkCopyCard("Formal Letter",s.result.formal_letter));}
-if(s.activeTab==="followups"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outOrder));[["Follow-Up #1",s.result.followup_1,"Day 3"],["Follow-Up #2",s.result.followup_2,"Week 1"],["Follow-Up #3",s.result.followup_3,"Week 2"],["Follow-Up #4",s.result.followup_4,"Month 1"]].forEach(([t,c,b])=>content.appendChild(dkCopyCard(t,c,b)));}
+if(s.activeTab==="messages"){content.appendChild(mkCopyCard("WhatsApp",s.result.whatsapp));content.appendChild(mkCopyCard("SMS",s.result.sms));}
+if(s.activeTab==="voice"){content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outNatural));content.appendChild(mkCopyCard("Phone Call Script",s.result.voice_script));}
+if(s.activeTab==="email"){content.appendChild(mkCopyCard("Email Subject",s.result.email_subject));content.appendChild(mkCopyCard("Email Body",s.result.email_body));}
+if(s.activeTab==="letter"){content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outBrackets));content.appendChild(mkCopyCard("Formal Letter",s.result.formal_letter));}
+if(s.activeTab==="followups"){content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outOrder));[["Follow-Up 1",s.result.followup_1,"Day 3"],["Follow-Up 2",s.result.followup_2,"Week 1"],["Follow-Up 3",s.result.followup_3,"Week 2"],["Follow-Up 4",s.result.followup_4,"Month 1"]].forEach(function(fu){content.appendChild(mkCopyCard(fu[0]+" ("+fu[2]+")",fu[1]));});}
 if(s.activeTab==="schedule"&&s.result.schedule){
-content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 14px"}},tt(appLang).outPlanFor(s.contactName)));
-s.result.schedule.forEach(d=>{
-const dc=el("div",{style:{background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});
-dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"9px",marginBottom:"9px"}},el("span",{style:{fontSize:"20px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:G.purple}},d.day)));
-(d.tasks||[]).forEach(t=>{const row=el("div",{style:{display:"flex",gap:"9px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:G.purple,fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",color:"#333",lineHeight:"1.6"}},t));dc.appendChild(row);});
-content.appendChild(dc);
-});
-}
-wrap.appendChild(content);
-return;
-}
-
-const content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
-
-content.appendChild(el("div",{style:cardStyle},el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"👤 Who Are You Contacting?"),el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outWhoSub),dkField(tt(appLang).outCName,"text",s.contactName,v=>s.contactName=v,"Maria"),dkChips(tt(appLang).outCType,null,CONTACT_TYPES(),s.contactType,v=>{s.contactType=v;renderApp2Content();},true),dkChips(tt(appLang).outReason,tt(appLang).outReasonH,REASONS(),s.contactReason,v=>{s.contactReason=v;renderApp2Content();},true),dkChips(tt(appLang).outTone,null,TONES(),s.tone,v=>{s.tone=v;renderApp2Content();},true)));
-
+content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 14px"}},T().outPlanFor(s.contactName)));
+s.result.schedule.forEach(function(d){var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"9px",marginBottom:"9px"}},el("span",{style:{fontSize:"20px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#7664d0"}},d.day)));(d.tasks||[]).forEach(function(t){var row=el("div",{style:{display:"flex",gap:"9px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",color:"#333",lineHeight:"1.6"}},t));dc.appendChild(row);});content.appendChild(dc);});}
+wrap.appendChild(content);return;}
+var content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
+content.appendChild(el("div",{style:Object.assign({},CS)},
+el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"👤 "+T().outWho),
+el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 16px"}},T().outWhoSub),
+mkInp(T().outCName,s.contactName,function(v){s.contactName=v;},T().outCNamePh),
+mkChips(T().outCType,null,CONTACT_TYPES(),s.contactType,function(v){s.contactType=v;draw();},true),
+mkChips(T().outReason,T().outReasonH,REASONS(),s.contactReason,function(v){s.contactReason=v;draw();},true),
+mkChips(T().outTone,null,TONES(),s.tone,function(v){s.tone=v;draw();},true)));
 if(isObjection()){
-const objCard=el("div",{style:cardStyle});
-objCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🛡️ What Objection Did They Raise?"));
-objCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outObjSub));
-objCard.appendChild(dkChips(tt(appLang).outObjCat,null,OBJECTIONS(),s.objection,v=>{s.objection=v;renderApp2Content();},true));
-objCard.appendChild(el("div",{style:{marginTop:"14px"}},el("label",{style:labelStyle},tt(appLang).outExact+" "),el("span",{style:{fontSize:"10px",fontWeight:"400",color:G.muted}},tt(appLang).outExactOpt),el("p",{style:{fontSize:"11px",color:G.muted,margin:"4px 0 6px",fontStyle:"italic"}},tt(appLang).outExactH)));
-const ta=el("textarea",{placeholder:'e.g. "I tried MONAT before and my hair fell out"',rows:3,style:{...inputStyle,resize:"vertical"}});
-ta.value=s.exactObjection||"";
-ta.addEventListener("input",e=>s.exactObjection=e.target.value);
-objCard.querySelector("div:last-child").appendChild(ta);
-content.appendChild(objCard);
-}
-
-const hairCard=el("div",{style:cardStyle});
-hairCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"💇 Their Hair & Skin Situation"));
-hairCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outHairSub));
-hairCard.appendChild(dkChips(tt(appLang).outHairProbs,tt(appLang).outHairH,HAIR(),s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
-hairCard.appendChild(dkChips(tt(appLang).outProdsMention,tt(appLang).outProdsH,OUT_PRODUCTS,s.products,v=>{s.products=tog(s.products,v);renderApp2Content();}));
-content.appendChild(hairCard);
-
-if(isPartner()){
-const pCard=el("div",{style:cardStyle});
-pCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🚀 Why Would They Be a Great Partner?"));
-pCard.appendChild(dkChips(tt(appLang).outPartProf,null,PARTNER_TARGETS(),s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
-content.appendChild(pCard);
-}
-
-const ctxCard=el("div",{style:cardStyle});
-ctxCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"💡 Personal Context"));
-ctxCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outCtxSub));
-ctxCard.appendChild(dkTextarea(tt(appLang).outPrior,s.priorContact,v=>s.priorContact=v,'e.g. "Met at a MONAT event. Said she was interested but wanted to think about it."',2,tt(appLang).outPriorH));
-ctxCard.appendChild(dkTextarea(tt(appLang).outNote,s.personalNote,v=>s.personalNote=v,'e.g. "Has 2 young kids, dry hair since having kids."',2,tt(appLang).outNoteH));
-content.appendChild(ctxCard);
-
-const agCard=el("div",{style:cardStyle});
-agCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🏷️ Your Details"));
-const agGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}});
-agGrid.appendChild(dkField(tt(appLang).outYourName,"text",s.yourName,v=>s.yourName=v,"Maria Johnson"));
-agGrid.appendChild(dkField(tt(appLang).outYourPhone,"text",s.yourPhone,v=>s.yourPhone=v,"+1 (555) 000-0000"));
-agCard.appendChild(agGrid);
-agCard.appendChild(dkField(tt(appLang).outYourLink,"text",s.yourLink,v=>s.yourLink=v,tt(appLang).profileLinkPh));
-content.appendChild(agCard);
-
-if(s.error)content.appendChild(el("div",{style:{background:"#1a0a0a",border:"1px solid #3a1a1a",borderRadius:"8px",padding:"11px 13px",color:"#f87171",fontSize:"12px",marginBottom:"12px"}},`⚠ ${s.error}`));
-if(s.loading){
-const lc=el("div",{style:{background:G.card,border:`1px solid ${G.border}`,borderRadius:"10px",padding:"15px 19px",marginBottom:"13px",textAlign:"center"}});
-lc.appendChild(el("p",{style:{color:G.purple,fontSize:"14px",margin:"0",fontWeight:"600"}},s.loadingMsg));
-lc.appendChild(el("p",{style:{color:G.muted,fontSize:"12px",margin:"6px 0 0"}},`Generating in ${s.language}. Takes about 20 seconds...`));
-content.appendChild(lc);
-}
-const genBtn=el("button",{style:{...btnStyle(!canGenerate()||s.loading,G.purple),width:"100%",fontSize:"15px"}},s.loading?tt(appLang).outGening:tt(appLang).outGen);
-genBtn.addEventListener("click",()=>{if(canGenerate()&&!s.loading)generate();});
+content.appendChild(el("div",{style:CS},
+el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"🛡️ "+T().outObjTitle),
+el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 16px"}},T().outObjSub),
+mkChips(T().outObjCat,null,OBJECTIONS(),s.objection,function(v){s.objection=v;draw();},true),
+mkTA(T().outExact+" "+T().outExactOpt,s.exactObjection,function(v){s.exactObjection=v;},T().outExactPh,3,T().outExactH)));}
+content.appendChild(el("div",{style:CS},
+el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"💇 "+T().outHairTitle),
+el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 16px"}},T().outHairSub),
+mkChips(T().outHairProbs,T().outHairH,HAIR_PROBS(),s.hairProblems,function(v){s.hairProblems=tog(s.hairProblems,v);draw();}),
+mkChips(T().outProdsMention,T().outProdsH,OUT_PRODUCTS,s.products,function(v){s.products=tog(s.products,v);draw();})));
+if(isPartner()){content.appendChild(el("div",{style:CS},el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"🚀 "+T().outPartTitle),mkChips(T().outPartProf,null,PARTNER_T(),s.partnerTargets,function(v){s.partnerTargets=tog(s.partnerTargets,v);draw();})));}
+content.appendChild(el("div",{style:CS},
+el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"💡 "+T().outCtxTitle),
+el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 16px"}},T().outCtxSub),
+mkTA(T().outPrior,s.priorContact,function(v){s.priorContact=v;},T().outPriorPh,2,T().outPriorH),
+mkTA(T().outNote,s.personalNote,function(v){s.personalNote=v;},T().outNotePh,2,T().outNoteH)));
+content.appendChild(el("div",{style:CS},
+el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700"}},"🏷️ "+T().outYours),
+el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}},
+mkInp(T().outYourName,s.yourName,function(v){s.yourName=v;},state.user&&state.user.name?state.user.name:"Maria Johnson"),
+mkInp(T().outYourPhone,s.yourPhone,function(v){s.yourPhone=v;},"+1 (555) 000-0000")),
+mkInp(T().outYourLink,s.yourLink,function(v){s.yourLink=v;},"yourname.mymonat.com")));
+if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"11px 13px",color:"#dc2626",fontSize:"12px",marginBottom:"12px"}},"⚠ "+s.error));
+if(s.loading)content.appendChild(el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"15px 19px",marginBottom:"13px",textAlign:"center"}},el("p",{style:{color:"#7664d0",fontSize:"14px",margin:"0",fontWeight:"600"}},s.loadingMsg),el("p",{style:{color:"#6b6b6b",fontSize:"12px",margin:"6px 0 0"}},T().genIn(appLang))));
+var genBtn=el("button",{style:canGen()&&!s.loading?Object.assign({},btnD,{width:"100%",fontSize:"15px"}):Object.assign({},btnG,{width:"100%",fontSize:"15px"})},s.loading?T().outGening:"✦ "+T().outGen);
+genBtn.addEventListener("click",function(){if(canGen()&&!s.loading)generate();});
 content.appendChild(genBtn);
-if(!canGenerate())content.appendChild(el("p",{style:{color:G.muted,fontSize:"12px",marginTop:"8px",textAlign:"center"}},tt(appLang).outFill));
+if(!canGen())content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"12px",marginTop:"8px",textAlign:"center"}},T().outFill));
+wrap.appendChild(content);}
+draw();return wrap;}
 
-wrap.appendChild(content);
-}
-
-renderApp2Content();
-return wrap;
-}
-
-// ── MAIN RENDER ─────────────────────────────────────────────────────────────
+// ── RENDER ──
 function render(){
-const root=document.getElementById("root");
+var root=document.getElementById("root");
 root.innerHTML="";
 if(state.screen==="login")root.appendChild(renderLogin());
 else if(state.screen==="dashboard")root.appendChild(renderDashboard());
@@ -785,19 +381,10 @@ else if(state.screen==="app1")root.appendChild(renderApp1());
 else if(state.screen==="app2")root.appendChild(renderApp2());
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
-// Always show login immediately, then check session
+// ── INIT ──
 render();
 var saved=localStorage.getItem("nt_u");
-if(saved){
-try{
-var u=JSON.parse(saved);
-apiAuth({action:"check",userId:u.id}).then(function(res){
-if(res&&res.success){state={screen:"dashboard",user:res.user};render();}
-else{localStorage.removeItem("nt_u");}
-}).catch(function(){localStorage.removeItem("nt_u");});
-}catch(e){localStorage.removeItem("nt_u");}
-}
+if(saved){try{var u=JSON.parse(saved);apiAuth({action:"check",userId:u.id}).then(function(res){if(res&&res.success){state={screen:"dashboard",user:res.user};render();}else{localStorage.removeItem("nt_u");}}).catch(function(){localStorage.removeItem("nt_u");});}catch(e){localStorage.removeItem("nt_u");}}
 </script>
 </body>
 </html>
