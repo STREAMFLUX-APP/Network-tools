@@ -521,9 +521,31 @@ German:[{value:"first_outreach",label:"👋 Erster Kontakt",desc:"Noch nie konta
 };
 return d[lng]||d.English;
 }
-const HAIR=["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"];
+function HAIR(){
+var d={
+English:["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"],
+Spanish:["Caída y Adelgazamiento del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy e Inmanejable","Cabello y Cuero Cabelludo Grasoso","Cabello Dañado y con Rotura","Puntas Abiertas","Rizos y Ondas Sin Definición","Decoloración del Color Tratado","Cabello Plano Sin Volumen","Cuero Cabelludo con Picazón","Piel con Signos de Edad","Piel Opaca y Desigual"],
+Mexican:["Caída y Adelgazamiento del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy e Inmanejable","Cabello y Cuero Cabelludo Grasoso","Cabello Dañado y con Rotura","Puntas Abiertas","Rizos y Ondas Sin Definición","Decoloración del Color Tratado","Cabello Plano Sin Volumen","Cuero Cabelludo con Comezón","Piel con Signos de Edad","Piel Opaca y Pareja"],
+Italian:["Diradamento e Caduta Capelli","Capelli Secchi e Fragili","Capelli Crespi e Ingestibili","Capelli e Cuoio Capelluto Grassi","Capelli Danneggiati e Spezzati","Punte Aperte","Ricci e Onde Non Definiti","Sbiadimento del Colore","Capelli Piatti Senza Volume","Cuoio Capelluto che Prude","Pelle che Invecchia","Pelle Spenta e Non Uniforme"],
+French:["Chute et Amincissement des Cheveux","Cheveux Secs et Cassants","Cheveux Frisottants et Ingérables","Cheveux et Cuir Chevelu Gras","Cheveux Abîmés et Cassés","Pointes Abîmées","Boucles et Ondulations Non Définies","Décoloration du Cheveu Coloré","Cheveux Plats Sans Volume","Cuir Chevelu qui Démange","Peau Vieillissante","Peau Terne et Inégale"],
+Portuguese:["Queda e Enfraquecimento do Cabelo","Cabelo Seco e Quebradiço","Cabelo Frizz e Difícil de Controlar","Cabelo e Couro Cabeludo Oleoso","Cabelo Danificado e com Quebra","Pontas Duplas","Cachos e Ondas Sem Definição","Desbotamento da Cor","Cabelo Liso Sem Volume","Couro Cabeludo com Coceira","Pele com Sinais de Idade","Pele Opaca e Irregular"],
+German:["Haarausfall und -verdünnung","Trockenes und Sprödes Haar","Frizzy und Unkontrollierbares Haar","Fettiges Haar und Kopfhaut","Beschädigtes Haar mit Bruch","Spliss","Undefinierte Locken und Wellen","Verfärbung von gefärbtem Haar","Flaches Haar ohne Volumen","Juckende Kopfhaut","Alternde Haut","Matte und ungleichmäßige Haut"],
+};
+return d[appLang]||d.English;
+}
 const OUT_PRODUCTS=["MONAT Bond IQ™","IR Clinical™","Rejuveniqe Oil Intensive™","Smoothing Anti-Frizz™","MONAT Curl Perfection™","REJUVABEADS®","Scalp Purifying Scrub","Scalp Comfort™","MONAT Color Care","MONAT Densifying System","MONAT Barrier Booster™","MONAT GlowTint™ Lip Oil","MONAT Wellness Supplements","MONAT for MEN™"];
-const PARTNER_TARGETS=["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"];
+function PARTNER_TARGETS(){
+var d={
+English:["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"],
+Spanish:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mamá en Casa","Trabajar desde Casa","Busca un Negocio Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdió su Trabajo Recientemente","Apasionada por Productos Naturales"],
+Mexican:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mamá en Casa","Trabajar desde Casa","Busca un Chambita Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdió su Trabajo Recientemente","Apasionada por Productos Naturales"],
+Italian:["Vuole Reddito Extra","Ama la Bellezza e i Capelli","Mamma a Casa","Lavorare da Casa","Cerca un Lavoro Extra","Attiva sui Social Media","Mentalità Imprenditoriale","Studentessa / Giovane Professionista","Ha Perso il Lavoro di Recente","Appassionata di Prodotti Naturali"],
+French:["Veut des Revenus Supplémentaires","Aime la Beauté et les Cheveux","Maman au Foyer","Travailler de Chez Soi","Cherche une Activité Complémentaire","Active sur les Réseaux Sociaux","Mentalité Entrepreneuriale","Étudiante / Jeune Professionnelle","A Récemment Perdu son Emploi","Passionnée par les Produits Naturels"],
+Portuguese:["Quer Renda Extra","Ama Beleza e Cabelo","Mãe em Casa","Trabalhar de Casa","Procura uma Renda Extra","Ativa nas Redes Sociais","Mentalidade Empreendedora","Estudante / Jovem Profissional","Perdeu o Emprego Recentemente","Apaixonada por Produtos Naturais"],
+German:["Will Zusatzeinkommen","Liebt Schönheit und Haare","Hausfrau und Mutter","Von zu Hause aus Arbeiten","Sucht einen Nebenverdienst","Aktiv in Sozialen Medien","Unternehmerische Denkweise","Studentin / Junge Berufstätige","Hat Kürzlich Arbeit Verloren","Leidenschaft für Naturprodukte"],
+};
+return d[appLang]||d.English;
+}
 function OBJECTIONS(){
 var lng=appLang;
 var d={
@@ -707,14 +729,14 @@ content.appendChild(objCard);
 const hairCard=el("div",{style:cardStyle});
 hairCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"💇 Their Hair & Skin Situation"));
 hairCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outHairSub));
-hairCard.appendChild(dkChips(tt(appLang).outHairProbs,tt(appLang).outHairH,HAIR,s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
+hairCard.appendChild(dkChips(tt(appLang).outHairProbs,tt(appLang).outHairH,HAIR(),s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
 hairCard.appendChild(dkChips(tt(appLang).outProdsMention,tt(appLang).outProdsH,OUT_PRODUCTS,s.products,v=>{s.products=tog(s.products,v);renderApp2Content();}));
 content.appendChild(hairCard);
 
 if(isPartner()){
 const pCard=el("div",{style:cardStyle});
 pCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🚀 Why Would They Be a Great Partner?"));
-pCard.appendChild(dkChips(tt(appLang).outPartProf,null,PARTNER_TARGETS,s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
+pCard.appendChild(dkChips(tt(appLang).outPartProf,null,PARTNER_TARGETS(),s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
 content.appendChild(pCard);
 }
 
