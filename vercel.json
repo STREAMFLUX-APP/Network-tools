@@ -4,10 +4,13 @@
 { "src": "api/*.js", "use": "@vercel/node" },
 { "src": "public/**", "use": "@vercel/static" }
 ],
-"rewrites": [
-{ "source": "/api/:path*", "destination": "/api/:path*.js" },
-{ "source": "/marketing.html", "destination": "/public/marketing.html" },
-{ "source": "/outreach.html", "destination": "/public/outreach.html" },
-{ "source": "/:path*", "destination": "/public/:path*" }
+"routes": [
+{ "src": "/api/auth", "dest": "/api/auth.js" },
+{ "src": "/api/claude", "dest": "/api/claude.js" },
+{ "src": "/api/admin", "dest": "/api/admin.js" },
+{ "src": "/marketing.html", "dest": "/public/marketing.html" },
+{ "src": "/outreach.html", "dest": "/public/outreach.html" },
+{ "src": "/", "dest": "/public/index.html" },
+{ "src": "/(.*)", "dest": "/public/$1" }
 ]
 }
