@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Tools by Streamflux</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; background: #f8f7ff; color: #111; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+.wrap { width: 100%; max-width: 480px; }
+.logo { text-align: center; margin-bottom: 28px; }
+.logo-icon { width: 52px; height: 52px; border-radius: 13px; background: #2e2a4a; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; margin: 0 auto 12px; }
+.logo h1 { font-size: 20px; letter-spacing: 2px; }
+.logo p { font-size: 12px; color: #6b6b6b; margin-top: 2px; }
+.lang-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.lang-row label { font-size: 12px; color: #6b6b6b; }
+select { padding: 6px 12px; border-radius: 16px; border: 1px solid #e8e6f0; background: #fff; font-size: 13px; cursor: pointer; outline: none; font-family: inherit; }
+.tools { display: flex; flex-direction: column; gap: 14px; }
+.tool { display: block; text-decoration: none; border-radius: 14px; padding: 22px 20px; cursor: pointer; }
+.tool-mkt { background: #2e2a4a; }
+.tool-out { background: #1a1a3a; }
+.tool-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.tool-icon { font-size: 26px; }
+.tool-title { font-size: 17px; font-weight: bold; color: #fff; }
+.tool-sub { font-size: 8px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
+.tool-arrow { margin-left: auto; color: rgba(255,255,255,0.5); font-size: 18px; }
+.tool-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.65); border-radius: 10px; padding: 3px 9px; }
+.foot { text-align: center; margin-top: 32px; font-size: 9px; color: #e8e6f0; letter-spacing: 2px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="logo">
+<div class="logo-icon">✦</div>
+<h1>Network Tools</h1>
+<p>by Streamflux</p>
+</div>
+<div class="lang-row">
+<label>Language:</label>
+<select id="langSel" onchange="saveLang(this.value)">
+<option value="English">🇺🇸 English</option>
+<option value="Spanish">🇪🇸 Español (España)</option>
+<option value="Mexican">🇲🇽 Español (México)</option>
+<option value="Italian">🇮🇹 Italiano</option>
+<option value="French">🇫🇷 Français</option>
+<option value="Portuguese">🇧🇷 Português</option>
+<option value="German">🇩🇪 Deutsch</option>
+<option value="Arabic">🇦🇪 العربية</option>
+<option value="Chinese">🇨🇳 中文</option>
+</select>
+</div>
+<div class="tools">
+<a class="tool tool-mkt" href="#" onclick="goTo('marketing')">
+<div class="tool-head">
+<span class="tool-icon">📣</span>
+<div><div class="tool-title">Marketing Machine</div><div class="tool-sub">by Streamflux</div></div>
+<span class="tool-arrow">→</span>
+</div>
+<p class="tool-desc">Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Full posting package in seconds.</p>
+<div class="tags">
+<span class="tag">WhatsApp Status</span><span class="tag">Instagram Feed</span><span class="tag">Instagram Shop</span>
+<span class="tag">Instagram Reel</span><span class="tag">Facebook Feed</span><span class="tag">Facebook Shop</span>
+<span class="tag">TikTok Shop</span><span class="tag">Image / Canva</span><span class="tag">7-Day Schedule</span>
+</div>
+</a>
+<a class="tool tool-out" href="#" onclick="goTo('outreach')">
+<div class="tool-head">
+<span class="tool-icon">🤝</span>
+<div><div class="tool-title">Outreach Machine</div><div class="tool-sub">by Streamflux</div></div>
+<span class="tool-arrow">→</span>
+</div>
+<p class="tool-desc">Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters.</p>
+<div class="tags">
+<span class="tag">WhatsApp Message</span><span class="tag">SMS</span><span class="tag">Phone Script</span>
+<span class="tag">Email</span><span class="tag">Formal Letter</span><span class="tag">4 Follow-Ups</span>
+</div>
+</a>
+</div>
+<div class="foot">Network Tools by Streamflux · Powered by Claude AI</div>
+</div>
+<script>
+const lang = localStorage.getItem('nt_lang') || 'English';
+document.getElementById('langSel').value = lang;
+function saveLang(v) { localStorage.setItem('nt_lang', v); }
+function goTo(tool) { window.location.href = '/' + tool + '.html'; }
+</script>
+</body>
+</html>
+
