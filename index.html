@@ -16,6 +16,304 @@ input,textarea,button,select{font-family:inherit}
 <script>
 const G={bg:"#f8f7ff",card:"#ffffff",border:"#e8e6f0",purple:"#7664d0",purpleDim:"#ede9ff",purpleBorder:"rgba(118,100,208,0.3)",dark:"#2e2a4a",white:"#fff",muted:"#6b6b6b",green:"#2d9e6b",red:"#dc2626",gbg:"#f4f3f9",gl:"#e8e6f0"};
 
+const T={
+English:{welcome:"Welcome",choose:tt(appLang).choose,lang:"Language",logout:tt(appLang).logout,trial:"d left",
+loginTitle:tt(appLang).loginTitle,loginSub:tt(appLang).loginSub,loginEmail:tt(appLang).loginEmail,loginPass:tt(appLang).loginPass,
+loginBtn:tt(appLang).loginBtn,loggingIn:tt(appLang).loggingIn,loginErr:tt(appLang).loginErr,loginHelp:tt(appLang).loginHelp,
+mktTitle:"Marketing Machine,mktDesc:Create content for WhatsApp, Instagram, Facebook, TikTok Shop and more. Full posting package in seconds.",
+outTitle:"Outreach Machine,outDesc:Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and letters.",
+home:tt(appLang).home,back:tt(appLang).back,cont:tt(appLang).cont,gen:tt(appLang).gen,generating:tt(appLang).generating,
+newContent:tt(appLang).newContent,ready:tt(appLang).ready,
+profileTitle:tt(appLang).profileTitle,profileName:tt(appLang).profileName,profileLink:tt(appLang).profileLink,profilePhone:"WhatsApp",
+profileNamePh:tt(appLang).profileNamePh,profileLinkPh:tt(appLang).profileLinkPh,profilePhonePh:"+1 (555) 000",
+profileWarn:tt(appLang).profileWarn,
+s1:tt(appLang).s1,s1t:tt(appLang).s1t,s1s:tt(appLang).s1s,
+s2:tt(appLang).s2,s3:tt(appLang).s3,s3t:tt(appLang).s3t,s3s:tt(appLang).s3s,
+s4:tt(appLang).s4,s4t:"✨ Tone & Style",s4s:"How should your content feel?",
+s2sell:"Which Problem Are You Solving?,s2recruit:Who Are You Targeting?,s2motivate:What's the Theme?,s2brand:What to Highlight?",
+s2sub:tt(appLang).s2sub,
+prodOpt:"Choose a Product (optional),prodSub:Select to focus all content on a specific product.",
+catHair:tt(appLang).catHair,catSkin:tt(appLang).catSkin,catWell:tt(appLang).catWell,catMen:tt(appLang).catMen,
+platSel:(n)=>tt(appLang).platSel(n),
+summary:"Your content summary:",fillFirst:tt(appLang).fillFirst,completeStep:tt(appLang).completeStep,
+genIn:(l)=>`Generating in ${l}. Please wait...`,schedTitle:tt(appLang).schedTitle,
+outWho:tt(appLang).outWho,outWhoSub:tt(appLang).outWhoSub,
+outCName:tt(appLang).outCName,outCNamePh:"Maria",outCType:tt(appLang).outCType,outReason:tt(appLang).outReason,
+outReasonH:tt(appLang).outReasonH,outTone:tt(appLang).outTone,
+outObjTitle:tt(appLang).outObjTitle,outObjSub:tt(appLang).outObjSub,
+outObjCat:tt(appLang).outObjCat,outExact:"Their Exact Words",outExactOpt:tt(appLang).outExactOpt,
+outExactH:tt(appLang).outExactH,
+outExactPh:'e.g. "I tried MONAT before and my hair fell out"',
+outHairTitle:tt(appLang).outHairTitle,outHairSub:tt(appLang).outHairSub,
+outHairProbs:tt(appLang).outHairProbs,outHairH:tt(appLang).outHairH,
+outProdsMention:tt(appLang).outProdsMention,outProdsH:tt(appLang).outProdsH,
+outPartTitle:tt(appLang).outPartTitle,outPartProf:tt(appLang).outPartProf,
+outCtxTitle:tt(appLang).outCtxTitle,outCtxSub:tt(appLang).outCtxSub,
+outPrior:tt(appLang).outPrior,outPriorH:tt(appLang).outPriorH,
+outPriorPh:'e.g. "Met at a MONAT event. Said she was interested but wanted to think about it."',
+outNote:tt(appLang).outNote,outNoteH:tt(appLang).outNoteH,
+outNotePh:'e.g. "Has 2 young kids, dry hair since having kids."',
+outYours:tt(appLang).outYours,outYourName:tt(appLang).outYourName,outYourPhone:tt(appLang).outYourPhone,outYourLink:tt(appLang).outYourLink,
+outGen:tt(appLang).outGen,outGening:tt(appLang).outGening,outFill:tt(appLang).outFill,
+outReady:(n)=>`✦ Outreach Package for ${n}`,outNew:tt(appLang).outNew,
+outNatural:tt(appLang).outNatural,outBrackets:tt(appLang).outBrackets,outOrder:tt(appLang).outOrder,
+outPlanFor:(n)=>`Your exact follow-up plan for ${n}.`,
+},
+Spanish:{welcome:"Bienvenida",choose:"Elige una herramienta para comenzar.",lang:"Idioma",logout:"Cerrar Sesión",trial:"d restantes",
+loginTitle:"Bienvenida de nuevo,loginSub:Inicia sesión en tu cuenta,loginEmail:Correo electrónico,loginPass:Contraseña",
+loginBtn:"Iniciar Sesión →,loggingIn:Iniciando sesión...,loginErr:Por favor ingresa tu correo y contraseña.,loginHelp:¿Necesitas ayuda? ",
+mktTitle:"Máquina de Marketing,mktDesc:Crea contenido para WhatsApp, Instagram, Facebook, TikTok Shop y más. Paquete completo en segundos.",
+outTitle:"Máquina de Contacto,outDesc:Mensajes personalizados 1-a-1 para cualquier contacto. Seguimientos, objeciones, scripts y cartas.",
+home:"← Inicio,back:← Atrás,cont:Continuar →,gen:✦ Generar Paquete Completo,generating:✦ Generando...",
+newContent:"← Nuevo Contenido,ready:✦ ¡Paquete Listo!",
+profileTitle:"Tu Perfil,profileName:Nombre *,profileLink:Enlace MONAT *,profilePhone:WhatsApp",
+profileNamePh:"ej. María,profileLinkPh:tunombre.mymonat.com,profilePhonePh:+34 (555) 000",
+profileWarn:"Completa tu nombre y enlace MONAT para continuar",
+s1:"Paso 1,s1t:¿Cuál es tu objetivo?,s1s:Todo el contenido se adaptará a esto.",
+s2:"Paso 2,s3:Paso 3,s3t:¿Dónde vas a publicar?,s3s:Selecciona todas las plataformas — generamos todo a la vez.",
+s4:"Paso 4,s4t:✨ Tono y Estilo,s4s:¿Cómo debe sentirse tu contenido?",
+s2sell:"¿Qué problema estás resolviendo?,s2recruit:¿A quién estás dirigiendo?,s2motivate:¿Cuál es el tema?,s2brand:¿Qué destacar?",
+s2sub:"Elige todo lo que aplique.",
+prodOpt:"Elige un Producto (opcional),prodSub:Selecciona para enfocar el contenido en un producto específico.",
+catHair:"💇 Cuidado Capilar,catSkin:🌿 Cuidado de la Piel,catWell:💊 Bienestar,catMen:👨 Para Hombres",
+platSel:(n)=>`✦ ${n} plataforma${n>1?"s":""} seleccionada${n>1?"s":""} + plan de 7 días`,
+summary:"Resumen de tu contenido:,fillFirst:Completa tu nombre y enlace MONAT primero.,completeStep:Por favor completa este paso para continuar.",
+genIn:(l)=>`Generando en ${l}. Por favor espera...`,schedTitle:"Tu plan de publicación de 7 días.",
+outWho:"¿A quién estás contactando?,outWhoSub:Más detalles = mensajes más personalizados.",
+outCName:"Nombre de pila,outCNamePh:María,outCType:Tipo de contacto,outReason:Razón para contactar",
+outReasonH:"¿Por qué los estás contactando ahora?,outTone:Tono de comunicación",
+outObjTitle:"¿Qué objeción plantearon?,outObjSub:Selecciona la categoría y pega sus palabras exactas para una respuesta mucho más poderosa.",
+outObjCat:"Categoría de objeción,outExact:Sus palabras exactas,outExactOpt:(opcional pero recomendado)",
+outExactH:"Pega exactamente lo que dijeron — la IA responde a sus palabras específicas",
+outExactPh:'ej. "Probé MONAT antes y mi cabello se cayó"',
+outHairTitle:"Su situación de cabello y piel,outHairSub:La IA adaptará el contenido a sus problemas específicos.",
+outHairProbs:"Sus problemas de cabello / piel,outHairH:Selecciona todo lo que aplique",
+outProdsMention:"Productos a mencionar,outProdsH:Opcional",
+outPartTitle:"¿Por qué sería una gran socia?,outPartProf:Su perfil",
+outCtxTitle:"Contexto personal,outCtxSub:Los detalles personales hacen que los mensajes se sientan reales.",
+outPrior:"Historial de contacto previo,outPriorH:¿Han hablado antes? ¿Qué dijo?",
+outPriorPh:'ej. "Nos conocimos en un evento MONAT. Dijo que estaba interesada pero quería pensarlo."',
+outNote:"Nota personal,outNoteH:Hijos, trabajo, estilo de vida",
+outNotePh:'ej. "Tiene 2 hijos pequeños, cabello seco desde que tuvo hijos."',
+outYours:"Tus datos,outYourName:Tu nombre,outYourPhone:Tu WhatsApp / Teléfono,outYourLink:Tu enlace de tienda MONAT",
+outGen:"✦ Generar Paquete Completo,outGening:Generando...,outFill:Completa el nombre, tipo, razón, tono y tu nombre para continuar.",
+outReady:(n)=>`✦ Paquete para ${n}`,outNew:"← Nuevo Mensaje",
+outNatural:"Lee de forma natural — no suenes como si estuvieras leyendo un guión.,outBrackets:Reemplaza los corchetes antes de imprimir.,outOrder:Envía en orden si no hay respuesta.",
+outPlanFor:(n)=>`Tu plan exacto de seguimiento para ${n}.`,
+},
+Mexican:{welcome:"Bienvenida",choose:"Elige una herramienta para comenzar.",lang:"Idioma",logout:"Cerrar Sesión",trial:"d restantes",
+loginTitle:"Bienvenida de nuevo,loginSub:Inicia sesión en tu cuenta,loginEmail:Correo electrónico,loginPass:Contraseña",
+loginBtn:"Iniciar Sesión →,loggingIn:Iniciando sesión...,loginErr:Por favor ingresa tu correo y contraseña.,loginHelp:¿Necesitas ayuda? ",
+mktTitle:"Máquina de Marketing,mktDesc:Crea contenido para WhatsApp, Instagram, Facebook, TikTok Shop y más. Paquete completo en segundos.",
+outTitle:"Máquina de Contacto,outDesc:Mensajes personalizados 1-a-1 para cualquier contacto. Seguimientos, objeciones, scripts y cartas.",
+home:"← Inicio,back:← Atrás,cont:Continuar →,gen:✦ Generar Paquete Completo,generating:✦ Generando...",
+newContent:"← Nuevo Contenido,ready:✦ ¡Paquete Listo!",
+profileTitle:"Tu Perfil,profileName:Nombre *,profileLink:Enlace MONAT *,profilePhone:WhatsApp",
+profileNamePh:"ej. María,profileLinkPh:tunombre.mymonat.com,profilePhonePh:+52 (555) 000",
+profileWarn:"Llena tu nombre y enlace MONAT para continuar",
+s1:"Paso 1,s1t:¿Cuál es tu objetivo?,s1s:Todo el contenido se va a adaptar a esto.",
+s2:"Paso 2,s3:Paso 3,s3t:¿Dónde vas a publicar?,s3s:Selecciona todas las plataformas — generamos todo a la vez.",
+s4:"Paso 4,s4t:✨ Tono y Estilo,s4s:¿Cómo quieres que se sienta tu contenido?",
+s2sell:"¿Qué problema estás resolviendo?,s2recruit:¿A quién le estás hablando?,s2motivate:¿Cuál es el tema?,s2brand:¿Qué quieres destacar?",
+s2sub:"Elige todo lo que aplique.",
+prodOpt:"Elige un Producto (opcional),prodSub:Selecciona para enfocar el contenido en un producto específico.",
+catHair:"💇 Cuidado Capilar,catSkin:🌿 Cuidado de la Piel,catWell:💊 Bienestar,catMen:👨 Para Hombres",
+platSel:(n)=>`✦ ${n} plataforma${n>1?"s":""} seleccionada${n>1?"s":""} + plan de 7 días`,
+summary:"Resumen de tu contenido:,fillFirst:Llena tu nombre y enlace MONAT primero.,completeStep:Por favor completa este paso para continuar.",
+genIn:(l)=>`Generando en ${l}. Por favor espera...`,schedTitle:"Tu plan de publicación de 7 días.",
+outWho:"¿A quién le vas a escribir?,outWhoSub:Más detalles = mensajes más personalizados.",
+outCName:"Nombre de pila,outCNamePh:María,outCType:Tipo de contacto,outReason:Razón para contactar",
+outReasonH:"¿Por qué los estás contactando ahorita?,outTone:Tono de comunicación",
+outObjTitle:"¿Qué objeción pusieron?,outObjSub:Selecciona la categoría y pega sus palabras exactas para una respuesta mucho más poderosa.",
+outObjCat:"Categoría de objeción,outExact:Sus palabras exactas,outExactOpt:(opcional pero muy recomendado)",
+outExactH:"Pega exactamente lo que dijeron — la IA responde directo a sus palabras",
+outExactPh:'ej. "Ya probé MONAT y se me cayó el cabello"',
+outHairTitle:"Su situación de cabello y piel,outHairSub:La IA va a adaptar el contenido a sus problemas específicos.",
+outHairProbs:"Sus problemas de cabello / piel,outHairH:Selecciona todo lo que aplique",
+outProdsMention:"Productos a mencionar,outProdsH:Opcional",
+outPartTitle:"¿Por qué sería una gran socia?,outPartProf:Su perfil",
+outCtxTitle:"Contexto personal,outCtxSub:Los detalles personales hacen que los mensajes se sientan reales y no copiados.",
+outPrior:"Historial de contacto,outPriorH:¿Ya han platicado? ¿Qué te dijo?",
+outPriorPh:'ej. "Nos conocimos en un evento MONAT. Dijo que le interesaba pero quería pensarlo."',
+outNote:"Nota personal,outNoteH:Hijos, trabajo, estilo de vida",
+outNotePh:'ej. "Tiene 2 niños chiquitos, cabello muy seco desde que tuvo hijos."',
+outYours:"Tus datos,outYourName:Tu nombre,outYourPhone:Tu WhatsApp / Teléfono,outYourLink:Tu enlace de tienda MONAT",
+outGen:"✦ Generar Paquete Completo,outGening:Generando...,outFill:Llena el nombre, tipo, razón, tono y tu nombre para continuar.",
+outReady:(n)=>`✦ Paquete para ${n}`,outNew:"← Nuevo Mensaje",
+outNatural:"Lee de forma natural — no suenes como que estás leyendo un guión.,outBrackets:Reemplaza los corchetes antes de imprimir.,outOrder:Manda en orden si no hay respuesta.",
+outPlanFor:(n)=>`Tu plan exacto de seguimiento para ${n}.`,
+},
+Italian:{welcome:"Benvenuta",choose:"Scegli uno strumento per iniziare.",lang:"Lingua",logout:"Esci",trial:"g rimasti",
+loginTitle:"Bentornata",loginSub:"Accedi al tuo account",loginEmail:tt(appLang).loginEmail,loginPass:tt(appLang).loginPass,
+loginBtn:"Accedi →,loggingIn:Accesso in corso...,loginErr:Inserisci email e password.,loginHelp:Hai bisogno di aiuto? ",
+mktTitle:"Marketing Machine,mktDesc:Crea contenuti per WhatsApp, Instagram, Facebook, TikTok Shop e altro.",
+outTitle:"Outreach Machine,outDesc:Messaggi personalizzati 1-a-1 per qualsiasi contatto.",
+home:tt(appLang).home,back:"← Indietro",cont:"Continua →",gen:"✦ Genera Pacchetto Completo",generating:"✦ Generando...",
+newContent:"← Nuovo Contenuto,ready:✦ Pacchetto Pronto!",
+profileTitle:"Il Tuo Profilo,profileName:Nome *,profileLink:Link MONAT *,profilePhone:WhatsApp",
+profileNamePh:"es. Maria,profileLinkPh:tuonome.mymonat.com,profilePhonePh:+39 (555) 000",
+profileWarn:"Inserisci nome e link MONAT per continuare",
+s1:"Passo 1,s1t:Qual è il tuo obiettivo?,s1s:Tutto sarà personalizzato in base a questo.",
+s2:"Passo 2,s3:Passo 3,s3t:Dove pubblicherai?,s3s:Seleziona tutte le piattaforme — generiamo tutto in una volta.",
+s4:"Passo 4,s4t:✨ Tono e Stile,s4s:Come deve sentirsi il tuo contenuto?",
+s2sell:"Quale problema stai risolvendo?,s2recruit:Chi stai prendendo di mira?,s2motivate:Qual è il tema?,s2brand:Cosa evidenziare?",
+s2sub:"Scegli tutto ciò che si applica.",
+prodOpt:"Scegli un Prodotto (opzionale),prodSub:Seleziona per focalizzare il contenuto su un prodotto specifico.",
+catHair:"💇 Cura dei Capelli,catSkin:🌿 Cura della Pelle,catWell:💊 Benessere,catMen:👨 Per Uomo",
+platSel:(n)=>`✦ ${n} piattaforma${n>1?"e":""} selezionata${n>1?"e":""} + piano 7 giorni`,
+summary:"Riepilogo del tuo contenuto:,fillFirst:Inserisci prima nome e link MONAT.,completeStep:Completa questo passo per continuare.",
+genIn:(l)=>`Generando in ${l}. Attendi...`,schedTitle:"Il tuo piano di pubblicazione di 7 giorni.",
+outWho:"Chi stai contattando?,outWhoSub:Più dettagli = messaggi più personalizzati.",
+outCName:"Nome di battesimo,outCNamePh:Maria,outCType:Tipo di contatto,outReason:Motivo del contatto",
+outReasonH:"Perché li stai contattando ora?,outTone:Tono di comunicazione",
+outObjTitle:"Quale obiezione hanno sollevato?,outObjSub:Seleziona la categoria e incolla le loro parole esatte.",
+outObjCat:"Categoria obiezione,outExact:Le loro parole esatte,outExactOpt:(opzionale ma consigliato)",
+outExactH:"Incolla esattamente quello che hanno detto",
+outExactPh:'es. "Ho provato MONAT prima e i miei capelli sono caduti"',
+outHairTitle:"La loro situazione capelli e pelle,outHairSub:L'IA adatterà il contenuto ai loro problemi specifici.",
+outHairProbs:"I loro problemi di capelli / pelle,outHairH:Seleziona tutto ciò che si applica",
+outProdsMention:"Prodotti da menzionare,outProdsH:Opzionale",
+outPartTitle:"Perché sarebbe una grande partner?,outPartProf:Il suo profilo",
+outCtxTitle:"Contesto personale,outCtxSub:I dettagli personali rendono i messaggi autentici.",
+outPrior:"Storico contatti,outPriorH:Avete già parlato? Cosa ha detto?",
+outPriorPh:'es. "Ci siamo incontrate a un evento MONAT."',
+outNote:"Nota personale,outNoteH:Figli, lavoro, stile di vita",
+outNotePh:'es. "Ha 2 bambini piccoli, capelli secchi da quando ha avuto figli."',
+outYours:"I tuoi dati,outYourName:Il tuo nome,outYourPhone:Il tuo WhatsApp / Telefono,outYourLink:Il tuo link negozio MONAT",
+outGen:"✦ Genera Pacchetto Completo,outGening:Generando...,outFill:Compila nome, tipo, motivo, tono e il tuo nome per continuare.",
+outReady:(n)=>`✦ Pacchetto per ${n}`,outNew:"← Nuovo Messaggio",
+outNatural:"Leggi in modo naturale — non sembrare che stai leggendo un copione.,outBrackets:Sostituisci le parentesi prima di stampare.,outOrder:Invia in ordine se non c'è risposta.",
+outPlanFor:(n)=>`Il tuo piano esatto per ${n}.`,
+},
+French:{welcome:"Bienvenue",choose:"Choisissez un outil pour commencer.",lang:"Langue",logout:"Déconnexion",trial:"j restants",
+loginTitle:"Bon retour,loginSub:Connectez-vous à votre compte,loginEmail:E-mail,loginPass:Mot de passe",
+loginBtn:"Se connecter →,loggingIn:Connexion...,loginErr:Veuillez entrer votre e-mail et mot de passe.,loginHelp:Besoin d'aide ? ",
+mktTitle:"Machine Marketing,mktDesc:Créez du contenu pour WhatsApp, Instagram, Facebook, TikTok Shop et plus.",
+outTitle:"Machine de Prospection,outDesc:Messages personnalisés 1-à-1 pour tout contact.",
+home:"← Accueil,back:← Retour,cont:Continuer →,gen:✦ Générer le Package Complet,generating:✦ Génération...",
+newContent:"← Nouveau Contenu,ready:✦ Package Prêt !",
+profileTitle:"Votre Profil,profileName:Nom *,profileLink:Lien MONAT *,profilePhone:WhatsApp",
+profileNamePh:"ex. Marie,profileLinkPh:votreprenom.mymonat.com,profilePhonePh:+33 (555) 000",
+profileWarn:"Remplissez votre nom et lien MONAT pour continuer",
+s1:"Étape 1,s1t:Quel est votre objectif ?,s1s:Tout le contenu sera adapté en fonction de ceci.",
+s2:"Étape 2,s3:Étape 3,s3t:Où allez-vous publier ?,s3s:Sélectionnez toutes les plateformes — nous générons tout en une fois.",
+s4:"Étape 4,s4t:✨ Ton et Style,s4s:Comment doit se sentir votre contenu ?",
+s2sell:"Quel problème résolvez-vous ?,s2recruit:Qui ciblez-vous ?,s2motivate:Quel est le thème ?,s2brand:Que mettre en avant ?",
+s2sub:"Choisissez tout ce qui s'applique.",
+prodOpt:"Choisir un Produit (optionnel),prodSub:Sélectionnez pour focaliser le contenu sur un produit spécifique.",
+catHair:"💇 Soins Capillaires,catSkin:🌿 Soins de la Peau,catWell:💊 Bien-être,catMen:👨 Pour Hommes",
+platSel:(n)=>`✦ ${n} plateforme${n>1?"s":""} sélectionnée${n>1?"s":""} + plan 7 jours`,
+summary:"Résumé de votre contenu :,fillFirst:Remplissez d'abord nom et lien MONAT.,completeStep:Veuillez compléter cette étape pour continuer.",
+genIn:(l)=>`Génération en ${l}. Veuillez patienter...`,schedTitle:"Votre plan de publication de 7 jours.",
+outWho:"Qui contactez-vous ?,outWhoSub:Plus de détails = messages plus personnalisés.",
+outCName:"Prénom,outCNamePh:Marie,outCType:Type de contact,outReason:Raison du contact",
+outReasonH:"Pourquoi les contactez-vous maintenant ?,outTone:Ton de communication",
+outObjTitle:"Quelle objection ont-ils soulevée ?,outObjSub:Sélectionnez la catégorie et collez leurs mots exacts.",
+outObjCat:"Catégorie d'objection,outExact:Leurs mots exacts,outExactOpt:(optionnel mais recommandé)",
+outExactH:"Collez exactement ce qu'ils ont dit",
+outExactPh:"ex. J'ai essayé MONAT avant et mes cheveux sont tombés",
+outHairTitle:"Leur situation cheveux et peau,outHairSub:L'IA adaptera le contenu à leurs problèmes spécifiques.",
+outHairProbs:"Leurs problèmes de cheveux / peau,outHairH:Sélectionnez tout ce qui s'applique",
+outProdsMention:"Produits à mentionner,outProdsH:Optionnel",
+outPartTitle:"Pourquoi serait-elle une excellente partenaire ?,outPartProf:Son profil",
+outCtxTitle:"Contexte personnel,outCtxSub:Les détails personnels rendent les messages authentiques.",
+outPrior:"Historique des contacts,outPriorH:Avez-vous déjà parlé ? Qu'a-t-elle dit ?",
+outPriorPh:"ex. Nous nous sommes rencontrées à un événement MONAT.",
+outNote:"Note personnelle,outNoteH:Enfants, travail, style de vie",
+outNotePh:"ex. A 2 jeunes enfants, cheveux secs depuis qu'elle a eu des enfants.",
+outYours:"Vos coordonnées,outYourName:Votre nom,outYourPhone:Votre WhatsApp / Téléphone,outYourLink:Votre lien boutique MONAT",
+outGen:"✦ Générer le Package Complet,outGening:Génération...,outFill:Remplissez le nom, type, raison, ton et votre nom pour continuer.",
+outReady:(n)=>`✦ Package pour ${n}`,outNew:"← Nouveau Message",
+outNatural:"Lisez naturellement — ne semblez pas lire un script.,outBrackets:Remplacez les crochets avant d'imprimer.,outOrder:Envoyez dans l'ordre si pas de réponse.",
+outPlanFor:(n)=>`Votre plan exact pour ${n}.`,
+},
+Portuguese:{welcome:"Bem-vinda",choose:"Escolha uma ferramenta para começar.",lang:"Idioma",logout:"Sair",trial:"d restantes",
+loginTitle:"Bem-vinda de volta,loginSub:Entre na sua conta,loginEmail:E-mail,loginPass:Senha",
+loginBtn:"Entrar →,loggingIn:Entrando...,loginErr:Por favor insira seu e-mail e senha.,loginHelp:Precisa de ajuda? ",
+mktTitle:"Máquina de Marketing,mktDesc:Crie conteúdo para WhatsApp, Instagram, Facebook, TikTok Shop e mais.",
+outTitle:"Máquina de Contato,outDesc:Mensagens personalizadas 1-a-1 para qualquer contato.",
+home:"← Início,back:← Voltar,cont:Continuar →,gen:✦ Gerar Pacote Completo,generating:✦ Gerando...",
+newContent:"← Novo Conteúdo,ready:✦ Pacote Pronto!",
+profileTitle:"Seu Perfil,profileName:Nome *,profileLink:Link MONAT *,profilePhone:WhatsApp",
+profileNamePh:"ex. Maria,profileLinkPh:seunome.mymonat.com,profilePhonePh:+55 (555) 000",
+profileWarn:"Preencha seu nome e link MONAT para continuar",
+s1:"Passo 1,s1t:Qual é o seu objetivo?,s1s:Todo o conteúdo será personalizado com base nisso.",
+s2:"Passo 2,s3:Passo 3,s3t:Onde você vai postar?,s3s:Selecione todas as plataformas — geramos tudo de uma vez.",
+s4:"Passo 4,s4t:✨ Tom e Estilo,s4s:Como deve parecer seu conteúdo?",
+s2sell:"Qual problema você está resolvendo?,s2recruit:Quem você está mirando?,s2motivate:Qual é o tema?,s2brand:O que destacar?",
+s2sub:"Escolha tudo que se aplica.",
+prodOpt:"Escolha um Produto (opcional),prodSub:Selecione para focar o conteúdo em um produto específico.",
+catHair:"💇 Cuidado Capilar,catSkin:🌿 Cuidado da Pele,catWell:💊 Bem-estar,catMen:👨 Para Homens",
+platSel:(n)=>`✦ ${n} plataforma${n>1?"s":""} selecionada${n>1?"s":""} + plano de 7 dias`,
+summary:"Resumo do seu conteúdo:,fillFirst:Preencha seu nome e link MONAT primeiro.,completeStep:Por favor complete este passo para continuar.",
+genIn:(l)=>`Gerando em ${l}. Por favor aguarde...`,schedTitle:"Seu plano de publicação de 7 dias.",
+outWho:"Quem você está contactando?,outWhoSub:Mais detalhes = mensagens mais personalizadas.",
+outCName:"Primeiro nome,outCNamePh:Maria,outCType:Tipo de contato,outReason:Razão para contatar",
+outReasonH:"Por que você está contactando agora?,outTone:Tom de comunicação",
+outObjTitle:"Qual objeção eles levantaram?,outObjSub:Selecione a categoria e cole as palavras exatas deles.",
+outObjCat:"Categoria da objeção,outExact:As palavras exatas deles,outExactOpt:(opcional mas recomendado)",
+outExactH:"Cole exatamente o que disseram",
+outExactPh:"ex. Tentei MONAT antes e meu cabelo caiu",
+outHairTitle:"Situação de cabelo e pele deles,outHairSub:A IA vai adaptar o conteúdo aos problemas específicos deles.",
+outHairProbs:"Problemas de cabelo / pele deles,outHairH:Selecione tudo que se aplica",
+outProdsMention:"Produtos a mencionar,outProdsH:Opcional",
+outPartTitle:"Por que seria uma ótima parceira?,outPartProf:O perfil dela",
+outCtxTitle:"Contexto pessoal,outCtxSub:Detalhes pessoais fazem as mensagens parecerem reais.",
+outPrior:"Histórico de contato,outPriorH:Já conversaram? O que ela disse?",
+outPriorPh:"ex. Nos conhecemos em um evento MONAT. Disse que estava interessada mas queria pensar.",
+outNote:"Nota pessoal,outNoteH:Filhos, trabalho, estilo de vida",
+outNotePh:"ex. Tem 2 filhos pequenos, cabelo seco desde que teve filhos.",
+outYours:"Seus dados,outYourName:Seu nome,outYourPhone:Seu WhatsApp / Telefone,outYourLink:Seu link da loja MONAT",
+outGen:"✦ Gerar Pacote Completo,outGening:Gerando...,outFill:Preencha o nome, tipo, razão, tom e seu nome para continuar.",
+outReady:(n)=>`✦ Pacote para ${n}`,outNew:"← Nova Mensagem",
+outNatural:"Leia de forma natural — não pareça que está lendo um roteiro.,outBrackets:Substitua os colchetes antes de imprimir.,outOrder:Envie em ordem se não houver resposta.",
+outPlanFor:(n)=>`Seu plano exato para ${n}.`,
+},
+German:{welcome:"Willkommen",choose:"Wählen Sie ein Tool, um zu beginnen.",lang:"Sprache",logout:"Abmelden",trial:"T verbleibend",
+loginTitle:"Willkommen zurück,loginSub:Melden Sie sich an,loginEmail:E-Mail,loginPass:Passwort",
+loginBtn:"Anmelden →,loggingIn:Anmeldung...,loginErr:Bitte geben Sie E-Mail und Passwort ein.,loginHelp:Brauchen Sie Hilfe? ",
+mktTitle:"Marketing-Maschine,mktDesc:Erstellen Sie Inhalte für WhatsApp, Instagram, Facebook, TikTok Shop und mehr.",
+outTitle:"Outreach-Maschine,outDesc:Personalisierte 1-zu-1-Nachrichten für jeden Kontakt.",
+home:"← Startseite,back:← Zurück,cont:Weiter →,gen:✦ Komplettes Paket generieren,generating:✦ Generiere...",
+newContent:"← Neuer Inhalt,ready:✦ Paket fertig!",
+profileTitle:"Ihr Profil,profileName:tt(appLang).profileName,profileLink:MONAT-Link *,profilePhone:WhatsApp",
+profileNamePh:"z.B. Maria,profileLinkPh:ihrname.mymonat.com,profilePhonePh:+49 (555) 000",
+profileWarn:"Geben Sie Name und MONAT-Link ein, um fortzufahren",
+s1:"Schritt 1,s1t:Was ist Ihr Ziel?,s1s:Alle Inhalte werden darauf ausgerichtet.",
+s2:"Schritt 2,s3:Schritt 3,s3t:Wo posten Sie?,s3s:Wählen Sie alle Plattformen — wir generieren alles auf einmal.",
+s4:"Schritt 4,s4t:✨ Ton und Stil,s4s:Wie soll sich Ihr Inhalt anfühlen?",
+s2sell:"Welches Problem lösen Sie?,s2recruit:Wen sprechen Sie an?,s2motivate:Was ist das Thema?,s2brand:Was hervorheben?",
+s2sub:"Wählen Sie alles Zutreffende.",
+prodOpt:"Produkt wählen (optional),prodSub:Wählen Sie, um den Inhalt auf ein Produkt zu fokussieren.",
+catHair:"💇 Haarpflege,catSkin:🌿 Hautpflege,catWell:tt(appLang).catWell,catMen:👨 Für Männer",
+platSel:(n)=>`✦ ${n} Plattform${n>1?"en":""} ausgewählt + 7-Tage-Plan`,
+summary:"Ihre Inhaltsübersicht:,fillFirst:Geben Sie zuerst Name und MONAT-Link ein.,completeStep:Bitte vervollständigen Sie diesen Schritt.",
+genIn:(l)=>`Generiere auf ${l}. Bitte warten...`,schedTitle:"Ihr 7-Tage-Veröffentlichungsplan.",
+outWho:"Wen kontaktieren Sie?,outWhoSub:Mehr Details = personalisiertere Nachrichten.",
+outCName:"Vorname,outCNamePh:Maria,outCType:Kontakttyp,outReason:Kontaktgrund",
+outReasonH:"Warum kontaktieren Sie sie jetzt?,outTone:Kommunikationston",
+outObjTitle:"Welchen Einwand haben sie erhoben?,outObjSub:Wählen Sie die Kategorie und fügen Sie ihre genauen Worte ein.",
+outObjCat:"Einwandkategorie,outExact:Ihre genauen Worte,outExactOpt:(optional, aber empfohlen)",
+outExactH:"Fügen Sie genau ein, was sie gesagt haben",
+outExactPh:"z.B. Ich habe MONAT ausprobiert und meine Haare sind ausgefallen",
+outHairTitle:"Ihre Haar- und Hautsituation,outHairSub:Die KI passt den Inhalt an ihre spezifischen Probleme an.",
+outHairProbs:"Ihre Haar-/Hautprobleme,outHairH:Wählen Sie alles Zutreffende",
+outProdsMention:"Zu erwähnende Produkte",outProdsH:tt(appLang).outProdsH,
+outPartTitle:"Warum wäre sie eine tolle Partnerin?,outPartProf:Ihr Profil",
+outCtxTitle:"Persönlicher Kontext,outCtxSub:Persönliche Details lassen Nachrichten echt wirken.",
+outPrior:"Kontakthistorie,outPriorH:Haben Sie schon gesprochen? Was hat sie gesagt?",
+outPriorPh:"z.B. Wir haben uns bei einem MONAT-Event getroffen.",
+outNote:"Persönliche Notiz,outNoteH:Kinder, Arbeit, Lebensstil",
+outNotePh:"z.B. Hat 2 kleine Kinder, trockenes Haar seit der Geburt.",
+outYours:"Ihre Daten,outYourName:Ihr Name,outYourPhone:Ihr WhatsApp / Telefon,outYourLink:Ihr MONAT-Shop-Link",
+outGen:"✦ Komplettes Outreach-Paket generieren,outGening:Generiere...,outFill:Füllen Sie Name, Typ, Grund, Ton und Ihren Namen aus.",
+outReady:(n)=>`✦ Paket für ${n}`,outNew:"← Neue Nachricht",
+outNatural:"Lesen Sie natürlich — klingen Sie nicht wie ein Skript.,outBrackets:Ersetzen Sie Klammern vor dem Drucken.,outOrder:Senden Sie in Reihenfolge, wenn keine Antwort.",
+outPlanFor:(n)=>`Ihr genauer Plan für ${n}.`,
+},
+};
+function tt(lang){return T[lang]||T.English;}
+
 const apiAuth=async(body)=>{try{const r=await fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});return r.json();}catch(e){return{error:e.message};}};
 const apiClaude=async(prompt,maxTokens=1000)=>{
 const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,maxTokens})});
@@ -115,31 +413,31 @@ el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Networ
 el("div",{style:{fontSize:"12px",color:G.muted,marginTop:"2px"}},"by Streamflux")
 ));
 const card=el("div",{style:cardStyle});
-card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},"Welcome back"));
-card.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"20px"}},"Sign in to your account"));
+card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},tt(appLang).loginTitle));
+card.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"20px"}},tt(appLang).loginSub));
 const emailInp=el("input",{type:"email",placeholder:"your@email.com",style:{...inputStyle,marginBottom:"12px"}});
 const passInp=el("input",{type:"password",placeholder:"••••••••",style:{...inputStyle,marginBottom:"16px"}});
 emailInp.addEventListener("input",e=>email=e.target.value);
 passInp.addEventListener("input",e=>password=e.target.value);
 const errDiv=el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"9px 12px",color:G.red,fontSize:"13px",marginBottom:"12px",display:"none"}});
-const loginBtn=el("button",{style:{...btnStyle(false),width:"100%",fontSize:"15px"}},"Sign In →");
+const loginBtn=el("button",{style:{...btnStyle(false),width:"100%",fontSize:"15px"}},tt(appLang).loginBtn);
 const doLogin=async()=>{
-if(!email||!password){errDiv.textContent="Please enter your email and password.";errDiv.style.display="block";return;}
-loginBtn.textContent="Signing in...";loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color=G.muted;
+if(!email||!password){errDiv.textContent=tt(appLang).loginErr;errDiv.style.display="block";return;}
+loginBtn.textContent=tt(appLang).loggingIn;loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color=G.muted;
 errDiv.style.display="none";
 const res=await apiAuth({action:"login",email,password});
 if(res.success){localStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}
-else{errDiv.textContent="⚠ "+(res.error||"Login failed.");errDiv.style.display="block";loginBtn.textContent="Sign In →";loginBtn.disabled=false;loginBtn.style.background=G.dark;loginBtn.style.color="#fff";}
+else{errDiv.textContent="⚠ "+(res.error||"Login failed.");errDiv.style.display="block";loginBtn.textContent=tt(appLang).loginBtn;loginBtn.disabled=false;loginBtn.style.background=G.dark;loginBtn.style.color="#fff";}
 };
 loginBtn.addEventListener("click",doLogin);
 passInp.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
-card.appendChild(el("label",{style:labelStyle},"Email"));
+card.appendChild(el("label",{style:labelStyle},tt(appLang).loginEmail));
 card.appendChild(emailInp);
-card.appendChild(el("label",{style:labelStyle},"Password"));
+card.appendChild(el("label",{style:labelStyle},tt(appLang).loginPass));
 card.appendChild(passInp);
 card.appendChild(errDiv);
 card.appendChild(loginBtn);
-card.appendChild(el("p",{style:{textAlign:"center",color:G.muted,fontSize:"11px",marginTop:"14px"}},"Need help? ",el("span",{style:{color:G.purple}},"support@streamflux.app")));
+card.appendChild(el("p",{style:{textAlign:"center",color:G.muted,fontSize:"11px",marginTop:"14px"}},tt(appLang).loginHelp,el("span",{style:{color:G.purple}},"support@streamflux.app")));
 inner.appendChild(card);
 wrap.appendChild(inner);
 return wrap;
@@ -160,7 +458,7 @@ nav.appendChild(navLeft);
 const navRight=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
 if(user.trialActive){const badge=el("span",{style:{fontSize:"10px",color:G.purple,background:G.purpleDim,borderRadius:"10px",padding:"3px 8px"}},`⏰ ${user.daysLeft}d left`);navRight.appendChild(badge);}
 navRight.appendChild(el("span",{style:{fontSize:"12px",color:G.muted}},user.name));
-const logoutBtn=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},"Log Out");
+const logoutBtn=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},tt(appLang).logout);
 logoutBtn.addEventListener("click",()=>{localStorage.removeItem("nt_u");setState({screen:"login",user:null});});
 navRight.appendChild(logoutBtn);
 nav.appendChild(navRight);
@@ -170,13 +468,13 @@ const content=el("div",{style:{maxWidth:"700px",margin:"0 auto",padding:"40px 18
 const savedLang=appLang;
 content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"36px"}},
 el("div",{style:{fontSize:"28px",marginBottom:"8px"}},"✦"),
-el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},`Welcome, ${user.name.split(" ")[0]}!`),
-el("p",{style:{fontSize:"14px",color:G.muted,marginBottom:"16px"}},"Choose a tool to get started."),
+el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},tt(appLang).welcome+", "+user.name.split(" ")[0]+"!"),
+el("p",{style:{fontSize:"14px",color:G.muted,marginBottom:"16px"}},tt(appLang).choose),
 el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
 el("span",{style:{fontSize:"12px",color:G.muted}},"Language:"),
 (()=>{
 const sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:`1px solid ${G.gl}`,background:G.card,fontSize:"13px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===savedLang)o.selected=true;sel.appendChild(o);});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===savedLang)o.selected=true;sel.appendChild(o);});
 sel.addEventListener("change",e=>{
 appLang=e.target.value;
 localStorage.setItem("nt_lang",e.target.value);
@@ -211,7 +509,7 @@ el("span",{style:{marginLeft:"auto",color:"rgba(255,255,255,0.6)",fontSize:"20px
 ));
 outCard.appendChild(el("p",{style:{fontSize:"13px",color:"rgba(255,255,255,0.75)",lineHeight:"1.6",marginBottom:"14px"}},"Personalised 1-on-1 messages for any contact. Follow-ups, objection handling, voice scripts and formal letters."));
 const outTags=el("div",{style:{display:"flex",flexWrap:"wrap",gap:"6px"}});
-["WhatsApp Message","SMS","Phone Script","Email","Formal Letter","4 Follow-Ups","Schedule"].forEach(t=>outTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
+["WhatsApp Message","SMS","Phone Script",tt(appLang).loginEmail,"Formal Letter","4 Follow-Ups","Schedule"].forEach(t=>outTags.appendChild(el("span",{style:{fontSize:"10px",background:"rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.7)",borderRadius:"10px",padding:"3px 9px"}},t)));
 outCard.appendChild(outTags);
 outCard.addEventListener("click",()=>setState({screen:"app2"}));
 grid.appendChild(outCard);
@@ -224,7 +522,7 @@ return wrap;
 
 // ── APP 1 - MARKETING MACHINE ──────────────────────────────────────────────
 function renderApp1(){
-const LANGS=[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}];
+const LANGS=[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"}];
 const GOALS=[{value:"sell",label:"🛍️ Sell Products",desc:"Promote MONAT products to customers"},{value:"recruit",label:"🤝 Recruit Partners",desc:"Invite people to join as Market Partners"},{value:"motivate",label:"🔥 Motivate My Team",desc:"Inspire and energize your MONAT team"},{value:"brand",label:"✨ Brand Awareness",desc:"Grow your MONAT presence & following"}];
 const PAIN_POINTS=[{value:"thinning",label:"😟 Hair Thinning & Loss"},{value:"dry",label:"🏜️ Dry & Brittle Hair"},{value:"frizzy",label:"😤 Frizzy Hair"},{value:"oily",label:"💧 Oily Hair & Scalp"},{value:"damaged",label:"💔 Damaged Hair"},{value:"splitends",label:"✂️ Split Ends"},{value:"curls",label:"🌀 Undefined Curls"},{value:"color",label:"🎨 Color Fade"},{value:"aging_skin",label:"🪞 Aging Skin"},{value:"dull_skin",label:"🌥️ Dull Skin"},{value:"no_volume",label:"😔 No Volume"},{value:"scalp",label:"😣 Itchy Scalp"}];
 const RECRUIT=[{value:"extra_income",label:"💰 Wants Extra Income",desc:"Earn on the side"},{value:"work_from_home",label:"🏠 Work From Home",desc:"Flexible business"},{value:"loves_beauty",label:"💄 Loves Beauty",desc:"Passion into income"},{value:"entrepreneur",label:"🚀 Own Boss",desc:"No ceiling"},{value:"stay_home_mom",label:"👶 Stay-at-Home Mom",desc:"Earn & raise family"},{value:"side_hustle",label:"⚡ Side Hustle",desc:"That actually pays"},{value:"social_media",label:"📱 Social Media",desc:"Monetize posts"},{value:"student",label:"🎓 Student",desc:"Build income"}];
@@ -284,6 +582,9 @@ return p[plat]||"";
 }
 
 async function generate(){
+// Always read current language from DOM selector before generating
+const langEl=document.querySelector("#app1LangSel");
+if(langEl)s.language=langEl.value;
 s.loading=true;s.error="";s.result={};s.loadingPct=0;renderApp1Content();
 const base=buildBase();
 try{
@@ -319,20 +620,20 @@ function renderApp1Content(){
 wrap.innerHTML="";
 const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
 const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
-const backBtn=el("button",{style:{background:G.gbg,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},"← Home");
+const backBtn=el("button",{style:{background:G.gbg,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},tt(appLang).home);
 backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
 navLeft.appendChild(backBtn);
 navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px"}},"📣 Marketing Machine"));
 nav.appendChild(navLeft);
-const langSel1=el("select",{style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel1.appendChild(o);});
+const langSel1=el("select",{id:"app1LangSel",style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel1.appendChild(o);});
 langSel1.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp1Content();});
 nav.appendChild(langSel1);
 wrap.appendChild(nav);
 
 if(Object.keys(s.result).length>0&&!s.loading){
 const content=el("div",{style:{maxWidth:"780px",margin:"0 auto",padding:"16px 12px 60px"}});
-content.appendChild(el("div",{style:{background:G.dark,borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},"✦ Package Ready!"),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},`${s.name} · ${s.language}`)));
+content.appendChild(el("div",{style:{background:G.dark,borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},tt(appLang).ready),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},`${s.name} · ${s.language}`)));
 const visTabs=TABS.filter(tb=>tb.id==="schedule"||s.platforms.includes(tb.id));
 const tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
 visTabs.forEach(tb=>{
@@ -343,7 +644,7 @@ tabBar.appendChild(btn);
 content.appendChild(tabBar);
 if(s.platforms.includes(s.activeTab)&&s.result[s.activeTab]){content.appendChild(copyCard(TABS.find(tb=>tb.id===s.activeTab)?.label||s.activeTab,s.result[s.activeTab]));}
 if(s.activeTab==="schedule"){
-content.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"10px"}},"Your 7-day posting plan."));
+content.appendChild(el("p",{style:{fontSize:"13px",color:G.muted,marginBottom:"10px"}},tt(appLang).schedTitle));
 const days=parseSched(s.result.scheduleRaw||"");
 days.forEach(d=>{
 const dc=el("div",{style:{background:G.card,border:`1px solid ${G.gl}`,borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
@@ -352,7 +653,7 @@ d.tasks.forEach(t=>{const row=el("div",{style:{display:"flex",gap:"8px",marginBo
 content.appendChild(dc);
 });
 }
-const newBtn=el("button",{style:{...btnStyle(false),marginTop:"8px"}},"← New Content");
+const newBtn=el("button",{style:{...btnStyle(false),marginTop:"8px"}},tt(appLang).newContent);
 newBtn.addEventListener("click",()=>{s.result={};s.step=1;s.goal="";s.products=[];s.contexts=[];s.platforms=[];s.error="";renderApp1Content();});
 content.appendChild(newBtn);
 wrap.appendChild(content);
@@ -368,7 +669,7 @@ content.appendChild(prog);
 const profCard=el("div",{style:cardStyle});
 profCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"8px"}},"👤 Your Profile"));
 const profGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px"}});
-[{k:"name",l:"Name *",p:"e.g. Maria"},{k:"link",l:"MONAT Link *",p:"yourname.mymonat.com"},{k:"phone",l:"WhatsApp",p:"+1 (555) 000"}].forEach(f=>{
+[{k:"name",l:tt(appLang).profileName,p:tt(appLang).profileNamePh},{k:"link",l:tt(appLang).profileLink,p:tt(appLang).profileLinkPh},{k:"phone",l:"WhatsApp",p:"+1 (555) 000"}].forEach(f=>{
 const d=el("div",{});
 d.appendChild(el("label",{style:{fontSize:"9px",color:G.muted,display:"block",marginBottom:"3px"}},f.l));
 const inp=el("input",{type:"text",placeholder:f.p,style:{...inputStyle,padding:"8px 10px",fontSize:"12px",borderRadius:"7px"}});
@@ -378,39 +679,39 @@ d.appendChild(inp);
 profGrid.appendChild(d);
 });
 profCard.appendChild(profGrid);
-if(!s.name||!s.link)profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},"Fill in your name and MONAT link to continue"));
+if(!s.name||!s.link)profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},tt(appLang).profileWarn));
 content.appendChild(profCard);
 
 const stepCard=el("div",{style:cardStyle});
 if(s.step===1){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 1"));
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s1));
 stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"🎯 What Is Your Goal?"));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Everything will be tailored around this."));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s1s));
 stepCard.appendChild(chips(null,null,GOALS,s.goal,v=>{s.goal=v;renderApp1Content();},true));
 }
 if(s.step===2){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 2"));
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s2));
 stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},`💡 ${s.goal==="sell"?"Which Problem Are You Solving?":s.goal==="recruit"?"Who Are You Targeting?":s.goal==="motivate"?"What's the Theme?":"What to Highlight?"}`));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Pick all that apply."));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s2sub));
 stepCard.appendChild(chips(null,null,ctxOpts(),s.contexts,v=>{s.contexts=tog(s.contexts,v);renderApp1Content();}));
 if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.contexts.length} selected`));
 if(s.goal==="sell"){
 stepCard.appendChild(el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:`1px solid ${G.gl}`}},el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},"🛍️ Choose a Product (optional)"),el("p",{style:{fontSize:"11px",color:G.muted,margin:"0 0 12px"}},"Select to focus all content on a specific product.")));
-[{k:"hair",l:"💇 Hair Care"},{k:"skin",l:"🌿 Skin Care"},{k:"wellness",l:"💊 Wellness"},{k:"mens",l:"👨 Men's"}].forEach(cat=>{
+[{k:"hair",l:tt(appLang).catHair},{k:"skin",l:tt(appLang).catSkin},{k:"wellness",l:tt(appLang).catWell},{k:"mens",l:tt(appLang).catMen}].forEach(cat=>{
 stepCard.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:G.muted,letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.l));
 stepCard.appendChild(chips(null,null,PRODUCTS[cat.k],s.products,v=>{s.products=tog(s.products,v);renderApp1Content();}));
 });
 }
 }
 if(s.step===3){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 3"));
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s3));
 stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"📣 Where Are You Posting?"));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"Select all platforms — we generate everything at once."));
+stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},tt(appLang).s3s));
 stepCard.appendChild(chips(null,null,PLATFORMS,s.platforms,v=>{s.platforms=tog(s.platforms,v);renderApp1Content();}));
 if(s.platforms.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:G.purple,background:G.purpleDim,borderRadius:"6px",padding:"6px 10px"}},`✦ ${s.platforms.length} platform${s.platforms.length>1?"s":""} selected + 7-day schedule`));
 }
 if(s.step===4){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},"Step 4"));
+stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:G.purple,textTransform:"uppercase",marginBottom:"3px"}},tt(appLang).s4));
 stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"✨ Tone & Style"));
 stepCard.appendChild(el("p",{style:{fontSize:"12px",color:G.muted,margin:"0 0 14px"}},"How should your content feel?"));
 stepCard.appendChild(chips(null,null,TONES,s.tone,v=>{s.tone=v;renderApp1Content();},true));
@@ -423,21 +724,21 @@ lc.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",ma
 const bar=el("div",{style:{width:"100%",height:"4px",background:G.gl,borderRadius:"2px"}});
 bar.appendChild(el("div",{style:{width:`${s.loadingPct}%`,height:"100%",background:`linear-gradient(90deg,${G.dark},${G.purple})`,borderRadius:"2px",transition:"width 0.4s ease"}}));
 lc.appendChild(bar);
-lc.appendChild(el("div",{style:{fontSize:"11px",color:G.muted,marginTop:"6px"}},`Generating in ${s.language}. Please wait...`));
+lc.appendChild(el("div",{style:{fontSize:"11px",color:G.muted,marginTop:"6px"}},tt(appLang).genIn(appLang)));
 content.appendChild(lc);
 }
 if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"9px",padding:"10px 13px",marginBottom:"12px",color:G.red,fontSize:"12px"}},`⚠️ ${s.error}`));
 
 const btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9px"}});
-const backB=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"12px 20px",fontSize:"14px",cursor:"pointer"}},"← Back");
+const backB=el("button",{style:{background:G.card,color:G.dark,border:`1px solid ${G.gl}`,borderRadius:"10px",padding:"12px 20px",fontSize:"14px",cursor:"pointer"}},tt(appLang).back);
 backB.addEventListener("click",()=>{s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});renderApp1Content();});
 btnRow.appendChild(backB);
 if(s.step<4){
-const nextB=el("button",{style:btnStyle(!canProceed()||!s.name||!s.link)},"Continue →");
-nextB.addEventListener("click",()=>{if(!s.name||!s.link){s.error="Fill in your name and MONAT link first.";renderApp1Content();}else if(canProceed()){s.error="";s.step++;renderApp1Content();}else{s.error="Please complete this step to continue.";renderApp1Content();}});
+const nextB=el("button",{style:btnStyle(!canProceed()||!s.name||!s.link)},tt(appLang).cont);
+nextB.addEventListener("click",()=>{if(!s.name||!s.link){s.error=tt(appLang).fillFirst;renderApp1Content();}else if(canProceed()){s.error="";s.step++;renderApp1Content();}else{s.error=tt(appLang).completeStep;renderApp1Content();}});
 btnRow.appendChild(nextB);
 }else{
-const genB=el("button",{style:{...btnStyle(!canProceed()||s.loading||!s.name||!s.link),minWidth:"200px"}},s.loading?"✦ Generating...":"✦ Generate Full Package");
+const genB=el("button",{style:{...btnStyle(!canProceed()||s.loading||!s.name||!s.link),minWidth:"200px"}},s.loading?tt(appLang).generating:tt(appLang).gen);
 genB.addEventListener("click",()=>{if(canProceed()&&!s.loading&&s.name&&s.link)generate();});
 btnRow.appendChild(genB);
 }
@@ -480,6 +781,8 @@ return {ctx:`CONTACT:\n- Name: ${s.contactName}\n- Type: ${CONTACT_TYPES.find(t=
 }
 
 async function generate(){
+const langEl2=document.querySelector("#app2LangSel");
+if(langEl2)s.language=langEl2.value;
 s.loading=true;s.error="";s.result=null;renderApp2Content();
 const {ctx,langNote}=buildCtx();
 try{
@@ -559,30 +862,30 @@ function renderApp2Content(){
 wrap.innerHTML="";
 const nav=el("div",{style:{background:G.card,borderBottom:`1px solid ${G.border}`,padding:"0 18px",height:"54px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:"0",zIndex:"50"}});
 const navLeft=el("div",{style:{display:"flex",alignItems:"center",gap:"9px"}});
-const backBtn=el("button",{style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},"← Home");
+const backBtn=el("button",{style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 10px",fontSize:"11px",cursor:"pointer"}},tt(appLang).home);
 backBtn.addEventListener("click",()=>setState({screen:"dashboard"}));
 navLeft.appendChild(backBtn);
 navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",color:"#111"}},"🤝 Outreach Machine"));
 nav.appendChild(navLeft);
-const langSel2=el("select",{style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
-[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel2.appendChild(o);});
+const langSel2=el("select",{id:"app2LangSel",style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel2.appendChild(o);});
 langSel2.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp2Content();});
 nav.appendChild(langSel2);
 wrap.appendChild(nav);
 
 if(s.result){
 const content=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
-content.appendChild(el("div",{style:{background:G.dark,border:"1px solid #7664d0",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",justifyContent:"space-between",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:G.purple,fontWeight:"bold"}},`✦ Outreach Package for ${s.contactName}`),el("button",{onclick:()=>{s.result=null;s.error="";renderApp2Content();},style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},"← New Message")));
+content.appendChild(el("div",{style:{background:G.dark,border:"1px solid #7664d0",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",justifyContent:"space-between",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:G.purple,fontWeight:"bold"}},tt(appLang).outReady(s.contactName)),el("button",{onclick:()=>{s.result=null;s.error="";renderApp2Content();},style:{background:"transparent",color:G.muted,border:`1px solid ${G.border}`,borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer"}},tt(appLang).outNew)));
 const tabBar=el("div",{style:{display:"flex",gap:"6px",marginBottom:"16px",flexWrap:"wrap"}});
 TABS.forEach(tb=>{const btn=el("button",{style:{background:s.activeTab===tb.id?G.purple:G.gbg,color:s.activeTab===tb.id?"#fff":G.muted,border:`1px solid ${s.activeTab===tb.id?G.purple:G.border}`,borderRadius:"8px",padding:"7px 12px",fontSize:"11px",fontWeight:s.activeTab===tb.id?"700":"400",cursor:"pointer"}},tb.label);btn.addEventListener("click",()=>{s.activeTab=tb.id;renderApp2Content();});tabBar.appendChild(btn);});
 content.appendChild(tabBar);
 if(s.activeTab==="messages"){content.appendChild(dkCopyCard("WhatsApp",s.result.whatsapp,"WhatsApp"));content.appendChild(dkCopyCard("SMS",s.result.sms,"160 chars"));}
-if(s.activeTab==="voice"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},"Read naturally — don't sound scripted."));content.appendChild(dkCopyCard("Phone Call Script",s.result.voice_script));}
+if(s.activeTab==="voice"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outNatural));content.appendChild(dkCopyCard("Phone Call Script",s.result.voice_script));}
 if(s.activeTab==="email"){content.appendChild(dkCopyCard("Email Subject Line",s.result.email_subject));content.appendChild(dkCopyCard("Email Body",s.result.email_body));}
-if(s.activeTab==="letter"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},"Replace brackets before printing."));content.appendChild(dkCopyCard("Formal Letter",s.result.formal_letter));}
-if(s.activeTab==="followups"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},"Send in order if no reply."));[["Follow-Up #1",s.result.followup_1,"Day 3"],["Follow-Up #2",s.result.followup_2,"Week 1"],["Follow-Up #3",s.result.followup_3,"Week 2"],["Follow-Up #4",s.result.followup_4,"Month 1"]].forEach(([t,c,b])=>content.appendChild(dkCopyCard(t,c,b)));}
+if(s.activeTab==="letter"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outBrackets));content.appendChild(dkCopyCard("Formal Letter",s.result.formal_letter));}
+if(s.activeTab==="followups"){content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 12px"}},tt(appLang).outOrder));[["Follow-Up #1",s.result.followup_1,"Day 3"],["Follow-Up #2",s.result.followup_2,"Week 1"],["Follow-Up #3",s.result.followup_3,"Week 2"],["Follow-Up #4",s.result.followup_4,"Month 1"]].forEach(([t,c,b])=>content.appendChild(dkCopyCard(t,c,b)));}
 if(s.activeTab==="schedule"&&s.result.schedule){
-content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 14px"}},`Your exact follow-up plan for ${s.contactName}.`));
+content.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 14px"}},tt(appLang).outPlanFor(s.contactName)));
 s.result.schedule.forEach(d=>{
 const dc=el("div",{style:{background:G.gbg,border:`1px solid ${G.border}`,borderRadius:"10px",padding:"14px 16px",marginBottom:"11px"}});
 dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"9px",marginBottom:"9px"}},el("span",{style:{fontSize:"20px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:G.purple}},d.day)));
@@ -596,14 +899,14 @@ return;
 
 const content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
 
-content.appendChild(el("div",{style:cardStyle},el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"👤 Who Are You Contacting?"),el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},"The more detail, the more personalised the messages."),dkField("Their First Name","text",s.contactName,v=>s.contactName=v,"Maria"),dkChips("Contact Type",null,CONTACT_TYPES,s.contactType,v=>{s.contactType=v;renderApp2Content();},true),dkChips("Reason for Reaching Out","Why are you contacting them right now?",REASONS,s.contactReason,v=>{s.contactReason=v;renderApp2Content();},true),dkChips("Communication Tone",null,TONES,s.tone,v=>{s.tone=v;renderApp2Content();},true)));
+content.appendChild(el("div",{style:cardStyle},el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"👤 Who Are You Contacting?"),el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outWhoSub),dkField(tt(appLang).outCName,"text",s.contactName,v=>s.contactName=v,"Maria"),dkChips(tt(appLang).outCType,null,CONTACT_TYPES,s.contactType,v=>{s.contactType=v;renderApp2Content();},true),dkChips(tt(appLang).outReason,tt(appLang).outReasonH,REASONS,s.contactReason,v=>{s.contactReason=v;renderApp2Content();},true),dkChips(tt(appLang).outTone,null,TONES,s.tone,v=>{s.tone=v;renderApp2Content();},true)));
 
 if(isObjection()){
 const objCard=el("div",{style:cardStyle});
 objCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🛡️ What Objection Did They Raise?"));
-objCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},"Select the category and paste their exact words for a much more powerful response."));
-objCard.appendChild(dkChips("Objection Category",null,OBJECTIONS,s.objection,v=>{s.objection=v;renderApp2Content();},true));
-objCard.appendChild(el("div",{style:{marginTop:"14px"}},el("label",{style:labelStyle},"Their Exact Words "),el("span",{style:{fontSize:"10px",fontWeight:"400",color:G.muted}},"(optional but recommended)"),el("p",{style:{fontSize:"11px",color:G.muted,margin:"4px 0 6px",fontStyle:"italic"}},"Paste exactly what they said — AI responds to their specific words")));
+objCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outObjSub));
+objCard.appendChild(dkChips(tt(appLang).outObjCat,null,OBJECTIONS,s.objection,v=>{s.objection=v;renderApp2Content();},true));
+objCard.appendChild(el("div",{style:{marginTop:"14px"}},el("label",{style:labelStyle},tt(appLang).outExact+" "),el("span",{style:{fontSize:"10px",fontWeight:"400",color:G.muted}},tt(appLang).outExactOpt),el("p",{style:{fontSize:"11px",color:G.muted,margin:"4px 0 6px",fontStyle:"italic"}},tt(appLang).outExactH)));
 const ta=el("textarea",{placeholder:'e.g. "I tried MONAT before and my hair fell out"',rows:3,style:{...inputStyle,resize:"vertical"}});
 ta.value=s.exactObjection||"";
 ta.addEventListener("input",e=>s.exactObjection=e.target.value);
@@ -613,32 +916,32 @@ content.appendChild(objCard);
 
 const hairCard=el("div",{style:cardStyle});
 hairCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"💇 Their Hair & Skin Situation"));
-hairCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},"The AI will tailor content around their specific problems."));
-hairCard.appendChild(dkChips("Their Hair / Skin Problems","Select all that apply",HAIR,s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
-hairCard.appendChild(dkChips("Products to Mention","Optional",OUT_PRODUCTS,s.products,v=>{s.products=tog(s.products,v);renderApp2Content();}));
+hairCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outHairSub));
+hairCard.appendChild(dkChips(tt(appLang).outHairProbs,tt(appLang).outHairH,HAIR,s.hairProblems,v=>{s.hairProblems=tog(s.hairProblems,v);renderApp2Content();}));
+hairCard.appendChild(dkChips(tt(appLang).outProdsMention,tt(appLang).outProdsH,OUT_PRODUCTS,s.products,v=>{s.products=tog(s.products,v);renderApp2Content();}));
 content.appendChild(hairCard);
 
 if(isPartner()){
 const pCard=el("div",{style:cardStyle});
 pCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🚀 Why Would They Be a Great Partner?"));
-pCard.appendChild(dkChips("Their Profile",null,PARTNER_TARGETS,s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
+pCard.appendChild(dkChips(tt(appLang).outPartProf,null,PARTNER_TARGETS,s.partnerTargets,v=>{s.partnerTargets=tog(s.partnerTargets,v);renderApp2Content();}));
 content.appendChild(pCard);
 }
 
 const ctxCard=el("div",{style:cardStyle});
 ctxCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"💡 Personal Context"));
-ctxCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},"Personal details make messages feel real — not copy-paste."));
-ctxCard.appendChild(dkTextarea("Prior Contact History",s.priorContact,v=>s.priorContact=v,'e.g. "Met at a MONAT event. Said she was interested but wanted to think about it."',2,"Have you spoken before? What did they say?"));
-ctxCard.appendChild(dkTextarea("Personal Note",s.personalNote,v=>s.personalNote=v,'e.g. "Has 2 young kids, dry hair since having kids."',2,"Kids, job, lifestyle — anything personal you know"));
+ctxCard.appendChild(el("p",{style:{color:G.muted,fontSize:"13px",margin:"0 0 16px"}},tt(appLang).outCtxSub));
+ctxCard.appendChild(dkTextarea(tt(appLang).outPrior,s.priorContact,v=>s.priorContact=v,'e.g. "Met at a MONAT event. Said she was interested but wanted to think about it."',2,tt(appLang).outPriorH));
+ctxCard.appendChild(dkTextarea(tt(appLang).outNote,s.personalNote,v=>s.personalNote=v,'e.g. "Has 2 young kids, dry hair since having kids."',2,tt(appLang).outNoteH));
 content.appendChild(ctxCard);
 
 const agCard=el("div",{style:cardStyle});
 agCard.appendChild(el("h2",{style:{margin:"0 0 4px",fontSize:"15px",fontWeight:"700",color:"#111"}},"🏷️ Your Details"));
 const agGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}});
-agGrid.appendChild(dkField("Your Name","text",s.yourName,v=>s.yourName=v,"Maria Johnson"));
-agGrid.appendChild(dkField("Your WhatsApp / Phone","text",s.yourPhone,v=>s.yourPhone=v,"+1 (555) 000-0000"));
+agGrid.appendChild(dkField(tt(appLang).outYourName,"text",s.yourName,v=>s.yourName=v,"Maria Johnson"));
+agGrid.appendChild(dkField(tt(appLang).outYourPhone,"text",s.yourPhone,v=>s.yourPhone=v,"+1 (555) 000-0000"));
 agCard.appendChild(agGrid);
-agCard.appendChild(dkField("Your MONAT Shop Link","text",s.yourLink,v=>s.yourLink=v,"yourname.mymonat.com"));
+agCard.appendChild(dkField(tt(appLang).outYourLink,"text",s.yourLink,v=>s.yourLink=v,tt(appLang).profileLinkPh));
 content.appendChild(agCard);
 
 if(s.error)content.appendChild(el("div",{style:{background:"#1a0a0a",border:"1px solid #3a1a1a",borderRadius:"8px",padding:"11px 13px",color:"#f87171",fontSize:"12px",marginBottom:"12px"}},`⚠ ${s.error}`));
@@ -648,10 +951,10 @@ lc.appendChild(el("p",{style:{color:G.purple,fontSize:"14px",margin:"0",fontWeig
 lc.appendChild(el("p",{style:{color:G.muted,fontSize:"12px",margin:"6px 0 0"}},`Generating in ${s.language}. Takes about 20 seconds...`));
 content.appendChild(lc);
 }
-const genBtn=el("button",{style:{...btnStyle(!canGenerate()||s.loading,G.purple),width:"100%",fontSize:"15px"}},s.loading?"Generating...":"✦ Generate Full Outreach Package");
+const genBtn=el("button",{style:{...btnStyle(!canGenerate()||s.loading,G.purple),width:"100%",fontSize:"15px"}},s.loading?tt(appLang).outGening:tt(appLang).outGen);
 genBtn.addEventListener("click",()=>{if(canGenerate()&&!s.loading)generate();});
 content.appendChild(genBtn);
-if(!canGenerate())content.appendChild(el("p",{style:{color:G.muted,fontSize:"12px",marginTop:"8px",textAlign:"center"}},"Fill in their name, contact type, reason, tone and your name to continue."));
+if(!canGenerate())content.appendChild(el("p",{style:{color:G.muted,fontSize:"12px",marginTop:"8px",textAlign:"center"}},tt(appLang).outFill));
 
 wrap.appendChild(content);
 }
