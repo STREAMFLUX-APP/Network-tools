@@ -25,6 +25,7 @@ return d.text||"";
 };
 
 let state={screen:"login",user:null};
+let appLang=localStorage.getItem("nt_lang")||"English";
 const setState=(updates)=>{state={...state,...updates};render();};
 
 const btnStyle=(disabled,bg)=>({background:disabled?"#e8e6f0":bg||G.dark,color:disabled?G.muted:"#fff",border:"none",borderRadius:"10px",padding:"13px 24px",fontSize:"14px",fontWeight:"700",cursor:disabled?"not-allowed":"pointer",fontFamily:"inherit"});
@@ -166,7 +167,7 @@ nav.appendChild(navRight);
 wrap.appendChild(nav);
 
 const content=el("div",{style:{maxWidth:"700px",margin:"0 auto",padding:"40px 18px 60px"}});
-const savedLang=localStorage.getItem("nt_lang")||"English";
+const savedLang=appLang;
 content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"36px"}},
 el("div",{style:{fontSize:"28px",marginBottom:"8px"}},"✦"),
 el("h1",{style:{fontSize:"22px",fontWeight:"700",letterSpacing:"1px",marginBottom:"8px"}},`Welcome, ${user.name.split(" ")[0]}!`),
@@ -177,6 +178,7 @@ el("span",{style:{fontSize:"12px",color:G.muted}},"Language:"),
 const sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:`1px solid ${G.gl}`,background:G.card,fontSize:"13px",cursor:"pointer",outline:"none"}});
 [{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===savedLang)o.selected=true;sel.appendChild(o);});
 sel.addEventListener("change",e=>{
+appLang=e.target.value;
 localStorage.setItem("nt_lang",e.target.value);
 });
 return sel;
@@ -235,7 +237,7 @@ const TABS=[{id:"wa_status",label:"📱 WA Status"},{id:"wa_message",label:"💬
 const allProds=Object.values(PRODUCTS).flat();
 function tog(arr,val){return arr.includes(val)?arr.filter(x=>x!==val):[...arr,val];}
 
-let s={step:1,language:localStorage.getItem("nt_lang")||"English",goal:"",products:[],contexts:[],platforms:[],tone:"friendly",name:"",link:"",phone:"",loading:false,loadingMsg:"",loadingPct:0,result:{},activeTab:"wa_status",error:""};
+let s={step:1,language:appLang,goal:"",products:[],contexts:[],platforms:[],tone:"friendly",name:"",link:"",phone:"",loading:false,loadingMsg:"",loadingPct:0,result:{},activeTab:"wa_status",error:""};
 
 const wrap=el("div",{style:{minHeight:"100vh",background:G.bg}});
 
@@ -324,7 +326,7 @@ navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSp
 nav.appendChild(navLeft);
 const langSel1=el("select",{style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
 [{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel1.appendChild(o);});
-langSel1.addEventListener("change",e=>{s.language=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp1Content();});
+langSel1.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp1Content();});
 nav.appendChild(langSel1);
 wrap.appendChild(nav);
 
@@ -464,7 +466,7 @@ const dkInput_unused={width:"100%",background:G.gbg,border:`1px solid ${G.border
 const dkCard={background:G.card,border:`1px solid ${G.border}`,borderRadius:"14px",padding:"22px",marginBottom:"16px"};
 const dkLabel={display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.1em",color:G.muted,textTransform:"uppercase",marginBottom:"3px"};
 
-let s={language:localStorage.getItem("nt_lang")||"English",contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user?.name||"",yourPhone:"",yourLink:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
+let s={language:appLang,contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user?.name||"",yourPhone:"",yourLink:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
 
 const wrap=el("div",{style:{minHeight:"100vh",background:G.bg,color:"#111"}});
 
@@ -564,7 +566,7 @@ navLeft.appendChild(el("span",{style:{fontSize:"13px",fontWeight:"bold",letterSp
 nav.appendChild(navLeft);
 const langSel2=el("select",{style:{padding:"4px 8px",borderRadius:"12px",border:`1px solid ${G.gl}`,background:G.card,color:G.dark,fontSize:"11px",cursor:"pointer",outline:"none"}});
 [{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español (España)"},{v:"Mexican",l:"🇲🇽 Español (México)"},{v:"Italian",l:"🇮🇹 Italiano"},{v:"French",l:"🇫🇷 Français"},{v:"Portuguese",l:"🇧🇷 Português"},{v:"German",l:"🇩🇪 Deutsch"},{v:"Arabic",l:"🇦🇪 العربية"},{v:"Chinese",l:"🇨🇳 中文"}].forEach(lang=>{const o=el("option",{value:lang.v},lang.l);if(lang.v===s.language)o.selected=true;langSel2.appendChild(o);});
-langSel2.addEventListener("change",e=>{s.language=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp2Content();});
+langSel2.addEventListener("change",e=>{s.language=e.target.value;appLang=e.target.value;localStorage.setItem("nt_lang",e.target.value);renderApp2Content();});
 nav.appendChild(langSel2);
 wrap.appendChild(nav);
 
