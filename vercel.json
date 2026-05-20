@@ -1,14 +1,11 @@
 {
 "version": 2,
-"functions": {
-"api/*.js": { "runtime": "@vercel/node@3" }
-},
+"builds": [
+{ "src": "api/*.js", "use": "@vercel/node" },
+{ "src": "public/**", "use": "@vercel/static" }
+],
 "routes": [
-{ "src": "/api/auth", "dest": "/api/auth.js" },
-{ "src": "/api/claude", "dest": "/api/claude.js" },
-{ "src": "/api/admin", "dest": "/api/admin.js" },
-{ "src": "/marketing.html", "dest": "/public/marketing.html" },
-{ "src": "/outreach.html", "dest": "/public/outreach.html" },
+{ "src": "/api/(.*)", "dest": "/api/$1.js" },
 { "src": "/(.*)", "dest": "/public/$1" }
 ]
 }
