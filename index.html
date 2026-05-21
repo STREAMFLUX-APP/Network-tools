@@ -35,7 +35,10 @@ function OBJECTIONS(){var d={English:[{v:"too_expensive",l:"Too Expensive",d:"Ca
 function HAIR_PROBS(){var d={English:["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"],Spanish:["Caida del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy","Cabello Grasoso","Cabello Danado","Puntas Abiertas","Rizos Sin Definicion","Color Desvaneciendose","Cabello Plano Sin Volumen","Cuero Cabelludo con Picazon","Piel con Signos de Edad","Piel Opaca"],Mexican:["Caida del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy","Cabello Grasoso","Cabello Danado","Puntas Abiertas","Rizos Sin Definicion","Color Desvaneciendose","Cabello Plano Sin Volumen","Cuero Cabelludo con Comezon","Piel con Signos de Edad","Piel Opaca"]};return d[appLang]||d.English;}
 function PARTNER_T(){var d={English:["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"],Spanish:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mama en Casa","Trabajar desde Casa","Busca un Negocio Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdio su Trabajo Recientemente","Apasionada por Productos Naturales"],Mexican:["Quiere Ingresos Extra","Le Encanta la Belleza y el Cabello","Mama en Casa","Trabajar desde Casa","Busca una Chambita Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdio su Trabajo Recientemente","Apasionada por Productos Naturales"]};return d[appLang]||d.English;}
 
-var PRODUCTS={hair:[{v:"bond_iq",l:"MONAT Bond IQ",d:"Stronger Hair"},{v:"ir_clinical",l:"IR Clinical",d:"Hair Thinning Defense"},{v:"rejuveniqe",l:"Rejuveniqe Oil",d:"13+ natural oils"},{v:"anti_frizz",l:"Anti-Frizz",d:"Deep Treatment"},{v:"curl",l:"Curl Perfection",d:"Curl & Wave"},{v:"rejuvabeads",l:"REJUVABEADS",d:"Split End Mender"},{v:"scalp_scrub",l:"Scalp Purifying Scrub",d:"Deep cleanse"},{v:"scalp_comfort",l:"Scalp Comfort",d:"Rebalancing"},{v:"color_care",l:"Color Care",d:"Color-Treated Hair"},{v:"densifying",l:"Densifying System",d:"Volume & thickness"}],skin:[{v:"barrier",l:"Barrier Booster",d:"Glass Skin"},{v:"glowtint",l:"GlowTint Lip Oil",d:"Skincare gloss"}],wellness:[{v:"wellness",l:"Wellness Supplements",d:"Energy & mood"}],mens:[{v:"men",l:"MONAT for MEN",d:"Men's collection"}]};
+function PRODUCTS(){
+var isES=appLang==="Spanish"||appLang==="Mexican";
+return {hair:[{v:"bond_iq",l:"MONAT Bond IQ",d:isES?"Cabello mas fuerte":"Stronger Hair"},{v:"ir_clinical",l:"IR Clinical",d:isES?"Defensa contra la caida":"Hair Thinning Defense"},{v:"rejuveniqe",l:"Rejuveniqe Oil",d:isES?"13+ aceites naturales":"13+ natural oils"},{v:"anti_frizz",l:"Anti-Frizz",d:isES?"Tratamiento profundo":"Deep Treatment"},{v:"curl",l:"Curl Perfection",d:isES?"Rizos y ondas":"Curl & Wave"},{v:"rejuvabeads",l:"REJUVABEADS",d:isES?"Repara las puntas":"Split End Mender"},{v:"scalp_scrub",l:"Scalp Purifying Scrub",d:isES?"Limpieza profunda":"Deep cleanse"},{v:"scalp_comfort",l:"Scalp Comfort",d:isES?"Reequilibrador":"Rebalancing"},{v:"color_care",l:"Color Care",d:isES?"Cabello con tinte":"Color-Treated Hair"},{v:"densifying",l:"Densifying System",d:isES?"Volumen y grosor":"Volume & thickness"}],skin:[{v:"barrier",l:"Barrier Booster",d:isES?"Piel de cristal":"Glass Skin"},{v:"glowtint",l:"GlowTint Lip Oil",d:isES?"Brillo con cuidado":"Skincare gloss"}],wellness:[{v:"wellness",l:"Wellness Supplements",d:isES?"Energia y bienestar":"Energy & mood"}],mens:[{v:"men",l:"MONAT for MEN",d:isES?"Coleccion para hombres":"Men's collection"}]};
+}
 var OUT_PRODUCTS=["MONAT Bond IQ","IR Clinical","Rejuveniqe Oil","Anti-Frizz","Curl Perfection","REJUVABEADS","Scalp Purifying Scrub","Scalp Comfort","Color Care","Densifying System","Barrier Booster","GlowTint Lip Oil","Wellness Supplements","MONAT for MEN"];
 
 var state={screen:"login",user:null};
@@ -49,7 +52,7 @@ if(attrs)Object.keys(attrs).forEach(function(k){if(k==="style"&&typeof attrs[k]=
 for(var i=2;i<arguments.length;i++){var c=arguments[i];if(c==null||c===false)continue;if(Array.isArray(c))c.forEach(function(x){if(x!=null&&x!==false)e.appendChild(typeof x==="string"?document.createTextNode(x):x);});else e.appendChild(typeof c==="string"?document.createTextNode(c):c);}
 return e;}
 function tog(arr,val){return arr.indexOf(val)>=0?arr.filter(function(x){return x!==val;}).slice():[].concat(arr,[val]);}
-function allProds(){return [].concat(PRODUCTS.hair,PRODUCTS.skin,PRODUCTS.wellness,PRODUCTS.mens);}
+function allProds(){return [].concat(PRODUCTS().hair,PRODUCTS().skin,PRODUCTS().wellness,PRODUCTS().mens);}
 
 var IS={width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
 var CS={background:"#fff",border:"1px solid #e8e6f0",borderRadius:"14px",padding:"18px 20px",marginBottom:"14px"};
@@ -258,7 +261,7 @@ if(s.goal==="sell"){
 var ps=el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:"1px solid #e8e6f0"}});
 ps.appendChild(el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},T().prodOpt));
 ps.appendChild(el("p",{style:{fontSize:"11px",color:"#6b6b6b",margin:"0 0 12px"}},T().prodSub));
-[{k:"hair",lbl:T().catHair},{k:"skin",lbl:T().catSkin},{k:"wellness",lbl:T().catWell},{k:"mens",lbl:T().catMen}].forEach(function(cat){ps.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:"#6b6b6b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.lbl));ps.appendChild(mkChips(null,null,PRODUCTS[cat.k],s.products,function(v){s.products=tog(s.products,v);draw();}));});
+[{k:"hair",lbl:T().catHair},{k:"skin",lbl:T().catSkin},{k:"wellness",lbl:T().catWell},{k:"mens",lbl:T().catMen}].forEach(function(cat){ps.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:"#6b6b6b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.lbl));ps.appendChild(mkChips(null,null,PRODUCTS()[cat.k],s.products,function(v){s.products=tog(s.products,v);draw();}));});
 stepCard.appendChild(ps);}}
 if(s.step===3){
 stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s3));
@@ -323,7 +326,10 @@ function OBJECTIONS(){var d={English:[{v:"too_expensive",l:"Too Expensive",d:"Ca
 function HAIR_PROBS(){var d={English:["Hair Thinning & Loss","Dry & Brittle Hair","Frizzy & Unmanageable Hair","Oily Hair & Scalp","Damaged Hair & Breakage","Split Ends","Undefined Curls & Waves","Color-Treated Hair Fade","Flat Hair & No Volume","Itchy / Flaky Scalp","Aging Skin & Wrinkles","Dull & Uneven Skin"],Spanish:["Caida del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy","Cabello Grasoso","Cabello Danado","Puntas Abiertas","Rizos Sin Definicion","Color Desvaneciendose","Cabello Plano Sin Volumen","Cuero Cabelludo con Picazon","Piel con Signos de Edad","Piel Opaca"],Mexican:["Caida del Cabello","Cabello Seco y Quebradizo","Cabello Frizzy","Cabello Grasoso","Cabello Danado","Puntas Abiertas","Rizos Sin Definicion","Color Desvaneciendose","Cabello Plano Sin Volumen","Cuero Cabelludo con Comezon","Piel con Signos de Edad","Piel Opaca"]};return d[appLang]||d.English;}
 function PARTNER_T(){var d={English:["Wants Extra Income","Loves Beauty & Hair","Stay-at-Home Mom","Work From Home","Looking for a Side Hustle","Active on Social Media","Entrepreneur Mindset","Student / Young Professional","Recently Lost Job","Passionate About Natural Products"],Spanish:["Quiere Ingresos Extra","Ama la Belleza y el Cabello","Mama en Casa","Trabajar desde Casa","Busca un Negocio Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdio su Trabajo Recientemente","Apasionada por Productos Naturales"],Mexican:["Quiere Ingresos Extra","Le Encanta la Belleza y el Cabello","Mama en Casa","Trabajar desde Casa","Busca una Chambita Extra","Activa en Redes Sociales","Mentalidad Emprendedora","Estudiante / Joven Profesional","Perdio su Trabajo Recientemente","Apasionada por Productos Naturales"]};return d[appLang]||d.English;}
 
-var PRODUCTS={hair:[{v:"bond_iq",l:"MONAT Bond IQ",d:"Stronger Hair"},{v:"ir_clinical",l:"IR Clinical",d:"Hair Thinning Defense"},{v:"rejuveniqe",l:"Rejuveniqe Oil",d:"13+ natural oils"},{v:"anti_frizz",l:"Anti-Frizz",d:"Deep Treatment"},{v:"curl",l:"Curl Perfection",d:"Curl & Wave"},{v:"rejuvabeads",l:"REJUVABEADS",d:"Split End Mender"},{v:"scalp_scrub",l:"Scalp Purifying Scrub",d:"Deep cleanse"},{v:"scalp_comfort",l:"Scalp Comfort",d:"Rebalancing"},{v:"color_care",l:"Color Care",d:"Color-Treated Hair"},{v:"densifying",l:"Densifying System",d:"Volume & thickness"}],skin:[{v:"barrier",l:"Barrier Booster",d:"Glass Skin"},{v:"glowtint",l:"GlowTint Lip Oil",d:"Skincare gloss"}],wellness:[{v:"wellness",l:"Wellness Supplements",d:"Energy & mood"}],mens:[{v:"men",l:"MONAT for MEN",d:"Men's collection"}]};
+function PRODUCTS(){
+var isES=appLang==="Spanish"||appLang==="Mexican";
+return {hair:[{v:"bond_iq",l:"MONAT Bond IQ",d:isES?"Cabello mas fuerte":"Stronger Hair"},{v:"ir_clinical",l:"IR Clinical",d:isES?"Defensa contra la caida":"Hair Thinning Defense"},{v:"rejuveniqe",l:"Rejuveniqe Oil",d:isES?"13+ aceites naturales":"13+ natural oils"},{v:"anti_frizz",l:"Anti-Frizz",d:isES?"Tratamiento profundo":"Deep Treatment"},{v:"curl",l:"Curl Perfection",d:isES?"Rizos y ondas":"Curl & Wave"},{v:"rejuvabeads",l:"REJUVABEADS",d:isES?"Repara las puntas":"Split End Mender"},{v:"scalp_scrub",l:"Scalp Purifying Scrub",d:isES?"Limpieza profunda":"Deep cleanse"},{v:"scalp_comfort",l:"Scalp Comfort",d:isES?"Reequilibrador":"Rebalancing"},{v:"color_care",l:"Color Care",d:isES?"Cabello con tinte":"Color-Treated Hair"},{v:"densifying",l:"Densifying System",d:isES?"Volumen y grosor":"Volume & thickness"}],skin:[{v:"barrier",l:"Barrier Booster",d:isES?"Piel de cristal":"Glass Skin"},{v:"glowtint",l:"GlowTint Lip Oil",d:isES?"Brillo con cuidado":"Skincare gloss"}],wellness:[{v:"wellness",l:"Wellness Supplements",d:isES?"Energia y bienestar":"Energy & mood"}],mens:[{v:"men",l:"MONAT for MEN",d:isES?"Coleccion para hombres":"Men's collection"}]};
+}
 var OUT_PRODUCTS=["MONAT Bond IQ","IR Clinical","Rejuveniqe Oil","Anti-Frizz","Curl Perfection","REJUVABEADS","Scalp Purifying Scrub","Scalp Comfort","Color Care","Densifying System","Barrier Booster","GlowTint Lip Oil","Wellness Supplements","MONAT for MEN"];
 
 var state={screen:"login",user:null};
@@ -337,7 +343,7 @@ if(attrs)Object.keys(attrs).forEach(function(k){if(k==="style"&&typeof attrs[k]=
 for(var i=2;i<arguments.length;i++){var c=arguments[i];if(c==null||c===false)continue;if(Array.isArray(c))c.forEach(function(x){if(x!=null&&x!==false)e.appendChild(typeof x==="string"?document.createTextNode(x):x);});else e.appendChild(typeof c==="string"?document.createTextNode(c):c);}
 return e;}
 function tog(arr,val){return arr.indexOf(val)>=0?arr.filter(function(x){return x!==val;}).slice():[].concat(arr,[val]);}
-function allProds(){return [].concat(PRODUCTS.hair,PRODUCTS.skin,PRODUCTS.wellness,PRODUCTS.mens);}
+function allProds(){return [].concat(PRODUCTS().hair,PRODUCTS().skin,PRODUCTS().wellness,PRODUCTS().mens);}
 
 var IS={width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"14px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box"};
 var CS={background:"#fff",border:"1px solid #e8e6f0",borderRadius:"14px",padding:"18px 20px",marginBottom:"14px"};
@@ -489,113 +495,6 @@ s.loadingMsg="Writing "+lbl+"...";pct+=pStep;s.loadingPct=Math.min(pct,85);draw(
 var prompt=platPrompt(plat,base);if(!prompt){next();return;}
 apiClaude(prompt,1000).then(function(t){s.result[plat]=t;next();}).catch(function(e){s.error=e.message;s.loading=false;draw();});}
 next();}
-function draw(){
-wrap.innerHTML="";
-wrap.appendChild(mkNav("📣 "+T().mktTitle,function(){setState({screen:"dashboard"});},user));
-if(Object.keys(s.result).length>0&&!s.loading){
-var content=el("div",{style:{maxWidth:"780px",margin:"0 auto",padding:"16px 12px 60px"}});
-content.appendChild(el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center"}},el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},"✦ "+T().ready),el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)",marginLeft:"auto"}},s.name+" · "+appLang)));
-var visTabs=MKT_TABS.filter(function(tb){return tb.id==="schedule"||s.platforms.indexOf(tb.id)>=0;});
-var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
-visTabs.forEach(function(tb){var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:s.activeTab===tb.id?"#2e2a4a":"#fff",color:s.activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(s.activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:s.activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);btn.addEventListener("click",function(){s.activeTab=tb.id;draw();});tabBar.appendChild(btn);});
-content.appendChild(tabBar);
-if(s.platforms.indexOf(s.activeTab)>=0&&s.result[s.activeTab])content.appendChild(mkCopyCard((MKT_TABS.find(function(tb){return tb.id===s.activeTab;})||{l:s.activeTab}).l,s.result[s.activeTab]));
-if(s.activeTab==="schedule"){
-content.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
-var days=parseSched(s.result.scheduleRaw||"");
-days.forEach(function(d){var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700",flexShrink:"0"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});content.appendChild(dc);});}
-var newBtn=el("button",{style:Object.assign({},btnS,{marginTop:"8px"})},T().newContent);
-newBtn.addEventListener("click",function(){s.result={};s.step=1;s.goal="";s.products=[];s.contexts=[];s.platforms=[];s.error="";draw();});
-content.appendChild(newBtn);wrap.appendChild(content);return;}
-var content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"}});
-var prog=el("div",{style:{display:"flex",gap:"4px",marginBottom:"20px"}});
-for(var i=0;i<4;i++){prog.appendChild(el("div",{style:{flex:"1",height:"3px",background:s.step>i+1?"#2e2a4a":s.step===i+1?"#7664d0":"#e8e6f0",borderRadius:"2px"}}));}
-content.appendChild(prog);
-var profCard=el("div",{style:CS});
-profCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"8px"}},T().profileTitle));
-var profGrid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"9px"}});
-[{k:"name",lbl:T().profileName,ph:T().profileNamePh},{k:"link",lbl:T().profileLink,ph:T().profileLinkPh},{k:"phone",lbl:T().profilePhone,ph:T().profilePhonePh}].forEach(function(f){
-var d=el("div",{});d.appendChild(el("label",{style:{fontSize:"9px",color:"#6b6b6b",display:"block",marginBottom:"3px"}},f.lbl));
-var inp=el("input",{type:"text",placeholder:f.ph,style:{width:"100%",padding:"8px 10px",borderRadius:"7px",boxSizing:"border-box",background:"#f4f3f9",border:"1.5px solid #e8e6f0",fontSize:"12px",outline:"none",color:"#111",fontFamily:"inherit"}});
-inp.value=s[f.k]||"";(function(key,input){input.addEventListener("input",function(){s[key]=input.value;});})(f.k,inp);d.appendChild(inp);profGrid.appendChild(d);});
-profCard.appendChild(profGrid);
-if(!isReady())profCard.appendChild(el("div",{style:{marginTop:"8px",fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},T().profileWarn));
-content.appendChild(profCard);
-var stepCard=el("div",{style:CS});
-if(s.step===1){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s1));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"🎯 "+T().s1t));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s1s));
-stepCard.appendChild(mkChips(null,null,GOALS(),s.goal,function(v){s.goal=v;draw();},true));}
-if(s.step===2){
-var s2t={sell:T().s2sell,recruit:T().s2recruit,motivate:T().s2motivate,brand:T().s2brand}[s.goal]||T().s2sell;
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s2));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"💡 "+s2t));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s2sub));
-stepCard.appendChild(mkChips(null,null,ctxOpts(),s.contexts,function(v){s.contexts=tog(s.contexts,v);draw();}));
-if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},"✦ "+s.contexts.length+" selected"));
-var mktCtxBox=el("div",{style:{marginTop:"16px",paddingTop:"16px",borderTop:"1px solid #e8e6f0"}});
-mktCtxBox.appendChild(el("label",{style:{display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.08em",color:"#7664d0",textTransform:"uppercase",marginBottom:"4px"}},appLang==="Spanish"?"Tu contexto personalizado (opcional)":"Your Custom Context (optional)"));
-mktCtxBox.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},appLang==="Spanish"?"Describe tu situacion con tus propias palabras. Cuanto mas especifica seas, mejor sera el contenido.":"Describe your situation in your own words. The more specific, the better the content."));
-var mktCtxTA=el("textarea",{placeholder:appLang==="Spanish"?"ej. Tengo una clienta con cabello muy seco que ha probado todo. Es mama ocupada. Quiero promover el Rejuveniqe Oil para ella porque tiene el cabello muy danado desde que tuvo a sus hijos...":"e.g. I have a customer with very dry hair who tried everything. She is a busy mom. I want to promote the Rejuveniqe Oil because her hair has been damaged since having kids...",rows:"4",style:{width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
-mktCtxTA.value=s.mktCustomContext||"";
-mktCtxTA.addEventListener("input",function(){s.mktCustomContext=mktCtxTA.value;});
-mktCtxBox.appendChild(mktCtxTA);
-stepCard.appendChild(mktCtxBox);
-if(s.goal==="sell"){
-var ps=el("div",{style:{marginTop:"18px",paddingTop:"16px",borderTop:"1px solid #e8e6f0"}});
-ps.appendChild(el("div",{style:{fontSize:"12px",fontWeight:"700",marginBottom:"2px"}},T().prodOpt));
-ps.appendChild(el("p",{style:{fontSize:"11px",color:"#6b6b6b",margin:"0 0 12px"}},T().prodSub));
-[{k:"hair",lbl:T().catHair},{k:"skin",lbl:T().catSkin},{k:"wellness",lbl:T().catWell},{k:"mens",lbl:T().catMen}].forEach(function(cat){ps.appendChild(el("div",{style:{fontSize:"10px",fontWeight:"700",color:"#6b6b6b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px",marginTop:"10px"}},cat.lbl));ps.appendChild(mkChips(null,null,PRODUCTS[cat.k],s.products,function(v){s.products=tog(s.products,v);draw();}));});
-stepCard.appendChild(ps);}}
-if(s.step===3){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s3));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"📣 "+T().s3t));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s3s));
-stepCard.appendChild(mkChips(null,null,PLATFORMS(),s.platforms,function(v){s.platforms=tog(s.platforms,v);draw();}));
-if(s.platforms.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},"✦ "+T().platSel(s.platforms.length)));}
-if(s.step===4){
-stepCard.appendChild(el("div",{style:{fontSize:"9px",letterSpacing:"2px",color:"#7664d0",textTransform:"uppercase",marginBottom:"3px"}},T().s4));
-stepCard.appendChild(el("h2",{style:{fontSize:"16px",fontWeight:"700",margin:"0 0 4px"}},"✨ "+T().s4t));
-stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 14px"}},T().s4s));
-stepCard.appendChild(mkChips(null,null,TONES(),s.tone,function(v){s.tone=v;draw();},true));
-var sumDiv=el("div",{style:{background:"#f4f3f9",borderRadius:"9px",padding:"11px 13px",marginTop:"12px"}});
-sumDiv.appendChild(el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginBottom:"6px",fontWeight:"700"}},T().summary));
-var tagWrap=el("div",{style:{display:"flex",gap:"5px",flexWrap:"wrap"}});
-var items=[(GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l].concat(allProds().filter(function(p){return s.products.indexOf(p.v)>=0;}).map(function(p){return p.l;}),s.contexts.slice(0,3).map(function(c){return(ctxOpts().find(function(o){return(o.v||o.value)===c;})||{l:c}).l;}),s.platforms.map(function(p){return(PLATFORMS().find(function(pl){return pl.v===p;})||{l:p}).l;}),[(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l,appLang]);
-items.filter(Boolean).forEach(function(tag){tagWrap.appendChild(el("span",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"2px 9px",fontSize:"10px",color:"#2e2a4a"}},tag));});
-sumDiv.appendChild(tagWrap);stepCard.appendChild(sumDiv);}
-content.appendChild(stepCard);
-if(s.loading){var lc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 18px",marginBottom:"12px"}});lc.appendChild(el("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"6px"}},el("span",{style:{fontSize:"12px",color:"#2e2a4a",fontWeight:"600"}},s.loadingMsg),el("span",{style:{fontSize:"11px",color:"#6b6b6b"}},s.loadingPct+"%")));var bar=el("div",{style:{width:"100%",height:"4px",background:"#e8e6f0",borderRadius:"2px"}});var bf=el("div",{style:{width:s.loadingPct+"%",height:"100%",background:"linear-gradient(90deg,#2e2a4a,#7664d0)",borderRadius:"2px",transition:"width 0.4s ease"}});bar.appendChild(bf);lc.appendChild(bar);lc.appendChild(el("div",{style:{fontSize:"11px",color:"#6b6b6b",marginTop:"6px"}},T().genIn(appLang)));content.appendChild(lc);}
-if(s.error)content.appendChild(el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"9px",padding:"10px 13px",marginBottom:"12px",color:"#dc2626",fontSize:"12px"}},"⚠️ "+s.error));
-var btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9px"}});
-var backBtn=el("button",{style:btnS},T().back);
-backBtn.addEventListener("click",function(){s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});draw();});
-btnRow.appendChild(backBtn);
-if(s.step<4){var nextBtn=el("button",{style:canProceed()&&isReady()?btnD:btnG},T().cont);nextBtn.addEventListener("click",function(){if(!isReady()){s.error=T().fillFirst;draw();}else if(canProceed()){s.error="";s.step++;draw();}else{s.error=T().completeStep;draw();}});btnRow.appendChild(nextBtn);}
-else{var genBtn=el("button",{style:canProceed()&&isReady()&&!s.loading?Object.assign({},btnD,{minWidth:"200px"}):Object.assign({},btnG,{minWidth:"200px"})},s.loading?T().generating:"✦ "+T().gen);genBtn.addEventListener("click",function(){if(canProceed()&&isReady()&&!s.loading)generate();});btnRow.appendChild(genBtn);}
-content.appendChild(btnRow);wrap.appendChild(content);}
-draw();return wrap;}
-
-// ── OUTREACH MACHINE ──
-function renderApp2(){
-var user=state.user;
-var s={contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",contactName:"",hairProblems:[],products:[],partnerTargets:[],priorContact:"",personalNote:"",yourName:state.user&&state.user.name?state.user.name:"",yourPhone:"",yourLink:"",customContext:"",followupContext:"",loading:false,loadingMsg:"",result:null,error:"",activeTab:"messages"};
-var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
-var OUT_TABS=[{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice Script"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
-function isPartner(){return s.contactType==="potential_partner"||s.contactType==="past_partner";}
-function isObjection(){return s.contactReason==="handle_objection";}
-function canGen(){return!!(s.contactName&&s.contactType&&s.contactReason&&s.tone&&s.yourName);}
-function buildCtx(){
-if(s.customContext&&s.customContext.trim().length>10){
-var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-return{ctx:"CONTACT NAME: "+s.contactName+" | SENDER: "+s.yourName+(s.yourPhone?" | "+s.yourPhone:"")+(s.yourLink?" | "+s.yourLink:"")+" | MONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries"+(isPartner()?" | PARTNER OPPORTUNITY: Earn up to 5x/month | Work from home | Be your own boss":"")+" | CUSTOM CONTEXT: "+s.customContext,langNote:" | CRITICAL: Write ALL content in "+lang+". Every single word in "+lang+"."};}
-var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-return{ctx:"CONTACT:\n- Name: "+s.contactName+"\n- Type: "+((CONTACT_TYPES().find(function(t){return t.v===s.contactType;})||{l:s.contactType}).l)+"\n- Reason: "+((REASONS().find(function(r){return r.v===s.contactReason;})||{l:s.contactReason}).l)+"\n- Tone: "+((TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l)+"\n- Prior contact: "+(s.priorContact||"none")+"\n- Personal note: "+(s.personalNote||"none")+(isObjection()?"\n- Objection: "+((OBJECTIONS().find(function(o){return o.v===s.objection;})||{l:s.objection}).l)+(s.exactObjection?"\n- Their exact words: "+s.exactObjection:""):"")+(s.hairProblems.length>0?"\n- Hair/skin problems: "+s.hairProblems.join(", "):"")+(s.products.length>0?"\n- Products: "+s.products.join(", "):"")+(isPartner()&&s.partnerTargets.length>0?"\n- Partner profile: "+s.partnerTargets.join(", "):"")+"\nSENDER: "+s.yourName+(s.yourPhone?" | "+s.yourPhone:"")+(s.yourLink?" | "+s.yourLink:"")+"\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA"+(isPartner()?"\nPARTNER OPPORTUNITY: Earn up to 5x/month | $1.5B+ paid | Work from home | Be your own boss":""),
-langNote:"\n\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+"."};
-}
-function parseJSON(text){try{return JSON.parse(text);}catch(e){var cm=text.match(/```(?:json)?\s*([\s\S]*?)```/);if(cm){try{return JSON.parse(cm[1].trim());}catch(e2){}}var jm=text.match(/\{[\s\S]*\}/);if(jm){try{return JSON.parse(jm[0]);}catch(e3){}}return{};}
-}
 function generate(){
 s.loading=true;s.error="";s.result=null;draw();
 var o=buildCtx(),ctx=o.ctx,langNote=o.langNote;
