@@ -62,7 +62,7 @@ var btnS={background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRad
 var btnG={background:"#e8e6f0",color:"#6b6b6b",border:"none",borderRadius:"10px",padding:"12px 20px",fontSize:"14px",fontWeight:"700",cursor:"not-allowed"};
 
 function mkInp(lbl,val,onCh,ph,type){var w=el("div",{style:{marginBottom:"13px"}});if(lbl)w.appendChild(el("label",{style:LS},lbl));var i=el("input",{type:type||"text",placeholder:ph||"",style:IS});i.value=val||"";i.addEventListener("input",function(){onCh(i.value);});w.appendChild(i);return w;}
-function mkTA(lbl,val,onCh,ph,rows,hint){var w=el("div",{style:{marginBottom:"13px"}});if(lbl)w.appendChild(el("label",{style:LS},lbl));if(hint)w.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));var ta=el("textarea",{placeholder:ph||"",rows:rows||3,style:Object.assign({},IS,{resize:"vertical"})});ta.value=val||"";ta.addEventListener("input",function(){onCh(ta.value);});w.appendChild(ta);return w;}
+function mkTA(lbl,val,onCh,ph,rows,hint){var w=el("div",{style:{marginBottom:"13px"}});if(lbl)w.appendChild(el("label",{style:LS},lbl));if(hint)w.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 4px",fontStyle:"italic"}},hint));var ta=el("textarea",{placeholder:ph||"",rows:rows||3,spellcheck:"false",style:Object.assign({},IS,{resize:"vertical"})});ta.value=val||"";ta.addEventListener("input",function(){onCh(ta.value);});w.appendChild(ta);return w;}
 function mkChips(lbl,hint,opts,sel,onT,single){
 var w=el("div",{style:{marginBottom:"16px"}});
 if(lbl)w.appendChild(el("label",{style:LS},lbl));
@@ -130,7 +130,7 @@ var emailInp=el("input",{type:"email",placeholder:"your@email.com",style:Object.
 var passInp=el("input",{type:"password",placeholder:"••••••••",style:Object.assign({},IS,{marginBottom:"16px"})});passInp.addEventListener("input",function(){password=passInp.value;});
 var errDiv=el("div",{style:{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"9px 12px",marginBottom:"12px",color:"#dc2626",fontSize:"13px",display:"none"}});
 var loginBtn=el("button",{style:Object.assign({},btnD,{width:"100%",fontSize:"15px"})},T().loginBtn);
-function doLogin(){if(!email||!password){errDiv.textContent=T().loginErr;errDiv.style.display="block";return;}loginBtn.textContent=T().loggingIn;loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color="#6b6b6b";errDiv.style.display="none";apiAuth({action:"login",email:email,password:password}).then(function(res){if(res.success){localStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}else{errDiv.textContent="⚠️ "+(res.error||"Invalid credentials.");errDiv.style.display="block";loginBtn.textContent=T().loginBtn;loginBtn.disabled=false;loginBtn.style.background="#2e2a4a";loginBtn.style.color="#fff";}});}
+function doLogin(){if(!email||!password){errDiv.textContent=T().loginErr;errDiv.style.display="block";return;}loginBtn.textContent=T().loggingIn;loginBtn.disabled=true;loginBtn.style.background="#e8e6f0";loginBtn.style.color="#6b6b6b";errDiv.style.display="none";apiAuth({action:"login",email:email,password:password}).then(function(res){if(res.success){sessionStorage.setItem("nt_u",JSON.stringify(res.user));setState({screen:"dashboard",user:res.user});}else{errDiv.textContent="⚠️ "+(res.error||"Invalid credentials.");errDiv.style.display="block";loginBtn.textContent=T().loginBtn;loginBtn.disabled=false;loginBtn.style.background="#2e2a4a";loginBtn.style.color="#fff";}});}
 loginBtn.addEventListener("click",doLogin);passInp.addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
 card.appendChild(el("label",{style:LS},T().loginEmail));card.appendChild(emailInp);
 card.appendChild(el("label",{style:LS},T().loginPass));card.appendChild(passInp);
@@ -148,7 +148,7 @@ var navR=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
 if(user.trialActive)navR.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},"⏰ "+user.daysLeft+" "+T().trial));
 navR.appendChild(el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},user.name));
 var lb=el("button",{style:{background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit"}},T().logout);
-lb.addEventListener("click",function(){localStorage.removeItem("nt_u");setState({screen:"login",user:null});});
+lb.addEventListener("click",function(){sessionStorage.removeItem("nt_u");setState({screen:"login",user:null});});
 navR.appendChild(lb);nav.appendChild(navR);wrap.appendChild(nav);
 var content=el("div",{style:{maxWidth:"680px",margin:"0 auto",padding:"36px 16px 60px"}});
 content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"32px"}},
@@ -310,7 +310,7 @@ var s={contactType:"",contactReason:"",tone:"",objection:"",exactObjection:"",co
 var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 function isPartner(){return s.contactType==="potential_partner"||s.contactType==="past_partner";}
 function isObjection(){return s.contactReason==="handle_objection";}
-function canGen(){return!!(s.contactName&&s.contactType&&s.contactReason&&s.tone&&s.yourName);}
+function canGen(){return!!(s.contactName&&s.contactType&&s.contactReason&&s.tone);}
 function parseJSON(txt){try{return JSON.parse(txt);}catch(e){var m=txt.match(/\{[\s\S]*\}/);if(m){try{return JSON.parse(m[0]);}catch(e2){}}return{};}}
 function buildCtx(){
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish":"English";
@@ -369,7 +369,7 @@ if(s.activeTab==="letter"){c.appendChild(mkCopyCard("Formal Letter",s.result.for
 if(s.activeTab==="followups"){
 var fub=el("div",{style:{background:"#ede9ff",border:"1.5px solid #7664d0",borderRadius:"12px",padding:"14px 16px",marginBottom:"14px"}});
 fub.appendChild(el("label",{style:{fontSize:"11px",fontWeight:"700",color:"#7664d0",textTransform:"uppercase",display:"block",marginBottom:"6px"}},"🔄 "+(appLang==="English"?"Update Follow-Ups With New Info":"Actualizar seguimientos")));
-var futa=el("textarea",{placeholder:appLang==="English"?"e.g. She replied and said she just lost her job...":"ej. Me respondio que acaba de perder su trabajo...",rows:"3",style:{width:"100%",background:"#fff",border:"1px solid #b8aff0",borderRadius:"8px",color:"#111",fontSize:"13px",padding:"10px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
+var futa=el("textarea",{placeholder:appLang==="English"?"e.g. She replied and said she just lost her job...":"ej. Me respondio que acaba de perder su trabajo...",rows:"3",spellcheck:"false",style:{width:"100%",background:"#fff",border:"1px solid #b8aff0",borderRadius:"8px",color:"#111",fontSize:"13px",padding:"10px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
 futa.value=s.followupContext||"";futa.addEventListener("input",function(){s.followupContext=futa.value;});
 fub.appendChild(futa);
 var rb=el("button",{style:{marginTop:"8px",background:"#7664d0",color:"#fff",border:"none",borderRadius:"8px",padding:"9px 18px",fontSize:"12px",fontWeight:"700",cursor:"pointer",fontFamily:"inherit"}},appLang==="English"?"🔄 Regenerate Follow-Ups":"🔄 Regenerar Seguimientos");
@@ -397,7 +397,7 @@ var c=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px 60px"
 var cbox=el("div",{style:{background:"linear-gradient(135deg,#ede9ff,#f8f7ff)",border:"1.5px solid #7664d0",borderRadius:"14px",padding:"18px 20px",marginBottom:"14px"}});
 cbox.appendChild(el("label",{style:{fontSize:"11px",fontWeight:"700",color:"#7664d0",textTransform:"uppercase",display:"block",marginBottom:"6px"}},"✨ "+(appLang==="English"?"Describe the Situation in Your Own Words":"Describe la situacion con tus propias palabras")));
 cbox.appendChild(el("p",{style:{fontSize:"12px",color:"#555",margin:"0 0 8px",lineHeight:"1.5"}},appLang==="English"?"Write exactly what happened. The more specific, the better the AI writes for you.":"Escribe exactamente la situacion. Mas detalles, mejor contenido."));
-var cta=el("textarea",{placeholder:appLang==="English"?"e.g. Maria told me she cannot afford it, going through a divorce, tried MONAT before...":"ej. Maria me dijo que no puede pagarlo, esta pasando por un divorcio, probo MONAT antes...",rows:"4",style:{width:"100%",background:"rgba(255,255,255,0.9)",border:"1.5px solid #b8aff0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
+var cta=el("textarea",{placeholder:appLang==="English"?"e.g. Maria told me she cannot afford it, going through a divorce, tried MONAT before...":"ej. Maria me dijo que no puede pagarlo, esta pasando por un divorcio, probo MONAT antes...",rows:"4",spellcheck:"false",style:{width:"100%",background:"rgba(255,255,255,0.9)",border:"1.5px solid #b8aff0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
 cta.value=s.customContext||"";cta.addEventListener("input",function(){s.customContext=cta.value;});
 cbox.appendChild(cta);
 cbox.appendChild(el("p",{style:{fontSize:"10px",color:"#9580d0",marginTop:"6px",fontStyle:"italic"}},appLang==="English"?"Optional - if left empty, selections below are used.":"Opcional - si vacio se usan las opciones de abajo."));
@@ -457,6 +457,7 @@ draw();return wrap;}
 function render(){
 var root=document.getElementById("root");
 root.innerHTML="";
+document.documentElement.lang=appLang==="Spanish"?"es":appLang==="Mexican"?"es-MX":"en";
 if(state.screen==="login")root.appendChild(renderLogin());
 else if(state.screen==="dashboard")root.appendChild(renderDashboard());
 else if(state.screen==="app1")root.appendChild(renderApp1());
@@ -465,8 +466,8 @@ else if(state.screen==="app2")root.appendChild(renderApp2());
 
 // -- INIT --
 render();
-var saved=localStorage.getItem("nt_u");
-if(saved){try{var u=JSON.parse(saved);apiAuth({action:"check",userId:u.id}).then(function(res){if(res&&res.success){state={screen:"dashboard",user:res.user};render();}else{localStorage.removeItem("nt_u");}}).catch(function(){localStorage.removeItem("nt_u");});}catch(e){localStorage.removeItem("nt_u");}}
+var saved=sessionStorage.getItem("nt_u");
+if(saved){try{var u=JSON.parse(saved);apiAuth({action:"check",userId:u.id}).then(function(res){if(res&&res.success){state={screen:"dashboard",user:res.user};render();}else{sessionStorage.removeItem("nt_u");}}).catch(function(){sessionStorage.removeItem("nt_u");});}catch(e){sessionStorage.removeItem("nt_u");}}
 </script>
 </body>
 </html>
