@@ -446,14 +446,8 @@ var genBtn=el("button",{style:canGen()&&!s.loading?{background:"#2e2a4a",color:"
 genBtn.addEventListener("click",function(){if(canGen()&&!s.loading)generate();});
 content.appendChild(genBtn);
 if(!canGen())content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"12px",marginTop:"8px",textAlign:"center"}},T().outFill));
-wrap.appendChild(content);
+wrap.appendChild(content);}draw();return wrap;}
 }
-draw();
-return wrap;
-}
-
-}
-
 // -- RENDER --
 function render(){
 var root=document.getElementById("root");
