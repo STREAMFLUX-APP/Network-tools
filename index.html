@@ -113,6 +113,17 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff",display:"flex",
 var inner=el("div",{style:{width:"100%",maxWidth:"400px"}});
 inner.appendChild(el("div",{style:{textAlign:"center",marginBottom:"24px"}},el("div",{style:{width:"52px",height:"52px",borderRadius:"13px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",color:"#fff",margin:"0 auto 12px"}},"✦"),el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Network Tools"),el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginTop:"2px"}},"by Streamflux")));
 var card=el("div",{style:CS});
+// Language selector at top of login
+var langRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",marginBottom:"20px"}});
+langRow.appendChild(el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},"Language / Idioma:"));
+var loginLangSel=el("select",{style:{padding:"5px 10px",borderRadius:"12px",border:"1px solid #e8e6f0",background:"#f4f3f9",fontSize:"12px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español"},{v:"Mexican",l:"🇲🇽 Español (México)"}].forEach(function(lang){
+var o=el("option",{value:lang.v},lang.l);
+if(lang.v===appLang)o.selected=true;
+loginLangSel.appendChild(o);});
+loginLangSel.addEventListener("change",function(){appLang=loginLangSel.value;localStorage.setItem("nt_lang",loginLangSel.value);renderLogin();render();});
+langRow.appendChild(loginLangSel);
+card.appendChild(langRow);
 card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},T().loginTitle));
 card.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"20px"}},T().loginSub));
 var emailInp=el("input",{type:"email",placeholder:"your@email.com",style:Object.assign({},IS,{marginBottom:"12px"})});emailInp.addEventListener("input",function(){email=emailInp.value;});
@@ -169,13 +180,13 @@ function buildBase(){
 var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
-var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" — "+p.d;}).join(" | "):"";
+var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" - "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" — "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" - "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
 if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
-"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief — this is exactly what she wants to communicate):\n"+s.mktCustomContext+
+"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief - this is exactly what she wants to communicate):\n"+s.mktCustomContext+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.";}
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".";}
 function platPrompt(plat,base){
@@ -404,6 +415,17 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff",display:"flex",
 var inner=el("div",{style:{width:"100%",maxWidth:"400px"}});
 inner.appendChild(el("div",{style:{textAlign:"center",marginBottom:"24px"}},el("div",{style:{width:"52px",height:"52px",borderRadius:"13px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"24px",color:"#fff",margin:"0 auto 12px"}},"✦"),el("div",{style:{fontSize:"20px",fontWeight:"bold",letterSpacing:"2px"}},"Network Tools"),el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginTop:"2px"}},"by Streamflux")));
 var card=el("div",{style:CS});
+// Language selector at top of login
+var langRow=el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",marginBottom:"20px"}});
+langRow.appendChild(el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},"Language / Idioma:"));
+var loginLangSel=el("select",{style:{padding:"5px 10px",borderRadius:"12px",border:"1px solid #e8e6f0",background:"#f4f3f9",fontSize:"12px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
+[{v:"English",l:"🇺🇸 English"},{v:"Spanish",l:"🇪🇸 Español"},{v:"Mexican",l:"🇲🇽 Español (México)"}].forEach(function(lang){
+var o=el("option",{value:lang.v},lang.l);
+if(lang.v===appLang)o.selected=true;
+loginLangSel.appendChild(o);});
+loginLangSel.addEventListener("change",function(){appLang=loginLangSel.value;localStorage.setItem("nt_lang",loginLangSel.value);renderLogin();render();});
+langRow.appendChild(loginLangSel);
+card.appendChild(langRow);
 card.appendChild(el("h2",{style:{fontSize:"17px",fontWeight:"700",marginBottom:"4px"}},T().loginTitle));
 card.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"20px"}},T().loginSub));
 var emailInp=el("input",{type:"email",placeholder:"your@email.com",style:Object.assign({},IS,{marginBottom:"12px"})});emailInp.addEventListener("input",function(){email=emailInp.value;});
@@ -460,13 +482,13 @@ function buildBase(){
 var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
-var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" — "+p.d;}).join(" | "):"";
+var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" - "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" — "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" - "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
 if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
-"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief — this is exactly what she wants to communicate):\n"+s.mktCustomContext+
+"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief - this is exactly what she wants to communicate):\n"+s.mktCustomContext+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.";}
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".";}
 function platPrompt(plat,base){
@@ -564,12 +586,12 @@ var content=el("div",{style:{maxWidth:"660px",margin:"0 auto",padding:"20px 12px
 // Custom context box
 var outCustomBox=el("div",{style:{background:"linear-gradient(135deg,#ede9ff,#f8f7ff)",border:"1.5px solid #7664d0",borderRadius:"14px",padding:"18px 20px",marginBottom:"14px"}});
 outCustomBox.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"6px"}},el("span",{style:{fontSize:"18px"}},"✨"),el("label",{style:{fontSize:"11px",fontWeight:"700",letterSpacing:"0.08em",color:"#7664d0",textTransform:"uppercase"}},appLang==="Spanish"?"Describe la situacion con tus propias palabras":"Describe the Situation in Your Own Words")));
-outCustomBox.appendChild(el("p",{style:{fontSize:"12px",color:"#555",margin:"0 0 10px",lineHeight:"1.6"}},appLang==="Spanish"?"Escribe exactamente la situacion — la objecion, lo que te dijo, como la conoces. Cuanto mas especifica seas, mejor sera el contenido.":"Write exactly what happened — the objection they raised, what they said, how you know them. The more specific, the better the AI writes for you."));
+outCustomBox.appendChild(el("p",{style:{fontSize:"12px",color:"#555",margin:"0 0 10px",lineHeight:"1.6"}},appLang==="Spanish"?"Escribe exactamente la situacion - la objecion, lo que te dijo, como la conoces. Cuanto mas especifica, mejor sera el contenido.":"Write exactly what happened: the objection they raised, what they said, how you know them. The more specific, the better the AI writes for you."));
 var outCtxTA=el("textarea",{placeholder:appLang==="Spanish"?"ej. Maria me dijo que no puede pagarlo, esta pasando por un divorcio. Tambien probo MONAT antes y no le gusto. La conozco del gym, tiene 2 hijos y le cae mucho el cabello...":"e.g. Maria told me she can't afford it, she's going through a divorce. She also tried MONAT before and didn't like it. I know her from the gym, she has 2 kids and her hair falls out a lot...",rows:4,style:{width:"100%",background:"rgba(255,255,255,0.9)",border:"1.5px solid #b8aff0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
 outCtxTA.value=s.customContext||"";
 outCtxTA.addEventListener("input",function(){s.customContext=outCtxTA.value;});
 outCustomBox.appendChild(outCtxTA);
-outCustomBox.appendChild(el("p",{style:{fontSize:"10px",color:"#9580d0",marginTop:"8px",fontStyle:"italic"}},appLang==="Spanish"?"Opcional — si lo dejas vacio se usan las opciones de abajo":"Optional — if left empty, the selections below are used instead"));
+outCustomBox.appendChild(el("p",{style:{fontSize:"10px",color:"#9580d0",marginTop:"8px",fontStyle:"italic"}},appLang==="Spanish"?"Opcional - si lo dejas vacio se usan las opciones de abajo":"Optional - if left empty, the selections below are used instead"));
 content.appendChild(outCustomBox);
 
 content.appendChild(el("div",{style:Object.assign({},CS)},
