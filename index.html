@@ -608,8 +608,11 @@ var genBtn=el("button",{style:canGen()&&!s.loading?Object.assign({},btnD,{width:
 genBtn.addEventListener("click",function(){if(canGen()&&!s.loading)generate();});
 content.appendChild(genBtn);
 if(!canGen())content.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"12px",marginTop:"8px",textAlign:"center"}},T().outFill));
-wrap.appendChild(content);}
-draw();return wrap;}
+wrap.appendChild(content);
+}
+draw();
+return wrap;
+}
 }
 }
 
