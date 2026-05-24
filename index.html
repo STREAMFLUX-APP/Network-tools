@@ -163,12 +163,40 @@ nav.appendChild(right);return nav;}
 
 function parseSched(text){
 var lines=text.split("\n"),days=[],cur=null;
-var icons=["🚀","📱","🎯","🎬","📊","🔄","💥"];
-lines.forEach(function(line){var t=line.trim();if(!t)return;if(/^(day\s*\d|paso\s*\d|dia\s*\d)/i.test(t)){if(cur)days.push(cur);cur={day:t.replace(/\*\*/g,""),icon:icons[days.length]||"📅",tasks:[]};}else if(cur){var c=t.replace(/^[-*•→✓\d.]+\s*/,"").trim();if(c.length>5)cur.tasks.push(c);}});
+var icons=["🚀","📱","🎯","🎬","📊","🔄","💥","🌟"];
+var isES=appLang==="Spanish"||appLang==="Mexican";
+lines.forEach(function(line){
+var t=line.trim();if(!t)return;
+if(/^(day\s*\d|paso\s*\d|dia\s*\d|d.a\s*\d|semana\s*\d|week\s*\d|lunes|martes|mi.rcoles|jueves|viernes|s.bado|domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i.test(t)||/^\*\*(day|dia|d.a|paso|semana|week)\s*\d/i.test(t)){
 if(cur)days.push(cur);
-return days.length>=3?days:[{day:"Day 1",icon:"🚀",tasks:["Post on all platforms","Share to WhatsApp Status","Reply to every comment"]},{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},{day:"Day 3",icon:"🎯",tasks:["Re-share top post","DM 5 people who engaged"]},{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},{day:"Day 5",icon:"📊",tasks:["Share before/after result","Engage with community"]},{day:"Day 6",icon:"🔄",tasks:["Follow up warm leads","Share product demo"]},{day:"Day 7",icon:"💥",tasks:["Final CTA push","Plan next week"]}];}
+cur={day:t.replace(/\*\*/g,"").trim(),icon:icons[days.length]||"📅",tasks:[]};
+}else if(cur){
+var c=t.replace(/^[-*•→✓\d.]+\s*/,"").trim();
+if(c.length>5)cur.tasks.push(c);
+}
+});
+if(cur)days.push(cur);
+if(days.length>=3)return days;
+// Fallback in correct language
+return isES?[
+{day:"Dia 1 — Lanzamiento",icon:"🚀",tasks:["Publica en todas las plataformas seleccionadas","Comparte en tu Estado de WhatsApp","Responde cada comentario que recibas"]},
+{day:"Dia 2",icon:"📱",tasks:["Publica una historia en Instagram","Haz seguimiento a las respuestas"]},
+{day:"Dia 3",icon:"🎯",tasks:["Comparte de nuevo la publicacion con mejor rendimiento","Envia DM a 5 personas que interactuaron"]},
+{day:"Dia 4",icon:"🛍️",tasks:["Publica en las pestanas de tienda","Agrega etiquetas de productos"]},
+{day:"Dia 5",icon:"🎬",tasks:["Publica el video o Reel generado","Comparte en historia de Instagram"]},
+{day:"Dia 7",icon:"📊",tasks:["Revisa el rendimiento de las publicaciones","Planifica el contenido de la proxima semana"]},
+{day:"Seguimiento Continuo",icon:"📅",tasks:["Responde todos los mensajes pendientes","Registra nuevas clientas interesadas"]}
+]:[
+{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all selected platforms","Share to WhatsApp Status","Reply to every comment"]},
+{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},
+{day:"Day 3",icon:"🎯",tasks:["Re-share top performing post","DM 5 people who engaged"]},
+{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},
+{day:"Day 5",icon:"🎬",tasks:["Post the generated video or Reel","Share on Instagram Story"]},
+{day:"Day 7",icon:"📊",tasks:["Review post performance","Plan next week content"]},
+{day:"Ongoing",icon:"📅",tasks:["Reply all pending messages","Log new interested clients"]}
+];}
 
-// ── LOGIN ──
+
 function renderLogin(){
 var email="",password="";
 var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}});
