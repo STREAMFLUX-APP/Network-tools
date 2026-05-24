@@ -386,7 +386,7 @@ var base=buildBase();var platList=s.platforms.slice();var pStep=Math.floor(80/(p
 function next(){
 if(platList.length===0){s.loadingMsg="Building schedule...";s.loadingPct=90;draw();
 var platLbls=s.platforms.map(function(p){return(PLATFORMS().find(function(pl){return pl.v===p;})||{l:p}).l;}).join(", ");
-apiClaude("Create a 7-day social media posting schedule in "+(appLang==="Spanish"?"Spanish":"English")+".\nPlatforms: "+platLbls+"\nGoal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\nFormat exactly like this:\nDay 1 - Launch\n- task\n- task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule.",700).then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
+apiClaude("Create a 7-day social media posting schedule in "+(appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish":"English")+" CRITICAL: Write EVERY word including day names and tasks in that language. Day names must be in that language too."+".\nPlatforms: "+platLbls+"\nGoal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\nFormat exactly like this:\nDay 1 - Launch\n- task\n- task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule.",700).then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
 // Save to history
 var histItem1={goal:s.goal,platforms:s.platforms.slice(),tone:s.tone,name:s.name,result:s.result,savedAt:new Date().toLocaleDateString()};
 var h1=[];try{h1=JSON.parse(sessionStorage.getItem("nt_mkt_hist")||"[]");}catch{}h1.unshift(histItem1);sessionStorage.setItem("nt_mkt_hist",JSON.stringify(h1.slice(0,5)));
