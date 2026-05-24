@@ -106,6 +106,15 @@ var OUT_PRODUCTS=["MONAT Bond IQ Shampoo","MONAT Bond IQ Recovery Serum","IR Cli
 var state={screen:"login",user:null};
 function setState(u){state=Object.assign({},state,u);render();}
 function apiAuth(body){return fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).catch(function(){return{error:"Network error"};});}
+var GLOBAL_AI_RULES="ABSOLUTE RULES for every word you write: "+
+"1. ONLY use facts explicitly stated in the context. Never invent, assume or imply anything not given. "+
+"2. NEVER make income claims, earning promises or financial projections. "+
+"3. NEVER quote company statistics as persuasion arguments. "+
+"4. NEVER invent personal experiences for the sender unless explicitly stated. "+
+"5. NEVER create urgency contradicting what the contact said. "+
+"6. NEVER invent product claims, discounts, deposits or promotions not in context. "+
+"7. Write ONLY what is honest and verifiable from the context given. "+
+"8. If you do not know something — do not say it. ";
 function apiClaude(prompt,maxTokens,system){return fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens||900,system:system||""})}).then(function(r){return r.json();}).then(function(d){if(d.error)throw new Error(d.error);return d.text||"";});}
 
 function el(tag,attrs){
@@ -380,7 +389,7 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 var MKT_TABS=[{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Message"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}];
 function ctxOpts(){return s.goal==="sell"?PAIN():s.goal==="recruit"?RECRUIT():s.goal==="motivate"?MOTIVATE():BRAND();}
 function isReady(){return!!(s.name.trim()&&s.link.trim());}
-function canProceed(){if(s.step===1)return!!(s.goal&&isReady());if(s.step===2)return s.contexts.length>0;if(s.step===3)return s.platforms.length>0;if(s.step===4)return!!s.tone;return false;}
+function canProceed(){if(s.step===1)return!!(s.goal);if(s.step===2)return s.contexts.length>0;if(s.step===3)return s.platforms.length>0;if(s.step===4)return!!s.tone;return false;}
 function buildBase(){
 var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
@@ -388,16 +397,16 @@ var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
 var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" - "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
 var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" - "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
-if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
-return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
+var rndSeed="[FRESH UNIQUE VARIATION #"+Math.floor(Math.random()*99999)+"] ";if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
+return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
 "\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief - this is exactly what she wants to communicate):\n"+s.mktCustomContext+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only.";}
-return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
+return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
 function platPrompt(plat,base){
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var ps=sp.length>0?" for "+sp.map(function(p){return p.l;}).join(", "):"";
-var LANG_FORCE=appLang==="Spanish"?"[IDIOMA: ESPANOL. ESCRIBE TODO EN ESPANOL. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL.]":appLang==="Mexican"?"[IDIOMA: ESPANOL MEXICANO. ESCRIBE TODO EN ESPANOL MEXICANO. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL MEXICANO. Usa expresiones mexicanas naturales.]":"";
+var LANG_FORCE=appLang==="Spanish"?"[IDIOMA: ESPANOL. ESCRIBE TODO EN ESPANOL. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL. NUNCA uses expresiones como hola hermana - suena poco profesional.]":appLang==="Mexican"?"[IDIOMA: ESPANOL MEXICANO. ESCRIBE TODO EN ESPANOL MEXICANO. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL MEXICANO. Usa expresiones mexicanas naturales.]":"";
 var p={
 wa_status:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO WhatsApp STATUS versions. Max 70 words each. 2-3 emojis. Link: "+s.link+". Signed: "+s.name+".\nVersion A: personal story.\nVersion B: surprising result or question.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
 wa_message:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO personal WhatsApp MESSAGES 1-on-1. 70-100 words each. Genuine. No pressure. Link: "+s.link+". Signed: "+s.name+". 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
@@ -407,7 +416,7 @@ ig_reel:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram REEL scripts (30-45 sec)
 fb_feed:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook FEED POSTS. 150-200 words each. End with question. CTA + link: "+s.link+".\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]",
 fb_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook SHOP POSTS. 100-130 words each. 3 bullet points with check mark. Shop Now + link: "+s.link+".\nVersion A: result focus.\nVersion B: problem solved.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]",
 tiktok_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO TikTok SHOP scripts (35-45 sec).\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): ["+s.name+" - "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nPinned comment:\nCaption + hashtags:\nAudio mood:",
-image:LANG_FORCE+"\n\n"+base+"\n\nCreate a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
+image:LANG_FORCE+"\n\n"+base+"\n\n"+(s.goal==="recruit"?"Create a complete IMAGE CONTENT PACKAGE for RECRUITING. Focus on: lifestyle of success, freedom, working from home, confident women building a business, financial independence, happy entrepreneurial women. NOT hair transformation — opportunity and lifestyle."+"\n\nIMAGE PROMPT 1 - LIFESTYLE OF FREEDOM & SUCCESS:":"Create a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.")+" CRITICAL: Every image prompt must include a MONAT product bottle, packaging or branding element naturally placed in the scene — even lifestyle shots must have a MONAT product visible somewhere in the composition.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
 };return p[plat]||"";}
 function generate(){
 s.loading=true;s.error="";s.result={};s.loadingPct=0;draw();
@@ -424,7 +433,7 @@ return (appLang==="English"?"":"[IDIOMA: "+sl+". ESCRIBE TODO EN "+sl+". CADA PA
 })(),700,(appLang==="Spanish"||appLang==="Mexican")?"Eres un experto en marketing. INSTRUCCION CRITICA: Escribe TODO en "+(appLang==="Mexican"?"espanol mexicano":"espanol")+". Cada dia, cada tarea, cada palabra en espanol. Nunca uses ingles.":"").then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
 // Save to history
 var histItem1={goal:s.goal,platforms:s.platforms.slice(),tone:s.tone,name:s.name,result:s.result,savedAt:new Date().toLocaleDateString()};
-var h1=[];try{h1=JSON.parse(sessionStorage.getItem("nt_mkt_hist")||"[]");}catch{}h1.unshift(histItem1);sessionStorage.setItem("nt_mkt_hist",JSON.stringify(h1.slice(0,5)));
+var h1=[];try{h1=JSON.parse(localStorage.getItem("nt_mkt_hist")||"[]");}catch{}h1.unshift(histItem1);localStorage.setItem("nt_mkt_hist",JSON.stringify(h1.slice(0,5)));
 draw();}).catch(function(e){s.error=e.message;s.loading=false;draw();});return;}
 var plat=platList.shift();var lbl=(PLATFORMS().find(function(p){return p.v===plat;})||{l:plat}).l;
 s.loadingMsg="Writing "+lbl+"...";pct+=pStep;s.loadingPct=Math.min(pct,85);draw();
@@ -514,7 +523,7 @@ var btnRow=el("div",{style:{display:"flex",justifyContent:"space-between",gap:"9
 var backBtn=el("button",{style:btnS},T().back);
 backBtn.addEventListener("click",function(){s.error="";if(s.step>1)s.step--;else setState({screen:"dashboard"});draw();});
 btnRow.appendChild(backBtn);
-if(s.step<4){var nextBtn=el("button",{style:canProceed()&&isReady()?btnD:btnG},T().cont);nextBtn.addEventListener("click",function(){if(!isReady()){s.error=T().fillFirst;draw();}else if(canProceed()){s.error="";s.step++;draw();}else{s.error=T().completeStep;draw();}});btnRow.appendChild(nextBtn);}
+if(s.step<4){var nextBtn=el("button",{style:(s.step===1?canProceed():canProceed()&&isReady())?btnD:btnG},T().cont);nextBtn.addEventListener("click",function(){if(!isReady()){s.error=T().fillFirst;draw();}else if(canProceed()){s.error="";s.step++;draw();}else{s.error=T().completeStep;draw();}});btnRow.appendChild(nextBtn);}
 else{var genBtn=el("button",{style:canProceed()&&isReady()&&!s.loading?Object.assign({},btnD,{minWidth:"200px"}):Object.assign({},btnG,{minWidth:"200px"})},s.loading?T().generating:"✦ "+T().gen);genBtn.addEventListener("click",function(){if(canProceed()&&isReady()&&!s.loading)generate();});btnRow.appendChild(genBtn);}
 content.appendChild(btnRow);wrap.appendChild(content);}
 draw();return wrap;}
@@ -533,7 +542,7 @@ var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish":"En
 if(s.customContext&&s.customContext.trim().length>10){
 return{ctx:"CONTACT: "+s.contactName+" | SENDER: "+s.yourName+(s.yourLink?" | "+s.yourLink:"")+" | CUSTOM CONTEXT: "+s.customContext,langNote:" CRITICAL: Write ALL content in "+lang+"."};
 }
-return{ctx:"CONTACT: "+s.contactName+" | TYPE: "+((CONTACT_TYPES().find(function(t){return t.v===s.contactType;})||{l:s.contactType}).l)+" | REASON: "+((REASONS().find(function(r){return r.v===s.contactReason;})||{l:s.contactReason}).l)+" | TONE: "+((TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l)+(s.hairProblems.length>0?" | HAIR: "+s.hairProblems.join(", "):"")+(s.products.length>0?" | PRODUCTS: "+s.products.join(", "):"")+(isPartner()&&s.partnerTargets.length>0?" | PARTNER PROFILE: "+s.partnerTargets.join(", "):"")+(s.priorContact?" | PRIOR: "+s.priorContact:"")+(s.personalNote?" | NOTE: "+s.personalNote:"")+(isObjection()&&s.objection?" | OBJECTION: "+((OBJECTIONS().find(function(o){return o.v===s.objection;})||{l:s.objection}).l)+(s.exactObjection?" EXACT WORDS: "+s.exactObjection:""):"")+" | SENDER: "+s.yourName+(s.yourPhone?" "+s.yourPhone:"")+(s.yourLink?" "+s.yourLink:"")+" | MONAT: #1 Premium Haircare $3.4B+ revenue 100+ millionaires"+(isPartner()?" | OPPORTUNITY: Earn up to 5x/month work from home":""),
+return{ctx:"CONTACT: "+s.contactName+" | TYPE: "+((CONTACT_TYPES().find(function(t){return t.v===s.contactType;})||{l:s.contactType}).l)+" | REASON: "+((REASONS().find(function(r){return r.v===s.contactReason;})||{l:s.contactReason}).l)+" | TONE: "+((TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l)+(s.hairProblems.length>0?" | HAIR: "+s.hairProblems.join(", "):"")+(s.products.length>0?" | PRODUCTS: "+s.products.join(", "):"")+(isPartner()&&s.partnerTargets.length>0?" | PARTNER PROFILE: "+s.partnerTargets.join(", "):"")+(s.priorContact?" | PRIOR: "+s.priorContact:"")+(s.personalNote?" | NOTE: "+s.personalNote:"")+(isObjection()&&s.objection?" | OBJECTION: "+((OBJECTIONS().find(function(o){return o.v===s.objection;})||{l:s.objection}).l)+(s.exactObjection?" EXACT WORDS: "+s.exactObjection:""):"")+" | SENDER: "+s.yourName+(s.yourPhone?" "+s.yourPhone:"")+(s.yourLink?" "+s.yourLink:"")+" | MONAT: Premium Haircare brand, Leaping Bunny certified, Made in USA"+(isPartner()?" | MONAT has a partner program — do NOT make specific income claims, only share honest product and community benefits":""),
 langNote:" CRITICAL: Write ALL content in "+lang+". Every word in "+lang+"."};
 }
 function generate(){
@@ -542,12 +551,27 @@ var o=buildCtx();
 var ctx=o.ctx;
 var ln=o.langNote;
 var schema1='{"whatsapp":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}';
-var p1="Elite MONAT coach."+ln+" "+ctx+" Write personalised outreach. "+(isObjection()?"Handle this objection gracefully. Reframe positively. Soft question at end.":"Warm personal message. ONE question at end. Never salesy.")+" Return ONLY valid JSON: "+schema1+" whatsapp:60-90 words. sms:max 160 chars. voice_script:sections OPENING REASON VALUE CLOSE. email_subject:under 10 words. email_body:140-170 words signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
+var p1=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
+" STRICT RULES: NEVER invent facts, prices, deposits, promotions or anything not in the context. NEVER write personal experiences for the sender unless context explicitly states them. If the contact said they will buy later or need time — respect this, no pressure, no urgency. NEVER make income claims like earn 5x more or make $X per month — these are unverifiable and unethical. NEVER quote company revenue or statistics as arguments to overcome objections. Handle objections only with empathy, honest product benefits and the specific context given. Write based ONLY on what is in the context."+
+" "+(isObjection()?"Address the objection with empathy and product facts only. Reframe positively. One soft question at end.":"Write a warm genuine personal message. ONE question at end. Never salesy or pushy.")+
+" Return ONLY valid JSON: "+schema1+" whatsapp:60-90 words. sms:max 160 chars. voice_script:sections OPENING REASON VALUE CLOSE. email_subject:under 10 words. email_body:140-170 words signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
 s.loadingMsg=appLang==="English"?"Writing messages...":"Escribiendo mensajes...";draw();
 apiClaude(p1,1200).then(function(t){
 var r1=parseJSON(t);
 var schema2='{"formal_letter":"...","followup_1":"...","followup_2":"...","followup_3":"...","followup_4":"..."}';
-var p2="Elite MONAT coach."+ln+" "+ctx+" Write formal letter and 4 follow-ups. Return ONLY valid JSON: "+schema2+" formal_letter:260-300 words starts Dear "+s.contactName+" ends Warm regards "+s.yourName+". followup_1:Day 3 no reply 50-65 words. followup_2:Week 1 50-65 words new angle. followup_3:Week 2 40-55 words casual. followup_4:Month 1 40-50 words final warm touch.";
+var p2=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
+" STRICT RULES FOR FOLLOW-UPS:"+
+" 1. ONLY reference facts explicitly stated in the context above. Never invent facts, offers, prices, deposits, promotions or details not mentioned. NEVER make income claims like earn 5x, make X per month, or quote company revenue statistics as persuasion tools."+
+" 2. If the contact said they will buy later or need time — follow-ups must RESPECT this completely. Keep the relationship warm. Do NOT push the sale. Do NOT create urgency that contradicts what they said."+
+" 3. Follow-ups must feel like a real friend checking in — not a salesperson following up on a lead."+
+" 4. Never say things like the initial deposit is minimal, there is a special offer, or any claim you cannot verify from the context."+
+" 5. Each follow-up must have a genuinely different angle — not the same message rephrased."+
+" Write formal letter and 4 follow-ups. Return ONLY valid JSON: "+schema2+
+" formal_letter:260-300 words starts Dear "+s.contactName+" ends Warm regards "+s.yourName+"."+
+" followup_1:Day 3 — warm check-in, different angle, 50-60 words, no pressure."+
+" followup_2:Week 1 — share something genuinely useful or interesting related to their situation, 50-60 words."+
+" followup_3:Week 2 — casual, light, keep door open, 40-50 words."+
+" followup_4:Month 1 — final warm touch, acknowledge their timeline if they gave one, leave door completely open, 40-50 words.";
 s.loadingMsg=appLang==="English"?"Writing letter and follow-ups...":"Escribiendo carta y seguimientos...";draw();
 return apiClaude(p2,1300).then(function(t2){
 var r2=parseJSON(t2);
@@ -560,7 +584,7 @@ s.result=Object.assign({},r1,r2,r3);
 s.activeTab="messages";s.loading=false;
 // Save to history
 var histItem2={contactName:s.contactName,reason:s.contactReason,tone:s.tone,yourName:s.yourName,result:s.result,savedAt:new Date().toLocaleDateString()};
-var h2=[];try{h2=JSON.parse(sessionStorage.getItem("nt_out_hist")||"[]");}catch{}h2.unshift(histItem2);sessionStorage.setItem("nt_out_hist",JSON.stringify(h2.slice(0,5)));
+var h2=[];try{h2=JSON.parse(localStorage.getItem("nt_out_hist")||"[]");}catch{}h2.unshift(histItem2);localStorage.setItem("nt_out_hist",JSON.stringify(h2.slice(0,5)));
 draw();
 });});
 }).catch(function(e){s.error="Error: "+e.message;s.loading=false;draw();});
@@ -598,7 +622,7 @@ if(!s.followupContext||s.followupContext.trim().length<5)return;
 rb.disabled=true;rb.textContent=appLang==="English"?"Generating...":"Generando...";
 var rl=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish":"English";
 var rsch='{"followup_1":"...","followup_2":"...","followup_3":"...","followup_4":"..."}';
-var rp="MONAT coach. Contact:"+s.contactName+". Sender:"+s.yourName+". New situation:"+s.followupContext+". Write 4 follow-ups in "+rl+". Return ONLY JSON: "+rsch;
+var rp=GLOBAL_AI_RULES+"MONAT coach. Contact:"+s.contactName+". Sender:"+s.yourName+". New situation:"+s.followupContext+". Write 4 follow-ups in "+rl+". Return ONLY JSON: "+rsch;
 apiClaude(rp,700).then(function(t){var r=parseJSON(t);if(r.followup_1){s.result.followup_1=r.followup_1;s.result.followup_2=r.followup_2;s.result.followup_3=r.followup_3;s.result.followup_4=r.followup_4;}draw();}).catch(function(){rb.disabled=false;draw();});});
 fub.appendChild(rb);c.appendChild(fub);
 [["Follow-Up 1",s.result.followup_1,"Day 3"],["Follow-Up 2",s.result.followup_2,"Week 1"],["Follow-Up 3",s.result.followup_3,"Week 2"],["Follow-Up 4",s.result.followup_4,"Month 1"]].forEach(function(f){c.appendChild(mkCopyCard(f[0]+" ("+f[2]+")",f[1]));});
