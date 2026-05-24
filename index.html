@@ -106,7 +106,7 @@ var OUT_PRODUCTS=["MONAT Bond IQ Shampoo","MONAT Bond IQ Recovery Serum","IR Cli
 var state={screen:"login",user:null};
 function setState(u){state=Object.assign({},state,u);render();}
 function apiAuth(body){return fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).catch(function(){return{error:"Network error"};});}
-function apiClaude(prompt,maxTokens){return fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens||900})}).then(function(r){return r.json();}).then(function(d){if(d.error)throw new Error(d.error);return d.text||"";});}
+function apiClaude(prompt,maxTokens,system){return fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens||900,system:system||""})}).then(function(r){return r.json();}).then(function(d){if(d.error)throw new Error(d.error);return d.text||"";});}
 
 function el(tag,attrs){
 var e=document.createElement(tag);
@@ -217,11 +217,11 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 // NAV
 var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 20px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
 nav.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"10px"}},
-  el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"),
-  el("div",{},
-    el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
-    el("div",{style:{fontSize:"8px",color:"#7664d0",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
-  )
+el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"),
+el("div",{},
+el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
+el("div",{style:{fontSize:"8px",color:"#7664d0",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
+)
 ));
 var navR=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
 if(user.trialActive)navR.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},"⏰ "+user.daysLeft+" "+T().trial));
@@ -234,22 +234,22 @@ var content=el("div",{style:{maxWidth:"760px",margin:"0 auto",padding:"28px 16px
 
 // WELCOME + LANG
 content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"24px"}},
-  el("div",{style:{fontSize:"24px",marginBottom:"6px"}},"✦"),
-  el("h1",{style:{fontSize:"20px",fontWeight:"700",letterSpacing:"1px",marginBottom:"6px"}},T().welcome+", "+user.name.split(" ")[0]+"!"),
-  el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"14px"}},T().choose),
-  el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
-    el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},T().lang+":"),
-    (function(){
-      var sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:"1px solid #e8e6f0",background:"#fff",fontSize:"13px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
-      [{v:"English",l:"English"},{v:"Spanish",l:"Espanol (Espana)"},{v:"Mexican",l:"Espanol (Mexico)"}].forEach(function(lang){
-        var o=el("option",{value:lang.v},lang.l);
-        if(lang.v===appLang)o.selected=true;
-        sel.appendChild(o);
-      });
-      sel.addEventListener("change",function(){appLang=sel.value;localStorage.setItem("nt_lang",sel.value);render();});
-      return sel;
-    })()
-  )
+el("div",{style:{fontSize:"24px",marginBottom:"6px"}},"✦"),
+el("h1",{style:{fontSize:"20px",fontWeight:"700",letterSpacing:"1px",marginBottom:"6px"}},T().welcome+", "+user.name.split(" ")[0]+"!"),
+el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"14px"}},T().choose),
+el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
+el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},T().lang+":"),
+(function(){
+var sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:"1px solid #e8e6f0",background:"#fff",fontSize:"13px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
+[{v:"English",l:"English"},{v:"Spanish",l:"Espanol (Espana)"},{v:"Mexican",l:"Espanol (Mexico)"}].forEach(function(lang){
+var o=el("option",{value:lang.v},lang.l);
+if(lang.v===appLang)o.selected=true;
+sel.appendChild(o);
+});
+sel.addEventListener("change",function(){appLang=sel.value;localStorage.setItem("nt_lang",sel.value);render();});
+return sel;
+})()
+)
 ));
 
 // TWO MACHINE CARDS SIDE BY SIDE
@@ -257,68 +257,68 @@ var grid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px
 
 // Helper to build machine card
 function mkMachineCard(icon,titleKey,descKey,screen,hist,labelKey){
-  var hasApp = (screen==="app1") ? (user.plan==="marketing"||user.plan==="bundle") : (user.plan==="outreach"||user.plan==="bundle");
-  var c=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"16px",overflow:"hidden",boxShadow:"0 2px 12px rgba(46,42,74,0.08)"}});
+var hasApp = (screen==="app1") ? (user.plan==="marketing"||user.plan==="bundle") : (user.plan==="outreach"||user.plan==="bundle");
+var c=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"16px",overflow:"hidden",boxShadow:"0 2px 12px rgba(46,42,74,0.08)"}});
 
-  // Header
-  var hdr=el("div",{style:{background:"#2e2a4a",padding:"18px 20px 14px"}});
-  hdr.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"3px",textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:"6px"}},screen==="app1"?"APP 01":"APP 02"));
-  hdr.appendChild(el("div",{style:{marginBottom:"4px"}},
-    el("div",{style:{fontSize:"16px",fontWeight:"700",color:"#fff"}},T()[titleKey])
-  ));
-  c.appendChild(hdr);
+// Header
+var hdr=el("div",{style:{background:"#2e2a4a",padding:"18px 20px 14px"}});
+hdr.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"3px",textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:"6px"}},screen==="app1"?"APP 01":"APP 02"));
+hdr.appendChild(el("div",{style:{marginBottom:"4px"}},
+el("div",{style:{fontSize:"16px",fontWeight:"700",color:"#fff"}},T()[titleKey])
+));
+c.appendChild(hdr);
 
-  var body=el("div",{style:{padding:"14px 16px"}});
+var body=el("div",{style:{padding:"14px 16px"}});
 
-  if(hasApp){
-    var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},(appLang==="English"?"Generate →":appLang==="Spanish"?"Generar →":"Generar →"));
-    btn.addEventListener("click",function(){setState({screen:screen});});
-    body.appendChild(btn);
+if(hasApp){
+var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},(appLang==="English"?"Generate →":appLang==="Spanish"?"Generar →":"Generar →"));
+btn.addEventListener("click",function(){setState({screen:screen});});
+body.appendChild(btn);
 
-    // History
-    if(hist.length>0){
-      body.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"1px",color:"#6b6b6b",textTransform:"uppercase",marginBottom:"8px"}},
-        appLang==="English"?"Last 5 Generated":appLang==="Spanish"?"Ultimas 5 Generaciones":"Ultimas 5 Generaciones"
-      ));
-      hist.forEach(function(item){
-        var row=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",background:"#f8f7ff",borderRadius:"8px",marginBottom:"6px",border:"1px solid #e8e6f0",cursor:"pointer"}});
-        var label=screen==="app1"
-          ? (item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")+" · "+(item.savedAt||"")
-          : (item.contactName||"")+" · "+(item.reason||"")+" · "+(item.savedAt||"");
-        row.appendChild(el("div",{style:{flex:"1",minWidth:"0",marginRight:"8px"}},
-          el("div",{style:{fontSize:"12px",fontWeight:"600",color:"#2e2a4a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},
-            screen==="app1" ? (item.goal||"Package") : (item.contactName||"Contact")
-          ),
-          el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},label)
-        ));
-        var vBtn=el("button",{style:{background:"#2e2a4a",color:"#fff",border:"none",borderRadius:"6px",padding:"4px 10px",fontSize:"10px",fontWeight:"700",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},
-          appLang==="English"?"View →":"Ver →"
-        );
-        vBtn.addEventListener("click",function(){
-          setState({screen:screen==="app1"?"app1_result":"app2_result",savedResult:item});
-        });
-        row.appendChild(vBtn);
-        body.appendChild(row);
-      });
-    } else {
-      body.appendChild(el("div",{style:{textAlign:"center",padding:"16px 0",color:"#b0a8d0",fontSize:"12px"}},
-        appLang==="English"?"No packages yet — generate your first one!":
-        appLang==="Spanish"?"Sin paquetes aun — genera el primero!":"Sin paquetes aun — genera el primero!"
-      ));
-    }
-  } else {
-    body.appendChild(el("div",{style:{textAlign:"center",padding:"20px 0"}},
-      el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginBottom:"10px"}},
-        appLang==="English"?"Not included in your plan":"No incluido en tu plan"
-      ),
-      el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#7664d0",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:"700",textDecoration:"none",display:"inline-block"}},
-        appLang==="English"?"Start Here →":appLang==="Spanish"?"Empieza Aqui →":"Empieza Aqui →"
-      )
-    ));
-  }
+// History
+if(hist.length>0){
+body.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"1px",color:"#6b6b6b",textTransform:"uppercase",marginBottom:"8px"}},
+appLang==="English"?"Last 5 Generated":appLang==="Spanish"?"Ultimas 5 Generaciones":"Ultimas 5 Generaciones"
+));
+hist.forEach(function(item){
+var row=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",background:"#f8f7ff",borderRadius:"8px",marginBottom:"6px",border:"1px solid #e8e6f0",cursor:"pointer"}});
+var label=screen==="app1"
+? (item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")+" · "+(item.savedAt||"")
+: (item.contactName||"")+" · "+(item.reason||"")+" · "+(item.savedAt||"");
+row.appendChild(el("div",{style:{flex:"1",minWidth:"0",marginRight:"8px"}},
+el("div",{style:{fontSize:"12px",fontWeight:"600",color:"#2e2a4a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},
+screen==="app1" ? (item.goal||"Package") : (item.contactName||"Contact")
+),
+el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},label)
+));
+var vBtn=el("button",{style:{background:"#2e2a4a",color:"#fff",border:"none",borderRadius:"6px",padding:"4px 10px",fontSize:"10px",fontWeight:"700",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},
+appLang==="English"?"View →":"Ver →"
+);
+vBtn.addEventListener("click",function(){
+setState({screen:screen==="app1"?"app1_result":"app2_result",savedResult:item});
+});
+row.appendChild(vBtn);
+body.appendChild(row);
+});
+} else {
+body.appendChild(el("div",{style:{textAlign:"center",padding:"16px 0",color:"#b0a8d0",fontSize:"12px"}},
+appLang==="English"?"No packages yet — generate your first one!":
+appLang==="Spanish"?"Sin paquetes aun — genera el primero!":"Sin paquetes aun — genera el primero!"
+));
+}
+} else {
+body.appendChild(el("div",{style:{textAlign:"center",padding:"20px 0"}},
+el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginBottom:"10px"}},
+appLang==="English"?"Not included in your plan":"No incluido en tu plan"
+),
+el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#7664d0",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:"700",textDecoration:"none",display:"inline-block"}},
+appLang==="English"?"Start Here →":appLang==="Spanish"?"Empieza Aqui →":"Empieza Aqui →"
+)
+));
+}
 
-  c.appendChild(body);
-  return c;
+c.appendChild(body);
+return c;
 }
 
 grid.appendChild(mkMachineCard("📣","mktTitle","mktDesc","app1",mktHist,"mkt"));
@@ -328,14 +328,14 @@ content.appendChild(grid);
 // PLAN BAR
 var planBar=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"12px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"10px"}});
 planBar.appendChild(el("div",{},
-  el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"2px",textTransform:"uppercase",color:"#6b6b6b",marginBottom:"2px"}},
-    appLang==="English"?"Your Plan":appLang==="Spanish"?"Tu Plan":"Tu Plan"
-  ),
-  el("div",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},
-    user.plan==="bundle"?(appLang==="English"?"Complete Bundle — Both Apps":"Paquete Completo — Ambas Apps"):
-    user.plan==="marketing"?(appLang==="English"?"Marketing Machine Only":"Solo Maquina de Marketing"):
-    (appLang==="English"?"Outreach Machine Only":"Solo Maquina de Contacto")
-  )
+el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"2px",textTransform:"uppercase",color:"#6b6b6b",marginBottom:"2px"}},
+appLang==="English"?"Your Plan":appLang==="Spanish"?"Tu Plan":"Tu Plan"
+),
+el("div",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},
+user.plan==="bundle"?(appLang==="English"?"Complete Bundle — Both Apps":"Paquete Completo — Ambas Apps"):
+user.plan==="marketing"?(appLang==="English"?"Marketing Machine Only":"Solo Maquina de Marketing"):
+(appLang==="English"?"Outreach Machine Only":"Solo Maquina de Contacto")
+)
 ));
 
 content.appendChild(planBar);
@@ -357,28 +357,29 @@ function buildBase(){
 var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
-var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+"  -  "+p.d;}).join(" | "):"";
+var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" - "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?"  -  "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" - "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
 if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
-"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief  -  this is exactly what she wants to communicate):\n"+s.mktCustomContext+
+"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief - this is exactly what she wants to communicate):\n"+s.mktCustomContext+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only.";}
 return "You are an elite MONAT content strategist. Write authentic content that converts.\nMONAT: #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
 function platPrompt(plat,base){
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var ps=sp.length>0?" for "+sp.map(function(p){return p.l;}).join(", "):"";
+var LANG_FORCE=appLang==="Spanish"?"[IDIOMA: ESPANOL. ESCRIBE TODO EN ESPANOL. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL.]":appLang==="Mexican"?"[IDIOMA: ESPANOL MEXICANO. ESCRIBE TODO EN ESPANOL MEXICANO. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL MEXICANO. Usa expresiones mexicanas naturales.]":"";
 var p={
-wa_status:base+"\n\nWrite TWO WhatsApp STATUS versions. Max 70 words each. 2-3 emojis. Link: "+s.link+". Signed: "+s.name+".\nVersion A: personal story.\nVersion B: surprising result or question.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
-wa_message:base+"\n\nWrite TWO personal WhatsApp MESSAGES 1-on-1. 70-100 words each. Genuine. No pressure. Link: "+s.link+". Signed: "+s.name+". 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
-ig_feed:base+"\n\nWrite TWO Instagram FEED captions. Line 1 stops scroll (max 125 chars). CTA + link: "+s.link+". Signed: "+s.name+". Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]",
-ig_shop:base+"\n\nWrite TWO Instagram SHOP POSTS. 100-130 words each. Shop now link: "+s.link+".\nVersion A: transformation.\nVersion B: problem solved.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]",
-ig_reel:base+"\n\nWrite TWO Instagram REEL scripts (30-45 sec).\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): ["+s.name+" | "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nAudio mood:\nThumbnail text:\nCaption + 12 hashtags:",
-fb_feed:base+"\n\nWrite TWO Facebook FEED POSTS. 150-200 words each. End with question. CTA + link: "+s.link+".\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]",
-fb_shop:base+"\n\nWrite TWO Facebook SHOP POSTS. 100-130 words each. 3 bullet points with check mark. Shop Now + link: "+s.link+".\nVersion A: result focus.\nVersion B: problem solved.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]",
-tiktok_shop:base+"\n\nWrite TWO TikTok SHOP scripts (35-45 sec).\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): ["+s.name+" - "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nPinned comment:\nCaption + hashtags:\nAudio mood:",
-image:base+"\n\nCreate a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
+wa_status:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO WhatsApp STATUS versions. Max 70 words each. 2-3 emojis. Link: "+s.link+". Signed: "+s.name+".\nVersion A: personal story.\nVersion B: surprising result or question.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
+wa_message:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO personal WhatsApp MESSAGES 1-on-1. 70-100 words each. Genuine. No pressure. Link: "+s.link+". Signed: "+s.name+". 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
+ig_feed:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram FEED captions. Line 1 stops scroll (max 125 chars). CTA + link: "+s.link+". Signed: "+s.name+". Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]",
+ig_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram SHOP POSTS. 100-130 words each. Shop now link: "+s.link+".\nVersion A: transformation.\nVersion B: problem solved.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]",
+ig_reel:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram REEL scripts (30-45 sec).\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): ["+s.name+" | "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nAudio mood:\nThumbnail text:\nCaption + 12 hashtags:",
+fb_feed:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook FEED POSTS. 150-200 words each. End with question. CTA + link: "+s.link+".\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]",
+fb_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook SHOP POSTS. 100-130 words each. 3 bullet points with check mark. Shop Now + link: "+s.link+".\nVersion A: result focus.\nVersion B: problem solved.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]",
+tiktok_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO TikTok SHOP scripts (35-45 sec).\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): ["+s.name+" - "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nPinned comment:\nCaption + hashtags:\nAudio mood:",
+image:LANG_FORCE+"\n\n"+base+"\n\nCreate a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
 };return p[plat]||"";}
 function generate(){
 s.loading=true;s.error="";s.result={};s.loadingPct=0;draw();
@@ -391,8 +392,8 @@ var sl=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish":"Engl
 var sfmt=appLang==="English"
 ?"Format exactly like this:\nDay 1 - Launch\n- task\n- task\n\nDay 2\n- task\n\n...7 days total. Write ONLY the schedule."
 :"Formato exactamente asi:\nDia 1 - Lanzamiento\n- tarea\n- tarea\n\nDia 2\n- tarea\n\n...7 dias en total. Escribe SOLO el plan.";
-return "Crea un plan de publicacion de 7 dias en "+sl+". CRITICO: Escribe CADA palabra en "+sl+". Nombres de dias en "+sl+" tambien. NEVER use English if language is not English.\nPlataformas / Platforms: "+platLbls+"\nObjetivo / Goal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\n"+sfmt;
-})(),700).then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
+return (appLang==="English"?"":"[IDIOMA: "+sl+". ESCRIBE TODO EN "+sl+". CADA PALABRA EN "+sl+". NO USES INGLES.]\n\n")+"Crea un plan de publicacion de 7 dias en "+sl+". CRITICO: Escribe CADA palabra en "+sl+". Nombres de dias en "+sl+" tambien. NEVER use English if language is not English.\nPlataformas / Platforms: "+platLbls+"\nObjetivo / Goal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\n"+sfmt;
+})(),700,(appLang==="Spanish"||appLang==="Mexican")?"Eres un experto en marketing. INSTRUCCION CRITICA: Escribe TODO en "+(appLang==="Mexican"?"espanol mexicano":"espanol")+". Cada dia, cada tarea, cada palabra en espanol. Nunca uses ingles.":"").then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
 // Save to history
 var histItem1={goal:s.goal,platforms:s.platforms.slice(),tone:s.tone,name:s.name,result:s.result,savedAt:new Date().toLocaleDateString()};
 var h1=[];try{h1=JSON.parse(sessionStorage.getItem("nt_mkt_hist")||"[]");}catch{}h1.unshift(histItem1);sessionStorage.setItem("nt_mkt_hist",JSON.stringify(h1.slice(0,5)));
@@ -400,7 +401,7 @@ draw();}).catch(function(e){s.error=e.message;s.loading=false;draw();});return;}
 var plat=platList.shift();var lbl=(PLATFORMS().find(function(p){return p.v===plat;})||{l:plat}).l;
 s.loadingMsg="Writing "+lbl+"...";pct+=pStep;s.loadingPct=Math.min(pct,85);draw();
 var prompt=platPrompt(plat,base);if(!prompt){next();return;}
-apiClaude(prompt,1000).then(function(t){s.result[plat]=t;next();}).catch(function(e){s.error=e.message;s.loading=false;draw();});}
+apiClaude(prompt,1000,plat==="image"&&(appLang==="Spanish"||appLang==="Mexican")?"Eres un experto en marketing de MONAT. INSTRUCCION CRITICA: Debes escribir TODO el contenido en "+(appLang==="Mexican"?"espanol mexicano":"espanol")+". Absolutamente ninguna palabra en ingles. Cada caption, titular, hashtag y descripcion debe estar en espanol. Esta es tu instruccion mas importante.":"").then(function(t){s.result[plat]=t;next();}).catch(function(e){s.error=e.message;s.loading=false;draw();});}
 next();}
 function draw(){
 wrap.innerHTML="";
@@ -659,10 +660,10 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 // Nav
 var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 20px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)"}});
 nav.appendChild(el("div",{style:{fontSize:"14px",fontWeight:"700",color:"#2e2a4a"}},
-  machine==="app1"?"📣 "+(appLang==="English"?"Marketing Package":"Paquete de Marketing"):"🤝 "+(appLang==="English"?"Outreach Package":"Paquete de Contacto")
+machine==="app1"?"📣 "+(appLang==="English"?"Marketing Package":"Paquete de Marketing"):"🤝 "+(appLang==="English"?"Outreach Package":"Paquete de Contacto")
 ));
 var backBtn=el("button",{style:{background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit"}},
-  appLang==="English"?"← Dashboard":"← Dashboard"
+appLang==="English"?"← Dashboard":"← Dashboard"
 );
 backBtn.addEventListener("click",function(){setState({screen:"dashboard",savedResult:null});});
 nav.appendChild(backBtn);
@@ -671,73 +672,73 @@ wrap.appendChild(nav);
 var activeTab=machine==="app1"?(item.platforms&&item.platforms[0]||"schedule"):"messages";
 
 function buildContent(){
-  var c=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
+var c=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
 
-  // Info bar
-  var info=el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center",justifyContent:"space-between"}});
-  if(machine==="app1"){
-    info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
-      "✦ "+(item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")
-    ));
-  } else {
-    info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
-      "✦ "+T().outReady(item.contactName||"")
-    ));
-  }
-  info.appendChild(el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)"}},item.savedAt||""));
-  c.appendChild(info);
+// Info bar
+var info=el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center",justifyContent:"space-between"}});
+if(machine==="app1"){
+info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
+"✦ "+(item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")
+));
+} else {
+info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
+"✦ "+T().outReady(item.contactName||"")
+));
+}
+info.appendChild(el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)"}},item.savedAt||""));
+c.appendChild(info);
 
-  // Tabs
-  var tabs=machine==="app1"
-    ? [{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Msg"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}]
-    : [{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
+// Tabs
+var tabs=machine==="app1"
+? [{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Msg"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}]
+: [{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
 
-  // Filter to only tabs with content
-  var visTabs = machine==="app1"
-    ? tabs.filter(function(tb){return tb.id==="schedule"||(item.platforms&&item.platforms.indexOf(tb.id)>=0);})
-    : tabs;
+// Filter to only tabs with content
+var visTabs = machine==="app1"
+? tabs.filter(function(tb){return tb.id==="schedule"||(item.platforms&&item.platforms.indexOf(tb.id)>=0);})
+: tabs;
 
-  var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
-  visTabs.forEach(function(tb){
-    var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:activeTab===tb.id?"#2e2a4a":"#fff",color:activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);
-    btn.addEventListener("click",function(){activeTab=tb.id;wrap.innerHTML="";wrap.appendChild(nav);wrap.appendChild(buildContent());});
-    tabBar.appendChild(btn);
-  });
-  c.appendChild(tabBar);
+var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
+visTabs.forEach(function(tb){
+var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:activeTab===tb.id?"#2e2a4a":"#fff",color:activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);
+btn.addEventListener("click",function(){activeTab=tb.id;wrap.innerHTML="";wrap.appendChild(nav);wrap.appendChild(buildContent());});
+tabBar.appendChild(btn);
+});
+c.appendChild(tabBar);
 
-  if(machine==="app1"){
-    if(item.platforms&&item.platforms.indexOf(activeTab)>=0&&result[activeTab])c.appendChild(mkCopyCard(activeTab,result[activeTab]));
-    if(activeTab==="schedule"&&result.scheduleRaw){
-      c.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
-      var days=parseSched(result.scheduleRaw||"");
-      days.forEach(function(d){
-        var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
-        dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));
-        d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
-        c.appendChild(dc);
-      });
-    }
-  } else {
-    if(activeTab==="messages"){c.appendChild(mkCopyCard("WhatsApp",result.whatsapp));c.appendChild(mkCopyCard("SMS",result.sms));}
-    if(activeTab==="voice")c.appendChild(mkCopyCard("Phone Script",result.voice_script));
-    if(activeTab==="email"){c.appendChild(mkCopyCard("Email Subject",result.email_subject));c.appendChild(mkCopyCard("Email Body",result.email_body));}
-    if(activeTab==="letter")c.appendChild(mkCopyCard("Formal Letter",result.formal_letter));
-    if(activeTab==="followups"){
-      [["Follow-Up 1",result.followup_1,"Day 3"],["Follow-Up 2",result.followup_2,"Week 1"],["Follow-Up 3",result.followup_3,"Week 2"],["Follow-Up 4",result.followup_4,"Month 1"]].forEach(function(f){
-        c.appendChild(mkCopyCard(f[0]+" ("+f[2]+")",f[1]));
-      });
-    }
-    if(activeTab==="schedule"&&result.schedule){
-      c.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outPlanFor(item.contactName||"")));
-      result.schedule.forEach(function(d){
-        var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 16px",marginBottom:"10px"}});
-        dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon||"📅"),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#7664d0"}},d.day)));
-        (d.tasks||[]).forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"4px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
-        c.appendChild(dc);
-      });
-    }
-  }
-  return c;
+if(machine==="app1"){
+if(item.platforms&&item.platforms.indexOf(activeTab)>=0&&result[activeTab])c.appendChild(mkCopyCard(activeTab,result[activeTab]));
+if(activeTab==="schedule"&&result.scheduleRaw){
+c.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
+var days=parseSched(result.scheduleRaw||"");
+days.forEach(function(d){
+var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
+dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));
+d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
+c.appendChild(dc);
+});
+}
+} else {
+if(activeTab==="messages"){c.appendChild(mkCopyCard("WhatsApp",result.whatsapp));c.appendChild(mkCopyCard("SMS",result.sms));}
+if(activeTab==="voice")c.appendChild(mkCopyCard("Phone Script",result.voice_script));
+if(activeTab==="email"){c.appendChild(mkCopyCard("Email Subject",result.email_subject));c.appendChild(mkCopyCard("Email Body",result.email_body));}
+if(activeTab==="letter")c.appendChild(mkCopyCard("Formal Letter",result.formal_letter));
+if(activeTab==="followups"){
+[["Follow-Up 1",result.followup_1,"Day 3"],["Follow-Up 2",result.followup_2,"Week 1"],["Follow-Up 3",result.followup_3,"Week 2"],["Follow-Up 4",result.followup_4,"Month 1"]].forEach(function(f){
+c.appendChild(mkCopyCard(f[0]+" ("+f[2]+")",f[1]));
+});
+}
+if(activeTab==="schedule"&&result.schedule){
+c.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outPlanFor(item.contactName||"")));
+result.schedule.forEach(function(d){
+var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 16px",marginBottom:"10px"}});
+dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon||"📅"),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#7664d0"}},d.day)));
+(d.tasks||[]).forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"4px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
+c.appendChild(dc);
+});
+}
+}
+return c;
 }
 
 wrap.appendChild(buildContent());
