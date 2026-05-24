@@ -10,12 +10,11 @@ if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
 try {
 const body = {
-model: 'claude-sonnet-4-20250514',
+model: 'claude-haiku-4-5-20251001',
 max_tokens: Math.min(maxTokens, 4000),
 messages: [{ role: 'user', content: prompt }],
 };
 
-// Add system prompt if provided - this is the most reliable way to force language
 if (system && system.trim().length > 0) {
 body.system = system;
 }
@@ -43,4 +42,3 @@ return res.status(200).json({ text });
 return res.status(500).json({ error: err.message });
 }
 }
-
