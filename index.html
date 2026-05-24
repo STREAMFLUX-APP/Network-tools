@@ -263,17 +263,15 @@ function mkMachineCard(icon,titleKey,descKey,screen,hist,labelKey){
   // Header
   var hdr=el("div",{style:{background:"#2e2a4a",padding:"18px 20px 14px"}});
   hdr.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"3px",textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:"6px"}},screen==="app1"?"APP 01":"APP 02"));
-  hdr.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"10px",marginBottom:"4px"}},
-    el("span",{style:{fontSize:"22px"}},icon),
+  hdr.appendChild(el("div",{style:{marginBottom:"4px"}},
     el("div",{style:{fontSize:"16px",fontWeight:"700",color:"#fff"}},T()[titleKey])
   ));
-  hdr.appendChild(el("div",{style:{fontSize:"11px",color:"rgba(255,255,255,0.55)"}},T()[descKey]));
   c.appendChild(hdr);
 
   var body=el("div",{style:{padding:"14px 16px"}});
 
   if(hasApp){
-    var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},icon+" "+(appLang==="English"?"New →":appLang==="Spanish"?"Nuevo →":"Nuevo →"));
+    var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},(appLang==="English"?"Generate →":appLang==="Spanish"?"Generar →":"Generar →"));
     btn.addEventListener("click",function(){setState({screen:screen});});
     body.appendChild(btn);
 
@@ -314,7 +312,7 @@ function mkMachineCard(icon,titleKey,descKey,screen,hist,labelKey){
         appLang==="English"?"Not included in your plan":"No incluido en tu plan"
       ),
       el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#7664d0",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:"700",textDecoration:"none",display:"inline-block"}},
-        appLang==="English"?"Upgrade →":"Mejorar Plan →"
+        appLang==="English"?"Start Here →":appLang==="Spanish"?"Empieza Aqui →":"Empieza Aqui →"
       )
     ));
   }
@@ -339,11 +337,7 @@ planBar.appendChild(el("div",{},
     (appLang==="English"?"Outreach Machine Only":"Solo Maquina de Contacto")
   )
 ));
-if(!user.subscribed){
-  planBar.appendChild(el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#2e2a4a",color:"#fff",borderRadius:"8px",padding:"8px 14px",fontSize:"11px",fontWeight:"700",textDecoration:"none"}},
-    appLang==="English"?"Upgrade →":"Mejorar Plan →"
-  ));
-}
+
 content.appendChild(planBar);
 
 wrap.appendChild(content);
