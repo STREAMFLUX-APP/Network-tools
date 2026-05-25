@@ -175,34 +175,34 @@ var lines=text.split("\n"),days=[],cur=null;
 var icons=["🚀","📱","🎯","🎬","📊","🔄","💥","🌟"];
 var isES=appLang==="Spanish"||appLang==="Mexican";
 lines.forEach(function(line){
-var t=line.trim();if(!t)return;
-if(/^(day\s*\d|paso\s*\d|dia\s*\d|d.a\s*\d|semana\s*\d|week\s*\d|lunes|martes|mi.rcoles|jueves|viernes|s.bado|domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i.test(t)||/^\*\*(day|dia|d.a|paso|semana|week)\s*\d/i.test(t)){
-if(cur)days.push(cur);
-cur={day:t.replace(/\*\*/g,"").trim(),icon:icons[days.length]||"📅",tasks:[]};
-}else if(cur){
-var c=t.replace(/^[-*•→✓\d.]+\s*/,"").trim();
-if(c.length>5)cur.tasks.push(c);
-}
+  var t=line.trim();if(!t)return;
+  if(/^(day\s*\d|paso\s*\d|dia\s*\d|d.a\s*\d|semana\s*\d|week\s*\d|lunes|martes|mi.rcoles|jueves|viernes|s.bado|domingo|monday|tuesday|wednesday|thursday|friday|saturday|sunday)/i.test(t)||/^\*\*(day|dia|d.a|paso|semana|week)\s*\d/i.test(t)){
+    if(cur)days.push(cur);
+    cur={day:t.replace(/\*\*/g,"").trim(),icon:icons[days.length]||"📅",tasks:[]};
+  }else if(cur){
+    var c=t.replace(/^[-*•→✓\d.]+\s*/,"").trim();
+    if(c.length>5)cur.tasks.push(c);
+  }
 });
 if(cur)days.push(cur);
 if(days.length>=3)return days;
 // Fallback in correct language
 return isES?[
-{day:"Dia 1 — Lanzamiento",icon:"🚀",tasks:["Publica en todas las plataformas seleccionadas","Comparte en tu Estado de WhatsApp","Responde cada comentario que recibas"]},
-{day:"Dia 2",icon:"📱",tasks:["Publica una historia en Instagram","Haz seguimiento a las respuestas"]},
-{day:"Dia 3",icon:"🎯",tasks:["Comparte de nuevo la publicacion con mejor rendimiento","Envia DM a 5 personas que interactuaron"]},
-{day:"Dia 4",icon:"🛍️",tasks:["Publica en las pestanas de tienda","Agrega etiquetas de productos"]},
-{day:"Dia 5",icon:"🎬",tasks:["Publica el video o Reel generado","Comparte en historia de Instagram"]},
-{day:"Dia 7",icon:"📊",tasks:["Revisa el rendimiento de las publicaciones","Planifica el contenido de la proxima semana"]},
-{day:"Seguimiento Continuo",icon:"📅",tasks:["Responde todos los mensajes pendientes","Registra nuevas clientas interesadas"]}
+  {day:"Dia 1 — Lanzamiento",icon:"🚀",tasks:["Publica en todas las plataformas seleccionadas","Comparte en tu Estado de WhatsApp","Responde cada comentario que recibas"]},
+  {day:"Dia 2",icon:"📱",tasks:["Publica una historia en Instagram","Haz seguimiento a las respuestas"]},
+  {day:"Dia 3",icon:"🎯",tasks:["Comparte de nuevo la publicacion con mejor rendimiento","Envia DM a 5 personas que interactuaron"]},
+  {day:"Dia 4",icon:"🛍️",tasks:["Publica en las pestanas de tienda","Agrega etiquetas de productos"]},
+  {day:"Dia 5",icon:"🎬",tasks:["Publica el video o Reel generado","Comparte en historia de Instagram"]},
+  {day:"Dia 7",icon:"📊",tasks:["Revisa el rendimiento de las publicaciones","Planifica el contenido de la proxima semana"]},
+  {day:"Seguimiento Continuo",icon:"📅",tasks:["Responde todos los mensajes pendientes","Registra nuevas clientas interesadas"]}
 ]:[
-{day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all selected platforms","Share to WhatsApp Status","Reply to every comment"]},
-{day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},
-{day:"Day 3",icon:"🎯",tasks:["Re-share top performing post","DM 5 people who engaged"]},
-{day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},
-{day:"Day 5",icon:"🎬",tasks:["Post the generated video or Reel","Share on Instagram Story"]},
-{day:"Day 7",icon:"📊",tasks:["Review post performance","Plan next week content"]},
-{day:"Ongoing",icon:"📅",tasks:["Reply all pending messages","Log new interested clients"]}
+  {day:"Day 1 — Launch",icon:"🚀",tasks:["Post on all selected platforms","Share to WhatsApp Status","Reply to every comment"]},
+  {day:"Day 2",icon:"📱",tasks:["Post Instagram Story","Follow up with replies"]},
+  {day:"Day 3",icon:"🎯",tasks:["Re-share top performing post","DM 5 people who engaged"]},
+  {day:"Day 4",icon:"🛍️",tasks:["Post to Shop tabs","Add product tags"]},
+  {day:"Day 5",icon:"🎬",tasks:["Post the generated video or Reel","Share on Instagram Story"]},
+  {day:"Day 7",icon:"📊",tasks:["Review post performance","Plan next week content"]},
+  {day:"Ongoing",icon:"📅",tasks:["Reply all pending messages","Log new interested clients"]}
 ];}
 
 
@@ -242,8 +242,8 @@ function renderDashboard(){
 var user=state.user;
 
 // HISTORY HELPERS
-function getHist(key){try{return JSON.parse(sessionStorage.getItem(key)||"[]");}catch{return[];}}
-function saveHist(key,arr){sessionStorage.setItem(key,JSON.stringify(arr));}
+function getHist(key){try{return JSON.parse(localStorage.getItem(key)||"[]");}catch{return[];}}
+function saveHist(key,arr){try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){console.warn("saveHist failed:",e);}}
 function addHist(key,item){var arr=getHist(key);arr.unshift(item);saveHist(key,arr.slice(0,5));}
 
 var mktHist=getHist("nt_mkt_hist");
@@ -254,11 +254,11 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 // NAV
 var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 20px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)",position:"sticky",top:"0",zIndex:"50"}});
 nav.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"10px"}},
-el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"),
-el("div",{},
-el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
-el("div",{style:{fontSize:"8px",color:"#7664d0",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
-)
+  el("div",{style:{width:"32px",height:"32px",borderRadius:"8px",background:"#2e2a4a",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:"14px"}},"✦"),
+  el("div",{},
+    el("div",{style:{fontSize:"13px",fontWeight:"bold",letterSpacing:"2px",lineHeight:"1.1"}},"Network Tools"),
+    el("div",{style:{fontSize:"8px",color:"#7664d0",letterSpacing:"2px",textTransform:"uppercase"}},"by Streamflux")
+  )
 ));
 var navR=el("div",{style:{display:"flex",alignItems:"center",gap:"8px"}});
 if(user.trialActive)navR.appendChild(el("span",{style:{fontSize:"10px",color:"#7664d0",background:"#ede9ff",borderRadius:"10px",padding:"3px 8px"}},"⏰ "+user.daysLeft+" "+T().trial));
@@ -271,22 +271,22 @@ var content=el("div",{style:{maxWidth:"760px",margin:"0 auto",padding:"28px 16px
 
 // WELCOME + LANG
 content.appendChild(el("div",{style:{textAlign:"center",marginBottom:"24px"}},
-el("div",{style:{fontSize:"24px",marginBottom:"6px"}},"✦"),
-el("h1",{style:{fontSize:"20px",fontWeight:"700",letterSpacing:"1px",marginBottom:"6px"}},T().welcome+", "+user.name.split(" ")[0]+"!"),
-el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"14px"}},T().choose),
-el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
-el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},T().lang+":"),
-(function(){
-var sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:"1px solid #e8e6f0",background:"#fff",fontSize:"13px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
-[{v:"English",l:"English"},{v:"Spanish",l:"Espanol (Espana)"},{v:"Mexican",l:"Espanol (Mexico)"}].forEach(function(lang){
-var o=el("option",{value:lang.v},lang.l);
-if(lang.v===appLang)o.selected=true;
-sel.appendChild(o);
-});
-sel.addEventListener("change",function(){appLang=sel.value;localStorage.setItem("nt_lang",sel.value);render();});
-return sel;
-})()
-)
+  el("div",{style:{fontSize:"24px",marginBottom:"6px"}},"✦"),
+  el("h1",{style:{fontSize:"20px",fontWeight:"700",letterSpacing:"1px",marginBottom:"6px"}},T().welcome+", "+user.name.split(" ")[0]+"!"),
+  el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"14px"}},T().choose),
+  el("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}},
+    el("span",{style:{fontSize:"12px",color:"#6b6b6b"}},T().lang+":"),
+    (function(){
+      var sel=el("select",{style:{padding:"6px 12px",borderRadius:"16px",border:"1px solid #e8e6f0",background:"#fff",fontSize:"13px",cursor:"pointer",outline:"none",fontFamily:"inherit"}});
+      [{v:"English",l:"English"},{v:"Spanish",l:"Espanol (Espana)"},{v:"Mexican",l:"Espanol (Mexico)"}].forEach(function(lang){
+        var o=el("option",{value:lang.v},lang.l);
+        if(lang.v===appLang)o.selected=true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener("change",function(){appLang=sel.value;localStorage.setItem("nt_lang",sel.value);render();});
+      return sel;
+    })()
+  )
 ));
 
 // TWO MACHINE CARDS SIDE BY SIDE
@@ -294,68 +294,68 @@ var grid=el("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px
 
 // Helper to build machine card
 function mkMachineCard(icon,titleKey,descKey,screen,hist,labelKey){
-var hasApp = (screen==="app1") ? (user.plan==="marketing"||user.plan==="bundle") : (user.plan==="outreach"||user.plan==="bundle");
-var c=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"16px",overflow:"hidden",boxShadow:"0 2px 12px rgba(46,42,74,0.08)"}});
+  var hasApp = (screen==="app1") ? (user.plan==="marketing"||user.plan==="bundle") : (user.plan==="outreach"||user.plan==="bundle");
+  var c=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"16px",overflow:"hidden",boxShadow:"0 2px 12px rgba(46,42,74,0.08)"}});
 
-// Header
-var hdr=el("div",{style:{background:"#2e2a4a",padding:"18px 20px 14px"}});
-hdr.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"3px",textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:"6px"}},screen==="app1"?"APP 01":"APP 02"));
-hdr.appendChild(el("div",{style:{marginBottom:"4px"}},
-el("div",{style:{fontSize:"16px",fontWeight:"700",color:"#fff"}},T()[titleKey])
-));
-c.appendChild(hdr);
+  // Header
+  var hdr=el("div",{style:{background:"#2e2a4a",padding:"18px 20px 14px"}});
+  hdr.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"3px",textTransform:"uppercase",color:"rgba(255,255,255,0.4)",marginBottom:"6px"}},screen==="app1"?"APP 01":"APP 02"));
+  hdr.appendChild(el("div",{style:{marginBottom:"4px"}},
+    el("div",{style:{fontSize:"16px",fontWeight:"700",color:"#fff"}},T()[titleKey])
+  ));
+  c.appendChild(hdr);
 
-var body=el("div",{style:{padding:"14px 16px"}});
+  var body=el("div",{style:{padding:"14px 16px"}});
 
-if(hasApp){
-var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},(appLang==="English"?"Generate →":appLang==="Spanish"?"Generar →":"Generar →"));
-btn.addEventListener("click",function(){setState({screen:screen});});
-body.appendChild(btn);
+  if(hasApp){
+    var btn=el("button",{style:{background:"#7664d0",color:"#fff",border:"none",borderRadius:"10px",padding:"11px 16px",fontSize:"13px",fontWeight:"700",cursor:"pointer",width:"100%",fontFamily:"inherit",marginBottom:"14px"}},(appLang==="English"?"Generate →":appLang==="Spanish"?"Generar →":"Generar →"));
+    btn.addEventListener("click",function(){setState({screen:screen});});
+    body.appendChild(btn);
 
-// History
-if(hist.length>0){
-body.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"1px",color:"#6b6b6b",textTransform:"uppercase",marginBottom:"8px"}},
-appLang==="English"?"Last 5 Generated":appLang==="Spanish"?"Ultimas 5 Generaciones":"Ultimas 5 Generaciones"
-));
-hist.forEach(function(item){
-var row=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",background:"#f8f7ff",borderRadius:"8px",marginBottom:"6px",border:"1px solid #e8e6f0",cursor:"pointer"}});
-var label=screen==="app1"
-? (item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")+" · "+(item.savedAt||"")
-: (item.contactName||"")+" · "+(item.reason||"")+" · "+(item.savedAt||"");
-row.appendChild(el("div",{style:{flex:"1",minWidth:"0",marginRight:"8px"}},
-el("div",{style:{fontSize:"12px",fontWeight:"600",color:"#2e2a4a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},
-screen==="app1" ? (item.goal||"Package") : (item.contactName||"Contact")
-),
-el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},label)
-));
-var vBtn=el("button",{style:{background:"#2e2a4a",color:"#fff",border:"none",borderRadius:"6px",padding:"4px 10px",fontSize:"10px",fontWeight:"700",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},
-appLang==="English"?"View →":"Ver →"
-);
-vBtn.addEventListener("click",function(){
-setState({screen:screen==="app1"?"app1_result":"app2_result",savedResult:item});
-});
-row.appendChild(vBtn);
-body.appendChild(row);
-});
-} else {
-body.appendChild(el("div",{style:{textAlign:"center",padding:"16px 0",color:"#b0a8d0",fontSize:"12px"}},
-appLang==="English"?"No packages yet — generate your first one!":
-appLang==="Spanish"?"Sin paquetes aun — genera el primero!":"Sin paquetes aun — genera el primero!"
-));
-}
-} else {
-body.appendChild(el("div",{style:{textAlign:"center",padding:"20px 0"}},
-el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginBottom:"10px"}},
-appLang==="English"?"Not included in your plan":"No incluido en tu plan"
-),
-el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#7664d0",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:"700",textDecoration:"none",display:"inline-block"}},
-appLang==="English"?"Start Here →":appLang==="Spanish"?"Empieza Aqui →":"Empieza Aqui →"
-)
-));
-}
+    // History
+    if(hist.length>0){
+      body.appendChild(el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"1px",color:"#6b6b6b",textTransform:"uppercase",marginBottom:"8px"}},
+        appLang==="English"?"Last 5 Generated":appLang==="Spanish"?"Ultimas 5 Generaciones":"Ultimas 5 Generaciones"
+      ));
+      hist.forEach(function(item){
+        var row=el("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",background:"#f8f7ff",borderRadius:"8px",marginBottom:"6px",border:"1px solid #e8e6f0",cursor:"pointer"}});
+        var label=screen==="app1"
+          ? (item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")+" · "+(item.savedAt||"")
+          : (item.contactName||"")+" · "+(item.reason||"")+" · "+(item.savedAt||"");
+        row.appendChild(el("div",{style:{flex:"1",minWidth:"0",marginRight:"8px"}},
+          el("div",{style:{fontSize:"12px",fontWeight:"600",color:"#2e2a4a",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},
+            screen==="app1" ? (item.goal||"Package") : (item.contactName||"Contact")
+          ),
+          el("div",{style:{fontSize:"10px",color:"#6b6b6b",marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},label)
+        ));
+        var vBtn=el("button",{style:{background:"#2e2a4a",color:"#fff",border:"none",borderRadius:"6px",padding:"4px 10px",fontSize:"10px",fontWeight:"700",cursor:"pointer",fontFamily:"inherit",flexShrink:"0"}},
+          appLang==="English"?"View →":"Ver →"
+        );
+        vBtn.addEventListener("click",function(){
+          setState({screen:screen==="app1"?"app1_result":"app2_result",savedResult:item});
+        });
+        row.appendChild(vBtn);
+        body.appendChild(row);
+      });
+    } else {
+      body.appendChild(el("div",{style:{textAlign:"center",padding:"16px 0",color:"#b0a8d0",fontSize:"12px"}},
+        appLang==="English"?"No packages yet — generate your first one!":
+        appLang==="Spanish"?"Sin paquetes aun — genera el primero!":"Sin paquetes aun — genera el primero!"
+      ));
+    }
+  } else {
+    body.appendChild(el("div",{style:{textAlign:"center",padding:"20px 0"}},
+      el("div",{style:{fontSize:"12px",color:"#6b6b6b",marginBottom:"10px"}},
+        appLang==="English"?"Not included in your plan":"No incluido en tu plan"
+      ),
+      el("a",{href:"https://streamflux.app",target:"_blank",style:{background:"#7664d0",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:"700",textDecoration:"none",display:"inline-block"}},
+        appLang==="English"?"Start Here →":appLang==="Spanish"?"Empieza Aqui →":"Empieza Aqui →"
+      )
+    ));
+  }
 
-c.appendChild(body);
-return c;
+  c.appendChild(body);
+  return c;
 }
 
 grid.appendChild(mkMachineCard("📣","mktTitle","mktDesc","app1",mktHist,"mkt"));
@@ -365,14 +365,14 @@ content.appendChild(grid);
 // PLAN BAR
 var planBar=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"12px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"10px"}});
 planBar.appendChild(el("div",{},
-el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"2px",textTransform:"uppercase",color:"#6b6b6b",marginBottom:"2px"}},
-appLang==="English"?"Your Plan":appLang==="Spanish"?"Tu Plan":"Tu Plan"
-),
-el("div",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},
-user.plan==="bundle"?(appLang==="English"?"Complete Bundle — Both Apps":"Paquete Completo — Ambas Apps"):
-user.plan==="marketing"?(appLang==="English"?"Marketing Machine Only":"Solo Maquina de Marketing"):
-(appLang==="English"?"Outreach Machine Only":"Solo Maquina de Contacto")
-)
+  el("div",{style:{fontSize:"9px",fontWeight:"700",letterSpacing:"2px",textTransform:"uppercase",color:"#6b6b6b",marginBottom:"2px"}},
+    appLang==="English"?"Your Plan":appLang==="Spanish"?"Tu Plan":"Tu Plan"
+  ),
+  el("div",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},
+    user.plan==="bundle"?(appLang==="English"?"Complete Bundle — Both Apps":"Paquete Completo — Ambas Apps"):
+    user.plan==="marketing"?(appLang==="English"?"Marketing Machine Only":"Solo Maquina de Marketing"):
+    (appLang==="English"?"Outreach Machine Only":"Solo Maquina de Contacto")
+  )
 ));
 
 content.appendChild(planBar);
@@ -394,13 +394,13 @@ function buildBase(){
 var ci=s.contexts.map(function(c){return ctxOpts().find(function(o){return(o.v||o.value)===c;});}).filter(Boolean);
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
-var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+" - "+p.d;}).join(" | "):"";
+var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+"  -  "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?" - "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?"  -  "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
 var rndSeed="[FRESH UNIQUE VARIATION #"+Math.floor(Math.random()*99999)+"] ";if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
 return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
-"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief - this is exactly what she wants to communicate):\n"+s.mktCustomContext+
+"\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief  -  this is exactly what she wants to communicate):\n"+s.mktCustomContext+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only.";}
 return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
 function platPrompt(plat,base){
@@ -432,8 +432,19 @@ var sfmt=appLang==="English"
 return (appLang==="English"?"":"[IDIOMA: "+sl+". ESCRIBE TODO EN "+sl+". CADA PALABRA EN "+sl+". NO USES INGLES.]\n\n")+"Crea un plan de publicacion de 7 dias en "+sl+". CRITICO: Escribe CADA palabra en "+sl+". Nombres de dias en "+sl+" tambien. NEVER use English if language is not English.\nPlataformas / Platforms: "+platLbls+"\nObjetivo / Goal: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+"\n\n"+sfmt;
 })(),700,(appLang==="Spanish"||appLang==="Mexican")?"Eres un experto en marketing. INSTRUCCION CRITICA: Escribe TODO en "+(appLang==="Mexican"?"espanol mexicano":"espanol")+". Cada dia, cada tarea, cada palabra en espanol. Nunca uses ingles.":"").then(function(t){s.result.scheduleRaw=t;s.loadingPct=100;s.activeTab=s.platforms[0]||"schedule";s.loading=false;
 // Save to history
-var histItem1={goal:s.goal,platforms:s.platforms.slice(),tone:s.tone,name:s.name,result:s.result,savedAt:new Date().toLocaleDateString()};
-var h1=[];try{h1=JSON.parse(localStorage.getItem("nt_mkt_hist")||"[]");}catch{}h1.unshift(histItem1);localStorage.setItem("nt_mkt_hist",JSON.stringify(h1.slice(0,5)));
+try{
+var histItem1={goal:s.goal,platforms:s.platforms.slice(),tone:s.tone,name:s.name,result:s.result,savedAt:new Date().toLocaleDateString(),lang:appLang};
+var h1=[];try{h1=JSON.parse(localStorage.getItem("nt_mkt_hist")||"[]");}catch{h1=[];}
+h1=h1.filter(function(x){return x&&x.result;});
+h1.unshift(histItem1);
+var toSave=JSON.stringify(h1.slice(0,5));
+// If too large, save without full result content
+if(toSave.length>2000000){
+  var slim=h1.slice(0,5).map(function(x){return{goal:x.goal,platforms:x.platforms,tone:x.tone,name:x.name,savedAt:x.savedAt,lang:x.lang,result:x.result};});
+  toSave=JSON.stringify(slim);
+}
+localStorage.setItem("nt_mkt_hist",toSave);
+}catch(e){console.warn("History save failed:",e.message);}
 draw();}).catch(function(e){s.error=e.message;s.loading=false;draw();});return;}
 var plat=platList.shift();var lbl=(PLATFORMS().find(function(p){return p.v===plat;})||{l:plat}).l;
 s.loadingMsg="Writing "+lbl+"...";pct+=pStep;s.loadingPct=Math.min(pct,85);draw();
@@ -486,9 +497,9 @@ stepCard.appendChild(el("p",{style:{fontSize:"12px",color:"#6b6b6b",margin:"0 0 
 stepCard.appendChild(mkChips(null,null,ctxOpts(),s.contexts,function(v){s.contexts=tog(s.contexts,v);draw();}));
 if(s.contexts.length>0)stepCard.appendChild(el("div",{style:{fontSize:"11px",color:"#7664d0",background:"#ede9ff",borderRadius:"6px",padding:"6px 10px"}},"✦ "+s.contexts.length+" selected"));
 var mktCtxBox=el("div",{style:{marginTop:"16px",paddingTop:"16px",borderTop:"1px solid #e8e6f0"}});
-mktCtxBox.appendChild(el("label",{style:{display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.08em",color:"#7664d0",textTransform:"uppercase",marginBottom:"4px"}},appLang==="Spanish"?"Tu contexto personalizado (opcional)":"Your Custom Context (optional)"));
-mktCtxBox.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},appLang==="Spanish"?"Describe tu situacion con tus propias palabras. Cuanto mas especifica seas, mejor sera el contenido.":"Describe your situation in your own words. The more specific, the better the content."));
-var mktCtxTA=el("textarea",{placeholder:appLang==="Spanish"?"ej. Tengo una clienta con cabello muy seco que ha probado todo. Es mama ocupada. Quiero promover el Rejuveniqe Oil para ella porque tiene el cabello muy danado desde que tuvo a sus hijos...":"e.g. I have a customer with very dry hair who tried everything. She is a busy mom. I want to promote the Rejuveniqe Oil because her hair has been damaged since having kids...",rows:"4",style:{width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
+mktCtxBox.appendChild(el("label",{style:{display:"block",fontSize:"10px",fontWeight:"700",letterSpacing:"0.08em",color:"#7664d0",textTransform:"uppercase",marginBottom:"4px"}},(appLang==="Spanish"||appLang==="Mexican")?"Tu contexto personalizado (opcional)":"Your Custom Context (optional)"));
+mktCtxBox.appendChild(el("p",{style:{fontSize:"11px",color:"#999",margin:"0 0 6px",fontStyle:"italic"}},(appLang==="Spanish"||appLang==="Mexican")?"Describe tu situacion con tus propias palabras. Cuanto mas especifica seas, mejor sera el contenido.":"Describe your situation in your own words. The more specific, the better the content."));
+var mktCtxTA=el("textarea",{placeholder:(appLang==="Spanish"||appLang==="Mexican")?"ej. Tengo una clienta con cabello muy seco que ha probado todo. Es mama ocupada. Quiero promover el Rejuveniqe Oil para ella porque tiene el cabello muy danado desde que tuvo a sus hijos...":"e.g. I have a customer with very dry hair who tried everything. She is a busy mom. I want to promote the Rejuveniqe Oil because her hair has been damaged since having kids...",rows:"4",style:{width:"100%",background:"#f4f3f9",border:"1.5px solid #e8e6f0",borderRadius:"9px",color:"#111",fontSize:"13px",padding:"11px 14px",outline:"none",fontFamily:"inherit",boxSizing:"border-box",resize:"vertical"}});
 mktCtxTA.value=s.mktCustomContext||"";
 mktCtxTA.addEventListener("input",function(){s.mktCustomContext=mktCtxTA.value;});
 mktCtxBox.appendChild(mktCtxTA);
@@ -550,28 +561,32 @@ s.loading=true;s.error="";s.result=null;draw();
 var o=buildCtx();
 var ctx=o.ctx;
 var ln=o.langNote;
-var schema1='{"whatsapp":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}';
+var schema1=isObjection()?
+'{"whatsapp_1":"...","whatsapp_2":"...","whatsapp_3":"...","whatsapp_4":"...","whatsapp_5":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}':
+'{"whatsapp":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}';
 var p1=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
-" STRICT RULES: NEVER invent facts, prices, deposits, promotions or anything not in the context. NEVER write personal experiences for the sender unless context explicitly states them. If the contact said they will buy later or need time — respect this, no pressure, no urgency. NEVER make income claims like earn 5x more or make $X per month — these are unverifiable and unethical. NEVER quote company revenue or statistics as arguments to overcome objections. Handle objections only with empathy, honest product benefits and the specific context given. Write based ONLY on what is in the context."+
-" "+(isObjection()?"Address the objection with empathy and product facts only. Reframe positively. One soft question at end.":"Write a warm genuine personal message. ONE question at end. Never salesy or pushy.")+
-" Return ONLY valid JSON: "+schema1+" whatsapp:60-90 words. sms:max 160 chars. voice_script:sections OPENING REASON VALUE CLOSE. email_subject:under 10 words. email_body:140-170 words signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
+" INTEGRITY RULES: Only use facts from the context. Never invent experiences, claims, statistics, deposits, offers or urgency not stated. Respect what the contact said — if they need time, give them time."+
+" WRITING STANDARD: You are an elite copywriter AND a warm genuine human being. Every word must earn its place. Be specific, emotionally intelligent, strategically brilliant — but sound completely natural, never scripted. Use their name. Reference exactly what they told you. Vary sentence rhythm — short punchy sentences mixed with longer ones. Never start with Hi there or I hope this message finds you well. No corporate speak. No MLM cliches. Make this specific person stop, feel understood, and want to respond — not because they were pressured, but because they felt genuinely seen."+
+" "+(isObjection()?"Generate 5 DIFFERENT WhatsApp message versions to handle this objection. Each version must use a completely different approach, angle and tone. Version 1: empathy-first approach. Version 2: reframing the belief about MLM with honest facts. Version 3: curiosity angle — ask a genuine question. Version 4: share a real product benefit relevant to their situation. Version 5: respect their view completely, leave door open with zero pressure. All versions: 60-80 words, end with a soft question or open door.":"Write a warm genuine personal message. ONE question at end. Never salesy or pushy.")+
+" Return ONLY valid JSON: "+schema1+" whatsapp:60-80 words — natural human voice, specific to this person. sms:max 160 chars — punchy and real. voice_script:natural spoken language with sections OPENING REASON VALUE CLOSE — sounds like a real conversation not a script. email_subject:personal and specific under 10 words — not generic. email_body:140-160 words — warm personal opener, genuine value, one clear CTA, signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
 s.loadingMsg=appLang==="English"?"Writing messages...":"Escribiendo mensajes...";draw();
 apiClaude(p1,1200).then(function(t){
 var r1=parseJSON(t);
 var schema2='{"formal_letter":"...","followup_1":"...","followup_2":"...","followup_3":"...","followup_4":"..."}';
 var p2=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
-" STRICT RULES FOR FOLLOW-UPS:"+
+" WRITING STANDARD: Write at elite copywriter level — every word deliberate, every sentence pulling the reader forward. But sound completely human and warm. Never robotic. Never templated. Each message must have its own unique voice and feel. The goal is to make this person feel genuinely understood and want to stay in the conversation — not because they were sold to, but because the message resonated."+
+" FOLLOW-UP RULES:"+
 " 1. ONLY reference facts explicitly stated in the context above. Never invent facts, offers, prices, deposits, promotions or details not mentioned. NEVER make income claims like earn 5x, make X per month, or quote company revenue statistics as persuasion tools."+
 " 2. If the contact said they will buy later or need time — follow-ups must RESPECT this completely. Keep the relationship warm. Do NOT push the sale. Do NOT create urgency that contradicts what they said."+
 " 3. Follow-ups must feel like a real friend checking in — not a salesperson following up on a lead."+
 " 4. Never say things like the initial deposit is minimal, there is a special offer, or any claim you cannot verify from the context."+
 " 5. Each follow-up must have a genuinely different angle — not the same message rephrased."+
 " Write formal letter and 4 follow-ups. Return ONLY valid JSON: "+schema2+
-" formal_letter:260-300 words starts Dear "+s.contactName+" ends Warm regards "+s.yourName+"."+
-" followup_1:Day 3 — warm check-in, different angle, 50-60 words, no pressure."+
-" followup_2:Week 1 — share something genuinely useful or interesting related to their situation, 50-60 words."+
-" followup_3:Week 2 — casual, light, keep door open, 40-50 words."+
-" followup_4:Month 1 — final warm touch, acknowledge their timeline if they gave one, leave door completely open, 40-50 words.";
+" formal_letter:260-300 words — professional but warm, starts Dear "+s.contactName+", ends Warm regards "+s.yourName+". Reads like a real letter from a real person, not a template."+
+" followup_1:Day 3 — 50-60 words, warm and light, different angle from the first message, sounds like a genuine check-in from a friend."+
+" followup_2:Week 1 — 50-60 words, share one genuinely interesting or useful thing related to their specific situation, no pitch."+
+" followup_3:Week 2 — 40-50 words, very casual and human, almost like a text from a friend, zero sales energy."+
+" followup_4:Month 1 — 40-50 words, final warm human touch, acknowledge their timeline if given, leave the door completely open with genuine warmth.";
 s.loadingMsg=appLang==="English"?"Writing letter and follow-ups...":"Escribiendo carta y seguimientos...";draw();
 return apiClaude(p2,1300).then(function(t2){
 var r2=parseJSON(t2);
@@ -583,8 +598,13 @@ var r3=parseJSON(t3);
 s.result=Object.assign({},r1,r2,r3);
 s.activeTab="messages";s.loading=false;
 // Save to history
-var histItem2={contactName:s.contactName,reason:s.contactReason,tone:s.tone,yourName:s.yourName,result:s.result,savedAt:new Date().toLocaleDateString()};
-var h2=[];try{h2=JSON.parse(localStorage.getItem("nt_out_hist")||"[]");}catch{}h2.unshift(histItem2);localStorage.setItem("nt_out_hist",JSON.stringify(h2.slice(0,5)));
+try{
+var histItem2={contactName:s.contactName,reason:s.contactReason,tone:s.tone,yourName:s.yourName,result:s.result,savedAt:new Date().toLocaleDateString(),lang:appLang};
+var h2=[];try{h2=JSON.parse(localStorage.getItem("nt_out_hist")||"[]");}catch{h2=[];}
+h2=h2.filter(function(x){return x&&x.result;});
+h2.unshift(histItem2);
+localStorage.setItem("nt_out_hist",JSON.stringify(h2.slice(0,5)));
+}catch(e){console.warn("History save failed:",e.message);}
 draw();
 });});
 }).catch(function(e){s.error="Error: "+e.message;s.loading=false;draw();});
@@ -606,7 +626,19 @@ var btn=el("button",{style:{background:s.activeTab===t.id?"#2e2a4a":"#fff",color
 btn.addEventListener("click",function(){s.activeTab=t.id;draw();});
 tb.appendChild(btn);});
 c.appendChild(tb);
-if(s.activeTab==="messages"){c.appendChild(mkCopyCard("WhatsApp",s.result.whatsapp));c.appendChild(mkCopyCard("SMS",s.result.sms));}
+if(s.activeTab==="messages"){
+if(s.result.whatsapp_1){
+  // 5 objection handling versions
+  c.appendChild(el("p",{style:{fontSize:"12px",color:"#7664d0",fontWeight:"700",marginBottom:"8px"}},
+    appLang==="English"?"5 Different Ways to Handle This Objection — Choose the one that feels most natural:":"5 Formas Diferentes de Manejar Esta Objecion — Elige la que se sienta mas natural:"
+  ));
+  [["1",s.result.whatsapp_1],["2",s.result.whatsapp_2],["3",s.result.whatsapp_3],["4",s.result.whatsapp_4],["5",s.result.whatsapp_5]].forEach(function(v){
+    c.appendChild(mkCopyCard((appLang==="English"?"Version ":"Version ")+v[0],v[1]));
+  });
+}else{
+  c.appendChild(mkCopyCard("WhatsApp",s.result.whatsapp));
+}
+c.appendChild(mkCopyCard("SMS",s.result.sms));}
 if(s.activeTab==="voice"){c.appendChild(mkCopyCard("Phone Script",s.result.voice_script));}
 if(s.activeTab==="email"){c.appendChild(mkCopyCard("Email Subject",s.result.email_subject));c.appendChild(mkCopyCard("Email Body",s.result.email_body));}
 if(s.activeTab==="letter"){c.appendChild(mkCopyCard("Formal Letter",s.result.formal_letter));}
@@ -712,10 +744,10 @@ var wrap=el("div",{style:{minHeight:"100vh",background:"#f8f7ff"}});
 // Nav
 var nav=el("div",{style:{background:"#fff",borderBottom:"1px solid #e8e6f0",padding:"0 20px",height:"56px",display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 6px rgba(46,42,74,0.07)"}});
 nav.appendChild(el("div",{style:{fontSize:"14px",fontWeight:"700",color:"#2e2a4a"}},
-machine==="app1"?"📣 "+(appLang==="English"?"Marketing Package":"Paquete de Marketing"):"🤝 "+(appLang==="English"?"Outreach Package":"Paquete de Contacto")
+  machine==="app1"?"📣 "+(appLang==="English"?"Marketing Package":"Paquete de Marketing"):"🤝 "+(appLang==="English"?"Outreach Package":"Paquete de Contacto")
 ));
 var backBtn=el("button",{style:{background:"#fff",color:"#2e2a4a",border:"1px solid #e8e6f0",borderRadius:"8px",padding:"5px 12px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit"}},
-appLang==="English"?"← Dashboard":"← Dashboard"
+  appLang==="English"?"← Dashboard":"← Dashboard"
 );
 backBtn.addEventListener("click",function(){setState({screen:"dashboard",savedResult:null});});
 nav.appendChild(backBtn);
@@ -724,73 +756,73 @@ wrap.appendChild(nav);
 var activeTab=machine==="app1"?(item.platforms&&item.platforms[0]||"schedule"):"messages";
 
 function buildContent(){
-var c=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
+  var c=el("div",{style:{maxWidth:"720px",margin:"0 auto",padding:"18px 12px 60px"}});
 
-// Info bar
-var info=el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center",justifyContent:"space-between"}});
-if(machine==="app1"){
-info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
-"✦ "+(item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")
-));
-} else {
-info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
-"✦ "+T().outReady(item.contactName||"")
-));
-}
-info.appendChild(el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)"}},item.savedAt||""));
-c.appendChild(info);
+  // Info bar
+  var info=el("div",{style:{background:"#2e2a4a",borderRadius:"12px",padding:"11px 16px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"center",justifyContent:"space-between"}});
+  if(machine==="app1"){
+    info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
+      "✦ "+(item.goal||"")+" · "+(item.platforms?item.platforms.length+" platforms":"")
+    ));
+  } else {
+    info.appendChild(el("span",{style:{fontSize:"13px",color:"#fff",fontWeight:"bold"}},
+      "✦ "+T().outReady(item.contactName||"")
+    ));
+  }
+  info.appendChild(el("span",{style:{fontSize:"11px",color:"rgba(255,255,255,0.4)"}},item.savedAt||""));
+  c.appendChild(info);
 
-// Tabs
-var tabs=machine==="app1"
-? [{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Msg"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}]
-: [{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
+  // Tabs
+  var tabs=machine==="app1"
+    ? [{id:"wa_status",l:"WA Status"},{id:"wa_message",l:"WA Msg"},{id:"ig_feed",l:"IG Feed"},{id:"ig_shop",l:"IG Shop"},{id:"ig_reel",l:"IG Reel"},{id:"fb_feed",l:"FB Feed"},{id:"fb_shop",l:"FB Shop"},{id:"tiktok_shop",l:"TikTok"},{id:"image",l:"Image"},{id:"schedule",l:"Schedule"}]
+    : [{id:"messages",l:"💬 Messages"},{id:"voice",l:"🎙️ Voice"},{id:"email",l:"📧 Email"},{id:"letter",l:"✉️ Letter"},{id:"followups",l:"🔄 Follow-Ups"},{id:"schedule",l:"📅 Schedule"}];
 
-// Filter to only tabs with content
-var visTabs = machine==="app1"
-? tabs.filter(function(tb){return tb.id==="schedule"||(item.platforms&&item.platforms.indexOf(tb.id)>=0);})
-: tabs;
+  // Filter to only tabs with content
+  var visTabs = machine==="app1"
+    ? tabs.filter(function(tb){return tb.id==="schedule"||(item.platforms&&item.platforms.indexOf(tb.id)>=0);})
+    : tabs;
 
-var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
-visTabs.forEach(function(tb){
-var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:activeTab===tb.id?"#2e2a4a":"#fff",color:activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);
-btn.addEventListener("click",function(){activeTab=tb.id;wrap.innerHTML="";wrap.appendChild(nav);wrap.appendChild(buildContent());});
-tabBar.appendChild(btn);
-});
-c.appendChild(tabBar);
+  var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
+  visTabs.forEach(function(tb){
+    var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:activeTab===tb.id?"#2e2a4a":"#fff",color:activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);
+    btn.addEventListener("click",function(){activeTab=tb.id;wrap.innerHTML="";wrap.appendChild(nav);wrap.appendChild(buildContent());});
+    tabBar.appendChild(btn);
+  });
+  c.appendChild(tabBar);
 
-if(machine==="app1"){
-if(item.platforms&&item.platforms.indexOf(activeTab)>=0&&result[activeTab])c.appendChild(mkCopyCard(activeTab,result[activeTab]));
-if(activeTab==="schedule"&&result.scheduleRaw){
-c.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
-var days=parseSched(result.scheduleRaw||"");
-days.forEach(function(d){
-var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
-dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));
-d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
-c.appendChild(dc);
-});
-}
-} else {
-if(activeTab==="messages"){c.appendChild(mkCopyCard("WhatsApp",result.whatsapp));c.appendChild(mkCopyCard("SMS",result.sms));}
-if(activeTab==="voice")c.appendChild(mkCopyCard("Phone Script",result.voice_script));
-if(activeTab==="email"){c.appendChild(mkCopyCard("Email Subject",result.email_subject));c.appendChild(mkCopyCard("Email Body",result.email_body));}
-if(activeTab==="letter")c.appendChild(mkCopyCard("Formal Letter",result.formal_letter));
-if(activeTab==="followups"){
-[["Follow-Up 1",result.followup_1,"Day 3"],["Follow-Up 2",result.followup_2,"Week 1"],["Follow-Up 3",result.followup_3,"Week 2"],["Follow-Up 4",result.followup_4,"Month 1"]].forEach(function(f){
-c.appendChild(mkCopyCard(f[0]+" ("+f[2]+")",f[1]));
-});
-}
-if(activeTab==="schedule"&&result.schedule){
-c.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outPlanFor(item.contactName||"")));
-result.schedule.forEach(function(d){
-var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 16px",marginBottom:"10px"}});
-dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon||"📅"),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#7664d0"}},d.day)));
-(d.tasks||[]).forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"4px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
-c.appendChild(dc);
-});
-}
-}
-return c;
+  if(machine==="app1"){
+    if(item.platforms&&item.platforms.indexOf(activeTab)>=0&&result[activeTab])c.appendChild(mkCopyCard(activeTab,result[activeTab]));
+    if(activeTab==="schedule"&&result.scheduleRaw){
+      c.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
+      var days=parseSched(result.scheduleRaw||"");
+      days.forEach(function(d){
+        var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"12px",padding:"14px 16px",marginBottom:"10px"}});
+        dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#2e2a4a"}},d.day)));
+        d.tasks.forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"5px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
+        c.appendChild(dc);
+      });
+    }
+  } else {
+    if(activeTab==="messages"){c.appendChild(mkCopyCard("WhatsApp",result.whatsapp));c.appendChild(mkCopyCard("SMS",result.sms));}
+    if(activeTab==="voice")c.appendChild(mkCopyCard("Phone Script",result.voice_script));
+    if(activeTab==="email"){c.appendChild(mkCopyCard("Email Subject",result.email_subject));c.appendChild(mkCopyCard("Email Body",result.email_body));}
+    if(activeTab==="letter")c.appendChild(mkCopyCard("Formal Letter",result.formal_letter));
+    if(activeTab==="followups"){
+      [["Follow-Up 1",result.followup_1,"Day 3"],["Follow-Up 2",result.followup_2,"Week 1"],["Follow-Up 3",result.followup_3,"Week 2"],["Follow-Up 4",result.followup_4,"Month 1"]].forEach(function(f){
+        c.appendChild(mkCopyCard(f[0]+" ("+f[2]+")",f[1]));
+      });
+    }
+    if(activeTab==="schedule"&&result.schedule){
+      c.appendChild(el("p",{style:{color:"#6b6b6b",fontSize:"13px",margin:"0 0 12px"}},T().outPlanFor(item.contactName||"")));
+      result.schedule.forEach(function(d){
+        var dc=el("div",{style:{background:"#fff",border:"1px solid #e8e6f0",borderRadius:"10px",padding:"14px 16px",marginBottom:"10px"}});
+        dc.appendChild(el("div",{style:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}},el("span",{style:{fontSize:"18px"}},d.icon||"📅"),el("span",{style:{fontSize:"13px",fontWeight:"700",color:"#7664d0"}},d.day)));
+        (d.tasks||[]).forEach(function(t){var row=el("div",{style:{display:"flex",gap:"8px",marginBottom:"4px"}});row.appendChild(el("span",{style:{color:"#7664d0",fontWeight:"700"}},"→"));row.appendChild(el("span",{style:{fontSize:"12px",lineHeight:"1.6"}},t));dc.appendChild(row);});
+        c.appendChild(dc);
+      });
+    }
+  }
+  return c;
 }
 
 wrap.appendChild(buildContent());
