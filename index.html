@@ -106,15 +106,23 @@ var OUT_PRODUCTS=["MONAT Bond IQ Shampoo","MONAT Bond IQ Recovery Serum","IR Cli
 var state={screen:"login",user:null};
 function setState(u){state=Object.assign({},state,u);render();}
 function apiAuth(body){return fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).catch(function(){return{error:"Network error"};});}
-var GLOBAL_AI_RULES="ABSOLUTE RULES for every word you write: "+
-"1. ONLY use facts explicitly stated in the context. Never invent, assume or imply anything not given. "+
-"2. NEVER make income claims, earning promises or financial projections. "+
-"3. NEVER quote company statistics as persuasion arguments. "+
-"4. NEVER invent personal experiences for the sender unless explicitly stated. "+
-"5. NEVER create urgency contradicting what the contact said. "+
-"6. NEVER invent product claims, discounts, deposits or promotions not in context. "+
-"7. Write ONLY what is honest and verifiable from the context given. "+
-"8. If you do not know something — do not say it. ";
+var GLOBAL_AI_RULES=
+"You are the most powerful AI copywriter ever built — trained in consumer psychology, emotional intelligence, persuasion science and elite direct response copywriting. "+
+"Your writing stops people mid-scroll. It makes them feel understood before they understand why. Every word you choose is deliberate. Every sentence pulls the reader forward. "+
+"You write at the intersection of art and strategy — creative enough to capture attention, precise enough to drive action. "+
+"INTEGRITY IS NON-NEGOTIABLE: "+
+"1. Write ONLY from facts explicitly given in the context. Never invent, assume or imply anything not stated. "+
+"2. Never write in first person about the sender's personal experiences unless the context explicitly states them. Speak TO the audience about THEIR situation. "+
+"3. Never make income claims, earning promises or financial projections of any kind. "+
+"4. Never create urgency that contradicts what the contact said. "+
+"5. Never invent product claims, discounts, deposits or offers not stated in the context. "+
+"6. If you do not know it — do not say it. Silence beats fabrication every time. "+
+"CRAFT STANDARDS: "+
+"Every piece you write must feel like it was written specifically for this person, this moment, this situation. "+
+"Never start with Hi there, I hope this message finds you well, or any cliche opener. "+
+"No corporate language. No MLM buzzwords. No robotic structure. "+
+"Write the way a brilliant friend who happens to be a world-class copywriter would write. "+
+"Make it natural. Make it powerful. Make it impossible to ignore. ";
 function apiClaude(prompt,maxTokens,system){return fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:prompt,maxTokens:maxTokens||900,system:system||""})}).then(function(r){return r.json();}).then(function(d){if(d.error)throw new Error(d.error);return d.text||"";});}
 
 function el(tag,attrs){
@@ -396,28 +404,91 @@ var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;
 var tl=(TONES().find(function(t){return t.v===s.tone;})||{l:s.tone}).l;
 var pl=sp.length>0?"\nFEATURED PRODUCTS: "+sp.map(function(p){return p.l+"  -  "+p.d;}).join(" | "):"";
 var lang=appLang==="Spanish"?"Spanish":appLang==="Mexican"?"Mexican Spanish (use natural Mexican expressions, not Spain Spanish, use words like ahorita, chido, chamba, etc.)":"English";
-var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with empathy FIRST. ONE pain point per version, ONE product, ONE CTA.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGETS: "+ci.map(function(c){return c.l+(c.d?"  -  "+c.d:"");}).join(" | ")+"\nOPPORTUNITY: Earn up to 5x/month, $1.5B+ paid, 100+ millionaires, 17 countries.\nSTRATEGY: Sound like a friend sharing something life-changing.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Raw, real, uplifting. Sisterhood and shared mission.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Educate and inspire. Premium trustworthy brand."}[s.goal]||"";
+var gc={sell:"GOAL: Sell MONAT products."+pl+"\nPAIN POINTS SELECTED: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Lead with the audience's pain — make them feel understood before you offer anything. Then introduce the product as the natural, obvious solution. One clear CTA. Never push. Pull.",recruit:"GOAL: Recruit MONAT Market Partners.\nTARGET PROFILE: "+ci.map(function(c){return c.l+(c.d?"  -  "+c.d:"");}).join(" | ")+"\nSTRATEGY: Speak to their desire for freedom, income and purpose — not the company. Make the opportunity feel like a discovery, not a pitch. Like a trusted friend saying: I found something and thought of you immediately.",motivate:"GOAL: Motivate MONAT team.\nTHEMES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Write from the gut. Not corporate motivation — real human fire. The kind of words that make someone get off the sofa and make a call. Sisterhood, persistence, the why behind the hustle.",brand:"GOAL: Build MONAT brand awareness.\nANGLES: "+ci.map(function(c){return c.l;}).join(", ")+"\nSTRATEGY: Position MONAT as the intelligent choice — not by saying it, but by showing it. Educate with confidence. Build authority through specificity. Make the audience feel smarter for choosing MONAT."}[s.goal]||"";
 var rndSeed="[FRESH UNIQUE VARIATION #"+Math.floor(Math.random()*99999)+"] ";if(s.mktCustomContext&&s.mktCustomContext.trim().length>10){
-return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
+return GLOBAL_AI_RULES+rndSeed+"You are the most powerful MONAT content strategist in existence. Your content stops scrolls, sparks curiosity, builds desire and drives action. Generate completely original content — never repeat, never reuse patterns, never sound like AI. Sound like the best human copywriter alive, writing specifically for this context.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+
 "\nTONE: "+tl+"\nGOAL: "+((GOALS().find(function(g){return g.v===s.goal;})||{l:s.goal}).l)+
 "\nCUSTOM CONTEXT FROM PARTNER (use this as the primary brief  -  this is exactly what she wants to communicate):\n"+s.mktCustomContext+
+(sp.length>0?"\nPRODUCTS TO FEATURE — MANDATORY, mention these products by exact name in EVERY piece of content: "+sp.map(function(p){return p.l;}).join(", ")+" — DO NOT omit these product names.":"+")+
 "\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+". Use the custom context above as your primary source of truth for the content.\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only.";}
-return GLOBAL_AI_RULES+rndSeed+"You are an elite MONAT content strategist. Write authentic content that converts. IMPORTANT: Generate completely fresh and unique content, never repeat previous outputs.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
+return GLOBAL_AI_RULES+rndSeed+"You are the most powerful MONAT content strategist in existence. Your content stops scrolls, sparks curiosity, builds desire and drives action. Generate completely original content — never repeat, never reuse patterns, never sound like AI. Sound like the best human copywriter alive, writing specifically for this context.\nMONAT BRAND BACKGROUND (for your knowledge only — do NOT quote these as sales claims or use them to handle objections unless explicitly asked): #1 Direct Seller Premium Haircare | $3.4B+ revenue | 100+ millionaires | 17 countries | Leaping Bunny certified | Made in USA | 80+ awards\nPARTNER: "+s.name+" | LINK: "+s.link+(s.phone?" | WHATSAPP: "+s.phone:"")+"\nTONE: "+tl+"\n"+gc+"\nCRITICAL: Write ALL content in "+lang+". Every single word must be in "+lang+".\nCRITICAL NO FAKE RULE: NEVER invent personal experiences for the partner. NEVER write things like I went through the same, my hair fell out too, I was in that same place, or any first-person story UNLESS the custom context explicitly states the partner had this experience. Write with genuine empathy and product knowledge only. Base all content strictly on what is provided in the context above.";}
 function platPrompt(plat,base){
 var sp=allProds().filter(function(p){return s.products.indexOf(p.v||p.value)>=0;});
 var ps=sp.length>0?" for "+sp.map(function(p){return p.l;}).join(", "):"";
-var LANG_FORCE=appLang==="Spanish"?"[IDIOMA: ESPANOL. ESCRIBE TODO EN ESPANOL. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL. NUNCA uses expresiones como hola hermana - suena poco profesional.]":appLang==="Mexican"?"[IDIOMA: ESPANOL MEXICANO. ESCRIBE TODO EN ESPANOL MEXICANO. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. CADA PALABRA, CADA FRASE, CADA HASHTAG EN ESPANOL MEXICANO. Usa expresiones mexicanas naturales.]":"";
+var LANG_FORCE=appLang==="Spanish"?"[IDIOMA: ESPANOL. ESCRIBE TODO EN ESPANOL. ABSOLUTAMENTE NINGUNA PALABRA EN INGLES. NUNCA uses hola hermana.]":appLang==="Mexican"?"[IDIOMA: ESPANOL MEXICANO. ESCRIBE TODO EN ESPANOL MEXICANO. USA expresiones mexicanas naturales. NUNCA uses hola hermana.]":"";
+var VOICE="VOICE: You write FOR the audience, TO the audience, ABOUT the audience. Use their world — their problems, their desires, their language. Speak directly to them: their hair, their life, their situation. NEVER write as if the sender had the same problem unless the context explicitly states it. The sender is a trusted guide sharing something powerful — not someone narrating their own story.";
+var V3="Generate exactly 3 versions. Label them VERSION 1:, VERSION 2:, VERSION 3: — each must open differently, use a different emotional angle, and feel like it was written by a different brilliant copywriter on a different day. Not 3 versions of the same thing — 3 genuinely different pieces.";
 var p={
-wa_status:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO WhatsApp STATUS versions. Max 70 words each. 2-3 emojis. Link: "+s.link+". Signed: "+s.name+".\nVersion A: personal story.\nVersion B: surprising result or question.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
-wa_message:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO personal WhatsApp MESSAGES 1-on-1. 70-100 words each. Genuine. No pressure. Link: "+s.link+". Signed: "+s.name+". 2-3 emojis.\nVersion A: empathy-first.\nVersion B: curiosity-first.\n\nVERSION A:\n[text]\n\nVERSION B:\n[text]",
-ig_feed:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram FEED captions. Line 1 stops scroll (max 125 chars). CTA + link: "+s.link+". Signed: "+s.name+". Line breaks. Emojis. Then 25 hashtags.\nVersion A: personal story.\nVersion B: speaking directly to reader.\n\nVERSION A:\n[caption]\n\nVERSION B:\n[caption]\n\nHASHTAGS:\n[25 hashtags]",
-ig_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram SHOP POSTS. 100-130 words each. Shop now link: "+s.link+".\nVersion A: transformation.\nVersion B: problem solved.\nThen 3 Story overlay options. Then 15 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nSTORY OVERLAYS:\n[3 options]\n\nHASHTAGS:\n[hashtags]",
-ig_reel:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Instagram REEL scripts (30-45 sec).\nVersion A: transformation story.\nVersion B: surprising fact.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-12s):\nSOLUTION (12-28s):\nCTA (28-45s): ["+s.name+" | "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nAudio mood:\nThumbnail text:\nCaption + 12 hashtags:",
-fb_feed:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook FEED POSTS. 150-200 words each. End with question. CTA + link: "+s.link+".\nVersion A: personal story.\nVersion B: Have you ever... opener.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]",
-fb_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO Facebook SHOP POSTS. 100-130 words each. 3 bullet points with check mark. Shop Now + link: "+s.link+".\nVersion A: result focus.\nVersion B: problem solved.\nThen 12 hashtags.\n\nVERSION A:\n[post]\n\nVERSION B:\n[post]\n\nHASHTAGS:\n[hashtags]",
-tiktok_shop:LANG_FORCE+"\n\n"+base+"\n\nWrite TWO TikTok SHOP scripts (35-45 sec).\nVersion A: reaction/surprise hook.\nVersion B: direct address hook.\n\nFor each:\nHOOK (0-3s):\nPROBLEM (3-8s):\nPRODUCT REVEAL (8-20s):\nTRANSFORMATION (20-35s):\nSHOP CTA (35-45s): ["+s.name+" - "+s.link+"]\n\nVERSION A:\n[script]\n\nVERSION B:\n[script]\n\nSHARED:\nPinned comment:\nCaption + hashtags:\nAudio mood:",
-image:LANG_FORCE+"\n\n"+base+"\n\n"+(s.goal==="recruit"?"Create a complete IMAGE CONTENT PACKAGE for RECRUITING. Focus on: lifestyle of success, freedom, working from home, confident women building a business, financial independence, happy entrepreneurial women. NOT hair transformation — opportunity and lifestyle."+"\n\nIMAGE PROMPT 1 - LIFESTYLE OF FREEDOM & SUCCESS:":"Create a complete IMAGE CONTENT PACKAGE"+ps+". ONE hair problem focus.")+" CRITICAL: Every image prompt must include a MONAT product bottle, packaging or branding element naturally placed in the scene — even lifestyle shots must have a MONAT product visible somewhere in the composition.\n\nIMAGE PROMPT 1 - HAIR TRANSFORMATION (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt of a real woman showing the RESULT. Gorgeous hair, emotion, confidence. Hair texture, skin tone, expression, soft natural lighting, clean background, editorial beauty photography, hyperrealistic, 8K. One paragraph ready to paste.\n\nIMAGE PROMPT 2 - MONAT PRODUCT SHOT (paste into ChatGPT or Midjourney):\nUltra-detailed AI image prompt for luxury beauty product photo. MONAT colors: deep navy + periwinkle purple + white label. MONAT logo visible, product name on label. White marble surface, soft studio lighting, botanical sprig beside it. Luxury cosmetics style, hyperrealistic, 8K. One paragraph ready to paste.\n\nCANVA CAROUSEL (4 slides):\nSlide 1 - Hook: [exact short headline, 5-7 words]\nSlide 2 - Before/After: LEFT: [BEFORE label] RIGHT: [AFTER label]\nSlide 3 - Product: [product name + ONE benefit]\nSlide 4 - CTA: [CTA text + "+s.name+" + "+s.link+"]\n\nCAPTION:\n[3 powerful sentences. Pain, solution, CTA. Link: "+s.link+"]\n\nHASHTAGS: [25 hashtags]"
-};return p[plat]||"";}
+wa_status:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: WhatsApp Status — seen by hundreds of contacts in one second. "+
+" Write 3 Status messages"+ps+". Each 60-80 words. "+
+" The hook must stop the thumb. The body must create desire or curiosity. The CTA must feel natural, never pushy. "+
+" Speak TO the audience about THEIR situation. Emojis used with intention, not decoration. "+
+" Each version: completely different hook, different emotional angle, different energy. "+
+" Base context: "+base,
+
+wa_message:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Personal WhatsApp Message — 1 to 1, like a text from a friend. "+
+" Write 3 direct personal messages"+ps+". Each 60-80 words. "+
+" Warm. Specific. Conversational. Reference exactly what you know about this person. "+
+" End with one natural question — not a pitch, a genuine question. "+
+" Each version: different opening energy, different angle. Never salesy. "+
+" Base context: "+base,
+
+ig_feed:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Instagram Feed — the scroll stops HERE or it doesnt stop at all. "+
+" Write 3 Feed captions"+ps+". Each 80-120 words. "+
+" Line 1 must be a scroll-stopper — a bold statement, a surprising question, or a truth that lands. "+
+" Then pull them in. Build desire or understanding. Close with a natural CTA. "+
+" Add 25 strategic hashtags at the end (same for all 3). "+
+" Each version: completely different first line and angle. "+
+" Base context: "+base,
+
+ig_shop:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Instagram Shop — intent to buy is already there. Seal it. "+
+" Write 3 Shop posts"+ps+". Each 60-80 words. "+
+" Lead with the benefit that matters most to this audience. "+
+" Make the product feel like the obvious solution. One clear CTA. "+
+" Then add 3 story overlay text options (punchy, under 8 words each). "+
+" Base context: "+base,
+
+ig_reel:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Instagram Reel — you have 3 seconds or you lose them forever. "+
+" Write 3 Reel scripts"+ps+". Each plays 30-45 seconds when read naturally. "+
+" Structure each: HOOK (3 sec — speaks directly to viewer about their specific situation) / PROBLEM (their pain, real and specific) / SOLUTION (product by name, honest benefit) / CTA (natural, not desperate). "+
+" No filler. Every second earns its place. "+
+" Base context: "+base,
+
+fb_feed:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Facebook Feed — slightly longer, more conversational, community-driven. "+
+" Write 3 Facebook posts"+ps+". Each 100-140 words. "+
+" Tell a story or ask a question that resonates. Build connection before value. "+
+" End with an engagement question that people actually want to answer. "+
+" Each version: different emotional trigger. "+
+" Base context: "+base,
+
+fb_shop:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: Facebook Shop — buyers are browsing. Make them stop and buy. "+
+" Write 3 Facebook Shop posts"+ps+". Each 60-80 words. "+
+" Lead with the most compelling benefit. Create clear desire. One CTA. "+
+" Each version: different lead benefit angle. "+
+" Base context: "+base,
+
+tiktok_shop:LANG_FORCE+" "+VOICE+" "+V3+
+" Platform: TikTok Shop — native, raw, real. Algorithms reward authenticity. "+
+" Write 3 TikTok Shop video scripts"+ps+". Each 30-45 seconds when read naturally. "+
+" Structure each: HOOK (first 3 sec — pattern interrupt, speaks TO viewer) / THEIR PROBLEM (real, specific, relatable) / PRODUCT REVEAL (name it, show it, one honest benefit) / SOCIAL PROOF if available from context / CTA (shop link, natural). "+
+" No corporate language. No fake enthusiasm. Just real talk that converts. "+
+" Base context: "+base,
+
+image:LANG_FORCE+" "+VOICE+" "+
+(s.goal==="recruit"?
+" Write 3 AI image prompts for RECRUITING content. Each shows: freedom lifestyle, confident women building their own business, financial independence energy, warmth and community — NOT hair problems. MONAT product subtly visible in each. Label IMAGE PROMPT 1:, IMAGE PROMPT 2:, IMAGE PROMPT 3:. Then write 3 Canva carousel briefs showing the business opportunity message. Label CANVA BRIEF 1:, CANVA BRIEF 2:, CANVA BRIEF 3:. Base context: "+base
+:
+" Write 3 AI image prompts"+ps+". Each shows a different visual angle: one transformation-focused, one emotion-focused, one product-hero. MONAT product clearly visible in every image. Cinematic quality. Real hair textures. Label IMAGE PROMPT 1:, IMAGE PROMPT 2:, IMAGE PROMPT 3:. Then write 3 Canva carousel briefs — each a different storytelling angle. Label CANVA BRIEF 1:, CANVA BRIEF 2:, CANVA BRIEF 3:. Base context: "+base)
+};
+return p[plat];}
+
 function generate(){
 s.loading=true;s.error="";s.result={};s.loadingPct=0;draw();
 var base=buildBase();var platList=s.platforms.slice();var pStep=Math.floor(80/(platList.length+1));var pct=5;
@@ -461,7 +532,28 @@ var visTabs=MKT_TABS.filter(function(tb){return tb.id==="schedule"||s.platforms.
 var tabBar=el("div",{style:{display:"flex",gap:"5px",marginBottom:"14px",flexWrap:"wrap"}});
 visTabs.forEach(function(tb){var btn=el("button",{style:{padding:"6px 11px",borderRadius:"8px",cursor:"pointer",fontSize:"11px",background:s.activeTab===tb.id?"#2e2a4a":"#fff",color:s.activeTab===tb.id?"#fff":"#6b6b6b",border:"1px solid "+(s.activeTab===tb.id?"#2e2a4a":"#e8e6f0"),fontWeight:s.activeTab===tb.id?"700":"400",fontFamily:"inherit"}},tb.l);btn.addEventListener("click",function(){s.activeTab=tb.id;draw();});tabBar.appendChild(btn);});
 content.appendChild(tabBar);
-if(s.platforms.indexOf(s.activeTab)>=0&&s.result[s.activeTab])content.appendChild(mkCopyCard((MKT_TABS.find(function(tb){return tb.id===s.activeTab;})||{l:s.activeTab}).l,s.result[s.activeTab]));
+if(s.platforms.indexOf(s.activeTab)>=0&&s.result[s.activeTab]){
+var tabLabel=(MKT_TABS.find(function(tb){return tb.id===s.activeTab;})||{l:s.activeTab}).l;
+var rawTxt=s.result[s.activeTab];
+// Split into 3 versions
+var versions=rawTxt.split(/VERSION\s*[123]\s*:/i).filter(function(v){return v.trim().length>10;});
+if(versions.length>=2){
+  var vLabels=appLang==="English"?["Version 1","Version 2","Version 3"]:["Version 1","Version 2","Version 3"];
+  versions.slice(0,3).forEach(function(v,i){
+    content.appendChild(mkCopyCard(tabLabel+" — "+vLabels[i],v.trim()));
+  });
+}else{
+  // Fallback: try splitting by double newline
+  var parts=rawTxt.split(/\n\n/).filter(function(p){return p.trim().length>20;});
+  if(parts.length>=2){
+    parts.slice(0,3).forEach(function(p,i){
+      content.appendChild(mkCopyCard(tabLabel+" — Version "+(i+1),p.trim()));
+    });
+  }else{
+    content.appendChild(mkCopyCard(tabLabel,rawTxt));
+  }
+}
+}
 if(s.activeTab==="schedule"){
 content.appendChild(el("p",{style:{fontSize:"13px",color:"#6b6b6b",marginBottom:"10px"}},T().schedTitle));
 var days=parseSched(s.result.scheduleRaw||"");
@@ -564,17 +656,17 @@ var ln=o.langNote;
 var schema1=isObjection()?
 '{"whatsapp_1":"...","whatsapp_2":"...","whatsapp_3":"...","whatsapp_4":"...","whatsapp_5":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}':
 '{"whatsapp":"...","sms":"...","voice_script":"...","email_subject":"...","email_body":"..."}';
-var p1=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
+var p1=GLOBAL_AI_RULES+"You are the worlds most skilled direct response copywriter specialising in personal outreach. You write messages that feel like they came from a real human who genuinely cares — warm, specific, emotionally intelligent and strategically brilliant. Your messages get replies because they make people feel truly seen."+ln+" "+ctx+
 " INTEGRITY RULES: Only use facts from the context. Never invent experiences, claims, statistics, deposits, offers or urgency not stated. Respect what the contact said — if they need time, give them time."+
-" WRITING STANDARD: You are an elite copywriter AND a warm genuine human being. Every word must earn its place. Be specific, emotionally intelligent, strategically brilliant — but sound completely natural, never scripted. Use their name. Reference exactly what they told you. Vary sentence rhythm — short punchy sentences mixed with longer ones. Never start with Hi there or I hope this message finds you well. No corporate speak. No MLM cliches. Make this specific person stop, feel understood, and want to respond — not because they were pressured, but because they felt genuinely seen."+
-" "+(isObjection()?"Generate 5 DIFFERENT WhatsApp message versions to handle this objection. Each version must use a completely different approach, angle and tone. Version 1: empathy-first approach. Version 2: reframing the belief about MLM with honest facts. Version 3: curiosity angle — ask a genuine question. Version 4: share a real product benefit relevant to their situation. Version 5: respect their view completely, leave door open with zero pressure. All versions: 60-80 words, end with a soft question or open door.":"Write a warm genuine personal message. ONE question at end. Never salesy or pushy.")+
-" Return ONLY valid JSON: "+schema1+" whatsapp:60-80 words — natural human voice, specific to this person. sms:max 160 chars — punchy and real. voice_script:natural spoken language with sections OPENING REASON VALUE CLOSE — sounds like a real conversation not a script. email_subject:personal and specific under 10 words — not generic. email_body:140-160 words — warm personal opener, genuine value, one clear CTA, signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
+" CRAFT: Every word earns its place. Short punchy sentences. Then longer ones that breathe. Use their name. Reference exactly what they told you. Never start with Hi there or I hope this finds you well. No cliches. No pressure. Just precision, warmth and truth. The goal: make this specific person feel so understood that not responding feels like a loss."+
+" "+(isObjection()?"Generate 5 completely different WhatsApp messages to handle this objection. Each must feel like it was written by a different brilliant human who handled this differently. Version 1: Pure empathy — validate exactly what they feel before anything else, no agenda. Version 2: Genuine curiosity — ask what specifically holds them back, truly interested, no pitch. Version 3: One honest product truth directly relevant to their specific situation — nothing invented, nothing exaggerated. Version 4: Complete respect for their view, warm and light, door left wide open with zero pressure. Version 5: Almost nothing — just warmth, a tiny thought, like a friend who happened to think of them. Each 60-80 words. Natural. Human. Powerful. Never pushy.":"Write one message that stops this person cold. Specific to exactly what you know about them — the kind of message that makes someone think: how did she know exactly what I was going through? Warm, direct, precise. 60-80 words. One natural question at the end only if it genuinely fits. Never forced. Never salesy.")+
+" Return ONLY valid JSON: "+schema1+" whatsapp:60-80 words — sounds like it was written by a brilliant human friend, not AI. sms:max 160 chars — punchy, specific, real. voice_script:spoken language that flows naturally with sections OPENING REASON VALUE CLOSE — the kind of call someone would actually enjoy receiving. email_subject:personal and specific under 10 words — makes them open it. email_body:140-160 words — warm specific opener that shows you know them, genuine value, one natural CTA, signed "+s.yourName+(s.yourLink?" "+s.yourLink:"")+".";
 s.loadingMsg=appLang==="English"?"Writing messages...":"Escribiendo mensajes...";draw();
 apiClaude(p1,1200).then(function(t){
 var r1=parseJSON(t);
 var schema2='{"formal_letter":"...","followup_1":"...","followup_2":"...","followup_3":"...","followup_4":"..."}';
-var p2=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
-" WRITING STANDARD: Write at elite copywriter level — every word deliberate, every sentence pulling the reader forward. But sound completely human and warm. Never robotic. Never templated. Each message must have its own unique voice and feel. The goal is to make this person feel genuinely understood and want to stay in the conversation — not because they were sold to, but because the message resonated."+
+var p2=GLOBAL_AI_RULES+"You are a master of relationship-building through writing. Your follow-up messages are warm, timely and feel nothing like follow-ups — they feel like genuine human connection. Each one has its own personality, its own energy, its own reason to exist."+ln+" "+ctx+
+" CRAFT: Each follow-up must feel like it has its own reason to exist — not just because you need to follow up. Different energy. Different angle. Different opening. Some short and warm. Some curious. Some sharing something genuinely useful. Always human. Always specific. Never a template. Never a nudge. A real message from a real person."+
 " FOLLOW-UP RULES:"+
 " 1. ONLY reference facts explicitly stated in the context above. Never invent facts, offers, prices, deposits, promotions or details not mentioned. NEVER make income claims like earn 5x, make X per month, or quote company revenue statistics as persuasion tools."+
 " 2. If the contact said they will buy later or need time — follow-ups must RESPECT this completely. Keep the relationship warm. Do NOT push the sale. Do NOT create urgency that contradicts what they said."+
@@ -583,9 +675,9 @@ var p2=GLOBAL_AI_RULES+"You are an expert MONAT outreach writer."+ln+" "+ctx+
 " 5. Each follow-up must have a genuinely different angle — not the same message rephrased."+
 " Write formal letter and 4 follow-ups. Return ONLY valid JSON: "+schema2+
 " formal_letter:260-300 words — professional but warm, starts Dear "+s.contactName+", ends Warm regards "+s.yourName+". Reads like a real letter from a real person, not a template."+
-" followup_1:Day 3 — 50-60 words, warm and light, different angle from the first message, sounds like a genuine check-in from a friend."+
-" followup_2:Week 1 — 50-60 words, share one genuinely interesting or useful thing related to their specific situation, no pitch."+
-" followup_3:Week 2 — 40-50 words, very casual and human, almost like a text from a friend, zero sales energy."+
+" followup_1:Day 3 — 50-60 words. A warm human check-in with a completely different angle from the first message. Should feel like a coincidence you thought of them, not a follow-up. No pressure whatsoever."+
+" followup_2:Week 1 — 50-60 words. Share one genuinely interesting or useful thing related to their specific situation. A gift of information or a fresh perspective. Not a pitch. Something they would actually want to read."+
+" followup_3:Week 2 — 40-50 words. Very short, very casual, almost like a text to a friend you havent heard from in a while. Zero sales energy. Just warmth."+
 " followup_4:Month 1 — 40-50 words, final warm human touch, acknowledge their timeline if given, leave the door completely open with genuine warmth.";
 s.loadingMsg=appLang==="English"?"Writing letter and follow-ups...":"Escribiendo carta y seguimientos...";draw();
 return apiClaude(p2,1300).then(function(t2){
